@@ -4,9 +4,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body onload="startGame()">
+<body onload="startGame()" id="script">
 <script>
-
 var myGamePiece;
 var myObstacles = [];
 var myScore;
@@ -21,8 +20,8 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -72,7 +71,6 @@ function component(width, height, color, x, y, type) {
     this.hitCelling = function() {
         if (this.y < 0) {
             this.y = 0;
-            this.speedY = 0;
 			this.gravitySpeed = 0;
         }
     }
@@ -133,6 +131,17 @@ function accelerate(n) {
 	
     myGamePiece.gravity = n;
 }
+document.getElementById("script").onmousedown = function() {mouseDown()};
+document.getElementById("script").onmouseup = function() {mouseUp()};
+
+function mouseDown() {
+    accelerate(-0.1);
+}
+
+function mouseUp() {
+    accelerate(0.1);
+}
+
 </script>
 <br>
 

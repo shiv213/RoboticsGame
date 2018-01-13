@@ -37,7 +37,7 @@
 		// resizes along with the browser window.					
 		function redraw() {
 			context.strokeStyle = 'blue';
-			context.lineWidth = '5';
+			context.lineWidth = '1';
 			context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
 		}
 	
@@ -67,7 +67,7 @@ var myScore;
 function startGame() {
     myGamePiece = new component(30, 30, "red", 10, 120);
     myGamePiece.gravity = 0.05;
-    myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    myScore = new component("15px", "Oswald", "Blue", c.width - 100, 30, "text");
     myGameArea.start();
 }
 
@@ -84,7 +84,7 @@ var myGameArea = {
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-}
+}	
 
 function component(width, height, color, x, y, type) {
     this.type = type;

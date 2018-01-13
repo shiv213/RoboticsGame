@@ -2,12 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    border:1px solid #d3d3d3;
-    background-color: #f1f1f1;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body onload="startGame()">
 <script>
@@ -65,12 +60,20 @@ function component(width, height, color, x, y, type) {
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
+        this.hitCelling();
     }
     this.hitBottom = function() {
         var rockbottom = myGameArea.canvas.height - this.height;
         if (this.y > rockbottom) {
             this.y = rockbottom;
             this.gravitySpeed = 0;
+        }
+    }
+    this.hitCelling = function() {
+        if (this.y < 0) {
+            this.y = 0;
+            this.speedY = 0;
+			this.gravitySpeed = 0;
         }
     }
     this.crashWith = function(otherobj) {
@@ -127,12 +130,13 @@ function everyinterval(n) {
 
 function accelerate(n) {
     if (!myGameArea.interval) {myGameArea.interval = setInterval(updateGameArea, 20);}
-
+	
     myGamePiece.gravity = n;
 }
 </script>
 <br>
-<button onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button>
+
+<button id="myButton" onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button>
 <p>Click the ACCELERATE button to start the game</p>
 <p>How long can you stay alive? Use the ACCELERATE button to stay in the air..</p>
 </body>

@@ -1,11 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body onload="startGame()" id="script">
+<canvas id='c' style = 'position: absolute; left: 0px; top: 0px;' >
+</canvas>
 <script>
+	(function() {
+		var 
+			// Obtain a reference to the canvas element
+			// using its id.
+			htmlCanvas = document.getElementById('c'),
+		
+			// Obtain a graphics context on the
+			// canvas element for drawing.
+			context = htmlCanvas.getContext('2d');
+
+		// Start listening to resize events and
+		// draw canvas.
+		initialize();
+
+		function initialize() {
+			// Register an event listener to
+			// call the resizeCanvas() function each time 
+			// the window is resized.
+			window.addEventListener('resize', resizeCanvas, false);
+			
+			// Draw canvas border for the first time.
+			resizeCanvas();
+		}
+			
+		// Display custom canvas.
+		// In this case it's a blue, 5 pixel border that 
+		// resizes along with the browser window.					
+		function redraw() {
+			context.strokeStyle = 'blue';
+			context.lineWidth = '5';
+			context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+		}
+	
+		// Runs each time the DOM window resize event fires.
+		// Resets the canvas dimensions to match window,
+		// then draws the new borders accordingly.
+		function resizeCanvas() {
+			htmlCanvas.width = window.innerWidth;
+			htmlCanvas.height = window.innerHeight;
+			redraw();
+		}
+	
+	})();
+</script>
+<script>
+window.addEventListener('touchstart', function() {
+  accelerate(-0.2);
+});
+window.addEventListener('touchend', function() {
+  accelerate(0.1);
+});
+
 var myGamePiece;
 var myObstacles = [];
 var myScore;
@@ -134,8 +188,13 @@ function accelerate(n) {
 document.getElementById("script").onmousedown = function() {mouseDown()};
 document.getElementById("script").onmouseup = function() {mouseUp()};
 
+document.getElementById("script").touchstart = function() {mouseDown()};
+document.getElementById("script").touchend = function() {mouseUp()};
+
+
+
 function mouseDown() {
-    accelerate(-0.1);
+    accelerate(-0.2);
 }
 
 function mouseUp() {
@@ -145,8 +204,7 @@ function mouseUp() {
 </script>
 <br>
 
-<button id="myButton" onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button>
-<p>Click the ACCELERATE button to start the game</p>
-<p>How long can you stay alive? Use the ACCELERATE button to stay in the air..</p>
+<!-- <button id="myButton" onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button> //-->
+
 </body>
 </html>

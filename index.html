@@ -89,7 +89,7 @@
 			}
 		}
 
-		function component(width, height, color, x, y, type, turnAngle) {
+		function component(width, height, color, x, y, type, turnAngle, randomSize) {
 			this.type = type;
 			this.score = 0;
 			this.width = width;
@@ -101,6 +101,7 @@
 			this.gravity = 0;
 			this.gravitySpeed = 0;
 			this.turnAngle = turnAngle;
+			this.randomSize = randomSize;
 			this.update = function() {
 				ctx = myGameArea.context;
 				if (this.type == "text") {
@@ -110,24 +111,39 @@
 				} else if (this.type == "Obstacles") {
 					// make turn rect here
 					ctx.fillStyle = color;
-					var centerX = findCenterX(this.width, this.x);
-					var centerY = findCenterY(this.height, this.y);
-					// m_ are the moved coordiantes to the center
+					// width, height, x, y, randomSize
 					var finalxs = [0, 0, 0, 0];
 					var finalys = [0, 0, 0, 0];
-					for (var i = 0; i < 4; i++) {
-						finalxs[i] = getFinalX(this.x, this.y, centerX, centerY, turnAngle);
-						finalys[i] = getFinalY(this.x, this.y, centerX, centerY, turnAngle);
-					}
+
+					// var centerX = [0, 0, 0, 0];
+					// var centerY = [0, 0, 0, 0];
+					// // top right
+					// centerX[0] = findCenterX(this.width, this.x);
+					// centerY[0] = findCenterY(this.height, this.y);
+					// // top left
+					// centerX[1] = findCenterX(this.width, this.x + 10);
+					// centerY[1] = findCenterY(this.height, this.y);
+					// // bottom left
+					// centerX[2] = findCenterX(this.width, this.x);
+					// centerY[2] = findCenterY(this.height, this.y + this.randomSize);
+					// // bottom right
+					// centerX[3] = findCenterX(this.width, this.x + 10);
+					// centerY[3] = findCenterY(this.height, this.y + this.randomSize);
+					// // m_ are the moved coordiantes to the center
+					// var finalxs = [0, 0, 0, 0];
+					// var finalys = [0, 0, 0, 0];
+					// for (var i = 0; i < 4; i++) {
+					// 	finalxs[i] = getFinalX(this.x, this.y, centerX[i], centerY[i], turnAngle);
+					// 	finalys[i] = getFinalY(this.x, this.y, centerX[i], centerY[i], turnAngle);
+					// }
 
 					ctx.beginPath();
-					ctx.moveTo(finalxs[0], finalys[0]);
-					ctx.lineTo(finalxs[1], finalys[1]);
+					ctx.moveTo(finalxs[1], finalys[1]);
+					ctx.lineTo(finalxs[0], finalys[0]);
 					ctx.lineTo(finalxs[2], finalys[2]);
 					ctx.lineTo(finalxs[3], finalys[3]);
 					ctx.closePath();
 					ctx.fill();
-
 				} else {
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -208,7 +224,7 @@
 				var height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.2);
 				//height = Math.floor(Math.random()*(locations));
 				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
-				myObstacles.push(new component(10, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads));
+				myObstacles.push(new component(10, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, height));
 				// myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
 			}
 			for (i = 0; i < myObstacles.length; i += 1) {
@@ -268,6 +284,32 @@
 			var finaly = newmy + centerY;
 			return finaly;
 		}
+
+		function findCoordinates(width, height, x, y, randomSize){
+			var centerX = [0, 0, 0, 0];
+			var centerY = [0, 0, 0, 0];
+
+			centerX[0] = findCenterX(this.width, this.x);
+			centerY[0] = findCenterY(this.height, this.y);
+			// top left
+			centerX[1] = findCenterX(this.width, this.x + 10);
+			centerY[1] = findCenterY(this.height, this.y);
+			// bottom left
+			centerX[2] = findCenterX(this.width, this.x);
+			centerY[2] = findCenterY(this.height, this.y + this.randomSize);
+			// bottom right
+			centerX[3] = findCenterX(this.width, this.x + 10);
+			centerY[3] = findCenterY(this.height, this.y + this.randomSize);
+			// m_ are the moved coordiantes to the center
+			var finalxs = [0, 0, 0, 0];
+			var finalys = [0, 0, 0, 0];
+
+			for (var i = 0; i < 4; i++) {
+				finalxs[i] = getFinalX(this.x, this.y, centerX[i], centerY[i], turnAngle);
+				finalys[i] = getFinalY(this.x, this.y, centerX[i], centerY[i], turnAngle);
+			}
+			return finalxs
+		}
 		// document.getElementById("script").onmousedown = function() {
 		// 	mouseDown()
 		// };
@@ -282,15 +324,13 @@
 		// 	mouseUp()
 		// };
 		//
-		//
-		//
-		// function mouseDown() {
-		// 	accelerate(-0.2);
-		// }
-		//
-		// function mouseUp() {
-		// 	accelerate(0.1);
-		// }
+		function mouseDown() {
+			accelerate(-0.2);
+		}
+
+		function mouseUp() {
+			accelerate(0.1);
+		}
 	</script>
 	<br>
 

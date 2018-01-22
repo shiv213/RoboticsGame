@@ -1,210 +1,301 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body onload="startGame()" id="script">
-<canvas id='c' style = 'position: absolute; left: 0px; top: 0px;' >
+	<canvas id='c' style='position: absolute; left: 0px; top: 0px;'>
 </canvas>
-<script>
-	(function() {
-		var 
-			// Obtain a reference to the canvas element
-			// using its id.
-			htmlCanvas = document.getElementById('c'),
-		
-			// Obtain a graphics context on the
-			// canvas element for drawing.
-			context = htmlCanvas.getContext('2d');
+	<script>
+		(function() {
+			var
+				// Obtain a reference to the canvas element
+				// using its id.
+				htmlCanvas = document.getElementById('c'),
 
-		// Start listening to resize events and
-		// draw canvas.
-		initialize();
+				// Obtain a graphics context on the
+				// canvas element for drawing.
+				context = htmlCanvas.getContext('2d');
 
-		function initialize() {
-			// Register an event listener to
-			// call the resizeCanvas() function each time 
-			// the window is resized.
-			window.addEventListener('resize', resizeCanvas, false);
-			
-			// Draw canvas border for the first time.
-			resizeCanvas();
+			// Start listening to resize events and
+			// draw canvas.
+			initialize();
+
+			function initialize() {
+				// Register an event listener to
+				// call the resizeCanvas() function each time
+				// the window is resized.
+				window.addEventListener('resize', resizeCanvas, false);
+
+				// Draw canvas border for the first time.
+				resizeCanvas();
+			}
+
+			// Display custom canvas.
+			// In this case it's a blue, 5 pixel border that
+			// resizes along with the browser window.
+			function redraw() {
+				context.strokeStyle = 'blue';
+				context.lineWidth = '1';
+				context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+			}
+
+			// Runs each time the DOM window resize event fires.
+			// Resets the canvas dimensions to match window,
+			// then draws the new borders accordingly.
+			function resizeCanvas() {
+				htmlCanvas.width = window.innerWidth;
+				htmlCanvas.height = window.innerHeight;
+				redraw();
+			}
+
+		})();
+	</script>
+	<script>
+		window.addEventListener('touchstart', function() {
+			accelerate(-0.3);
+		});
+		window.addEventListener('touchend', function() {
+			accelerate(0.1);
+		});
+
+		var myGamePiece;
+		var myObstacles = [];
+		var myScore;
+		var score = 0;
+
+		function startGame() {
+			myGamePiece = new component(30, 30, "red", 10, 120);
+			myGamePiece.gravity = 0.05;
+			myScore = new component("15px", "Oswald", "Blue", c.width - 100, 30, "text");
+			myGameArea.start();
 		}
-			
-		// Display custom canvas.
-		// In this case it's a blue, 5 pixel border that 
-		// resizes along with the browser window.					
-		function redraw() {
-			context.strokeStyle = 'blue';
-			context.lineWidth = '1';
-			context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+
+		var myGameArea = {
+			canvas: document.createElement("canvas"),
+			start: function() {
+				this.canvas.width = window.innerWidth;
+				this.canvas.height = window.innerHeight;
+				this.context = this.canvas.getContext("2d");
+				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+				this.frameNo = 0;
+				updateGameArea();
+			},
+			clear: function() {
+				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			}
 		}
-	
-		// Runs each time the DOM window resize event fires.
-		// Resets the canvas dimensions to match window,
-		// then draws the new borders accordingly.
-		function resizeCanvas() {
-			htmlCanvas.width = window.innerWidth;
-			htmlCanvas.height = window.innerHeight;
-			redraw();
-		}
-	
-	})();
-</script>
-<script>
-window.addEventListener('touchstart', function() {
-  accelerate(-0.2);
-});
-window.addEventListener('touchend', function() {
-  accelerate(0.1);
-});
 
-var myGamePiece;
-var myObstacles = [];
-var myScore;
-
-function startGame() {
-    myGamePiece = new component(30, 30, "red", 10, 120);
-    myGamePiece.gravity = 0.05;
-    myScore = new component("15px", "Oswald", "Blue", c.width - 100, 30, "text");
-    myGameArea.start();
-}
-
-var myGameArea = {
-    canvas : document.createElement("canvas"),
-    start : function() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-        this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.frameNo = 0;
-        updateGameArea();
-        },
-    clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-}	
-
-function component(width, height, color, x, y, type) {
-    this.type = type;
-    this.score = 0;
-    this.width = width;
-    this.height = height;
-    this.speedX = 0;
-    this.speedY = 0;    
-    this.x = x;
-    this.y = y;
-    this.gravity = 0;
-    this.gravitySpeed = 0;
-    this.update = function() {
-        ctx = myGameArea.context;
-        if (this.type == "text") {
-            ctx.font = this.width + " " + this.height;
-            ctx.fillStyle = color;
-            ctx.fillText(this.text, this.x, this.y);
-        } else {
-            ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-        }
-    }
-    this.newPos = function() {
-        this.gravitySpeed += this.gravity;
-        this.x += this.speedX;
-        this.y += this.speedY + this.gravitySpeed;
-        this.hitBottom();
-        this.hitCelling();
-    }
-    this.hitBottom = function() {
-        var rockbottom = myGameArea.canvas.height - this.height;
-        if (this.y > rockbottom) {
-            this.y = rockbottom;
-            this.gravitySpeed = 0;
-        }
-    }
-    this.hitCelling = function() {
-        if (this.y < 0) {
-            this.y = 0;
+		function component(width, height, color, x, y, type, turnAngle) {
+			this.type = type;
+			this.score = 0;
+			this.width = width;
+			this.height = height;
+			this.speedX = 0;
+			this.speedY = 0;
+			this.x = x;
+			this.y = y;
+			this.gravity = 0;
 			this.gravitySpeed = 0;
-        }
-    }
-    this.crashWith = function(otherobj) {
-        var myleft = this.x;
-        var myright = this.x + (this.width);
-        var mytop = this.y;
-        var mybottom = this.y + (this.height);
-        var otherleft = otherobj.x;
-        var otherright = otherobj.x + (otherobj.width);
-        var othertop = otherobj.y;
-        var otherbottom = otherobj.y + (otherobj.height);
-        var crash = true;
-        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
-            crash = false;
-        }
-        return crash;
-    }
-}
+			this.turnAngle = turnAngle;
+			this.update = function() {
+				ctx = myGameArea.context;
+				if (this.type == "text") {
+					ctx.font = this.width + " " + this.height;
+					ctx.fillStyle = color;
+					ctx.fillText(this.text, this.x, this.y);
+				} else if (this.type == "Obstacles") {
+					// make turn rect here
+					ctx.fillStyle = color;
+					var centerX = findCenterX(this.width, this.x);
+					var centerY = findCenterY(this.height, this.y);
+					// m_ are the moved coordiantes to the center
+					var finalxs = [0, 0, 0, 0];
+					var finalys = [0, 0, 0, 0];
+					for (var i = 0; i < 4; i++) {
+						finalxs[i] = getFinalX(this.x, this.y, centerX, centerY, turnAngle);
+						finalys[i] = getFinalY(this.x, this.y, centerX, centerY, turnAngle);
+					}
 
-function updateGameArea() {
-    var x, height, gap, minHeight, maxHeight, minGap, maxGap;
-    for (i = 0; i < myObstacles.length; i += 1) {
-        if (myGamePiece.crashWith(myObstacles[i])) {
-            return;
-        } 
-    }
-    myGameArea.clear();
-    myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(150)) {
-        x = myGameArea.canvas.width;
-        minHeight = 20;
-        maxHeight = 200;
-        height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
-        minGap = 50;
-        maxGap = 200;
-        gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new component(10, height, "green", x, 0));
-        myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
-    }
-    for (i = 0; i < myObstacles.length; i += 1) {
-        myObstacles[i].x += -1;
-        myObstacles[i].update();
-    }
-    myScore.text="SCORE: " + myGameArea.frameNo;
-    myScore.update();
-    myGamePiece.newPos();
-    myGamePiece.update();
-}
+					ctx.beginPath();
+					ctx.moveTo(finalxs[0], finalys[0]);
+					ctx.lineTo(finalxs[1], finalys[1]);
+					ctx.lineTo(finalxs[2], finalys[2]);
+					ctx.lineTo(finalxs[3], finalys[3]);
+					ctx.closePath();
+					ctx.fill();
 
-function everyinterval(n) {
-    if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
-    return false;
-}
+				} else {
+					ctx.fillStyle = color;
+					ctx.fillRect(this.x, this.y, this.width, this.height);
+				}
+				// mx = this.x - centerX;
+				// my = this.y - centerY;
+				// newmx = mx * Math.cos(turnAngle) - my * Math.sin(turnAngle);
+				// newmy = mx * Math.sin(turnAngle) + my * Math.cos(turnAngle);
+				// finalx = newmx + centerX;
+				// finaly = newmy + centerY;
 
-function accelerate(n) {
-    if (!myGameArea.interval) {myGameArea.interval = setInterval(updateGameArea, 20);}
-	
-    myGamePiece.gravity = n;
-}
-document.getElementById("script").onmousedown = function() {mouseDown()};
-document.getElementById("script").onmouseup = function() {mouseUp()};
+				// c2.fillStyle = '#f00';
+				// ctx.beginPath();
+				// ctx.moveTo(finalxs[0], finalys[0]);
+				// ctx.lineTo(finalxs[1], finalys[1]);
+				// ctx.lineTo(finalxs[2], finalys[2]);
+				// ctx.lineTo(finalxs[3], finalys[3]);
+				// ctx.closePath();
+				// ctx.fill();
 
-document.getElementById("script").touchstart = function() {mouseDown()};
-document.getElementById("script").touchend = function() {mouseUp()};
+				// ctx.fillRect(this.x, this.y, this.width, this.height);
+			}
+			this.newPos = function() {
+				this.gravitySpeed += this.gravity;
+				this.x += this.speedX;
+				this.y += this.speedY + this.gravitySpeed;
+				this.hitBottom();
+				this.hitCelling();
+			}
+			this.hitBottom = function() {
+				var rockbottom = myGameArea.canvas.height - this.height;
+				if (this.y > rockbottom) {
+					this.y = rockbottom;
+					this.gravitySpeed = 0;
+				}
+			}
+			this.hitCelling = function() {
+				if (this.y < 0) {
+					this.y = 0;
+					this.gravitySpeed = 0;
+				}
+			}
+			this.crashWith = function(otherobj) {
+				var myleft = this.x;
+				var myright = this.x + (this.width);
+				var mytop = this.y;
+				var mybottom = this.y + (this.height);
+				var otherleft = otherobj.x;
+				var otherright = otherobj.x + (otherobj.width);
+				var othertop = otherobj.y;
+				var otherbottom = otherobj.y + (otherobj.height);
+				var crash = true;
+				if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+					crash = false;
+				}
+				return crash;
+			}
+		}
 
+		function updateGameArea() {
+			var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+			for (i = 0; i < myObstacles.length; i += 1) {
+				if (myGamePiece.crashWith(myObstacles[i])) {
+					return;
+				}
+			}
+			myGameArea.clear();
+			myGameArea.frameNo += 1;
+			speed = 1;
+			if (myGameArea.frameNo == 1 || everyinterval(300 * speed)) {
+				x = myGameArea.canvas.width;
+				// gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
+				// myObstacles.push(new component(10, height, "green", x, 0));
+				// myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+				var zones = Math.floor((Math.random() * 3))
+				console.log(zones);
+				var y = Math.floor(Math.random() * (myGameArea.canvas.height * 0.7));
+				var height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.2);
+				//height = Math.floor(Math.random()*(locations));
+				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
+				myObstacles.push(new component(10, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads));
+				// myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+			}
+			for (i = 0; i < myObstacles.length; i += 1) {
+				myObstacles[i].x += -speed;
+				myObstacles[i].update();
+			}
+			if (myGameArea.frameNo == 1 || everyinterval(50)) {
+				score += 1;
+			}
+			myScore.text = "SCORE: " + score;
+			myScore.update();
+			myGamePiece.newPos();
+			myGamePiece.update();
+		}
 
+		function everyinterval(n) {
+			if ((myGameArea.frameNo / n) % 1 == 0) {
+				return true;
+			}
+			return false;
+		}
 
-function mouseDown() {
-    accelerate(-0.2);
-}
+		function accelerate(n) {
+			//start around 30
+			// updateRate = (1 / Math.sqrt(myGameArea.frameNo + 1))*30
+			if (!myGameArea.interval) {
+				myGameArea.interval = setInterval(updateGameArea, 15);
+			}
 
-function mouseUp() {
-    accelerate(0.1);
-}
+			myGamePiece.gravity = n;
+		}
 
-</script>
-<br>
+		function makeToRad(Angle) {
+			return ((Angle * Math.PI) / 180);
+		}
 
-<!-- <button id="myButton" onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button> //-->
+		function findCenterX(width, x) {
+			return ((width / 2) + x);
+		}
+
+		function findCenterY(height, y) {
+			return ((height / 2) + y);
+		}
+
+		function getFinalX(x, y, centerX, centerY, turnAngle, my) {
+			var mx = x - centerX;
+			var my = y - centerY;
+			var newmx = mx * Math.cos(turnAngle) - my * Math.sin(turnAngle);
+			var finalx = newmx + centerX;
+			return finalx;
+		}
+
+		function getFinalY(x, y, centerX, centerY, turnAngle, mx) {
+			var mx = x - centerX;
+			var my = y - centerY;
+			var newmy = mx * Math.sin(turnAngle) + my * Math.cos(turnAngle);
+			var finaly = newmy + centerY;
+			return finaly;
+		}
+		// document.getElementById("script").onmousedown = function() {
+		// 	mouseDown()
+		// };
+		// document.getElementById("script").onmouseup = function() {
+		// 	mouseUp()
+		// };
+		//
+		// document.getElementById("script").touchstart = function() {
+		// 	mouseDown()
+		// };
+		// document.getElementById("script").touchend = function() {
+		// 	mouseUp()
+		// };
+		//
+		//
+		//
+		// function mouseDown() {
+		// 	accelerate(-0.2);
+		// }
+		//
+		// function mouseUp() {
+		// 	accelerate(0.1);
+		// }
+	</script>
+	<br>
+
+	<!-- <button id="myButton" onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button> //-->
 
 </body>
+
 </html>

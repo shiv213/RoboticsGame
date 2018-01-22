@@ -111,9 +111,11 @@
 				} else if (this.type == "Obstacles") {
 					// make turn rect here
 					ctx.fillStyle = color;
-					// width, height, x, y, randomSize
-					var finalxs = [0, 0, 0, 0];
-					var finalys = [0, 0, 0, 0];
+					// findCoordinatesX(width, height, x, y, randomSize)
+
+
+					var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
+					var finalys = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 
 					// var centerX = [0, 0, 0, 0];
 					// var centerY = [0, 0, 0, 0];
@@ -285,30 +287,56 @@
 			return finaly;
 		}
 
-		function findCoordinates(width, height, x, y, randomSize){
+		function findCoordinatesX(width, height, x, y, randomSize, turnAngle) {
 			var centerX = [0, 0, 0, 0];
 			var centerY = [0, 0, 0, 0];
 
-			centerX[0] = findCenterX(this.width, this.x);
-			centerY[0] = findCenterY(this.height, this.y);
+			centerX[0] = findCenterX(width, x);
+			centerY[0] = findCenterY(height, y);
 			// top left
-			centerX[1] = findCenterX(this.width, this.x + 10);
-			centerY[1] = findCenterY(this.height, this.y);
+			centerX[1] = findCenterX(width, x + 10);
+			centerY[1] = findCenterY(height, y);
 			// bottom left
-			centerX[2] = findCenterX(this.width, this.x);
-			centerY[2] = findCenterY(this.height, this.y + this.randomSize);
+			centerX[2] = findCenterX(width, x);
+			centerY[2] = findCenterY(height, y + randomSize);
 			// bottom right
-			centerX[3] = findCenterX(this.width, this.x + 10);
-			centerY[3] = findCenterY(this.height, this.y + this.randomSize);
+			centerX[3] = findCenterX(width, x + 10);
+			centerY[3] = findCenterY(height, y + randomSize);
 			// m_ are the moved coordiantes to the center
 			var finalxs = [0, 0, 0, 0];
 			var finalys = [0, 0, 0, 0];
 
 			for (var i = 0; i < 4; i++) {
-				finalxs[i] = getFinalX(this.x, this.y, centerX[i], centerY[i], turnAngle);
-				finalys[i] = getFinalY(this.x, this.y, centerX[i], centerY[i], turnAngle);
+				finalxs[i] = getFinalX(x, y, centerX[i], centerY[i], turnAngle);
+				finalys[i] = getFinalY(x, y, centerX[i], centerY[i], turnAngle);
 			}
-			return finalxs
+			return finalxs;
+		}
+
+		function findCoordinatesY(width, height, x, y, randomSize, turnAngle){
+			var centerX = [0, 0, 0, 0];
+			var centerY = [0, 0, 0, 0];
+
+			centerX[0] = findCenterX(width, x);
+			centerY[0] = findCenterY(height, y);
+			// top left
+			centerX[1] = findCenterX(width, x + 10);
+			centerY[1] = findCenterY(height, y);
+			// bottom left
+			centerX[2] = findCenterX(width, x);
+			centerY[2] = findCenterY(height, y + randomSize);
+			// bottom right
+			centerX[3] = findCenterX(width, x + 10);
+			centerY[3] = findCenterY(height, y + randomSize);
+			// m_ are the moved coordiantes to the center
+			var finalxs = [0, 0, 0, 0];
+			var finalys = [0, 0, 0, 0];
+
+			for (var i = 0; i < 4; i++) {
+				finalxs[i] = getFinalX(x, y, centerX[i], centerY[i], turnAngle);
+				finalys[i] = getFinalY(x, y, centerX[i], centerY[i], turnAngle);
+			}
+			return finalys;
 		}
 		// document.getElementById("script").onmousedown = function() {
 		// 	mouseDown()

@@ -9,6 +9,7 @@
 <body onload="startGame()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px;'>
 </canvas>
+<!--
 	<script>
 		(function() {
 			var
@@ -54,6 +55,9 @@
 
 		})();
 	</script>
+-->
+
+
 	<script>
 		window.addEventListener('touchstart', function() {
 			accelerate(-0.3);
@@ -70,12 +74,12 @@
 		function startGame() {
 			myGamePiece = new component(30, 30, "red", 10, 120);
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "Blue", c.width - 100, 30, "text");
+			myScore = new component("15px", "Oswald", "Blue", c.width * 2, 30, "text");
 			myGameArea.start();
 		}
 
 		var myGameArea = {
-			canvas: document.createElement("canvas"),
+			canvas: document.getElementById("c"),
 			start: function() {
 				this.canvas.width = window.innerWidth;
 				this.canvas.height = window.innerHeight;
@@ -191,13 +195,51 @@
 				var myright = this.x + (this.width);
 				var mytop = this.y;
 				var mybottom = this.y + (this.height);
-				var otherleft = otherobj.x;
-				var otherright = otherobj.x + (otherobj.width);
-				var othertop = otherobj.y;
-				var otherbottom = otherobj.y + (otherobj.height);
-				var crash = true;
-				if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
-					crash = false;
+
+				var width = otherobj.width;
+				var height = otherobj.height;
+				var randomSize = otherobj.randomSize;
+				var turnAngle = otherobj.turnAngle;
+				var x = otherobj.x;
+				var y = otherobj.y;
+
+				var finalxs = findCoordinatesX(width, height, x, y, randomSize, turnAngle);
+				var finalys = findCoordinatesY(width, height, x, y, randomSize, turnAngle);
+
+				// var otherleft = otherobj.x;
+				// var otherright = otherobj.x + (otherobj.width);
+				// var othertop = otherobj.y;
+				// var otherbottom = otherobj.y + (otherobj.height);
+				// top right
+				// ctx.moveTo(finalxs[1], finalys[1]);
+				// top left
+				// ctx.lineTo(finalxs[0], finalys[0]);
+				// bottom right
+				// ctx.lineTo(finalxs[2], finalys[2]);
+				// bottom left
+				// ctx.lineTo(finalxs[3], finalys[3]);
+
+				var crash = false;
+				// oriented like this \ with top at top left
+				if ((finalxs[1] > finalxs[2]) && (finalys[1] < finalys[2])){
+					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
+						crash = true;
+					}
+				//oriented like this / with top at top right
+			} else if ((finalxs[1] < finalxs[2]) && (finalys[1] < finalys[2])){
+					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
+						crash = true;
+					}
+				//oriented like this \ with top at bottom right
+			} else if ((finalxs[1] > finalxs[2]) && (finalys[1] > finalys[2])){
+					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
+						crash = true;
+					}
+				//oriented like this / with top at bottom left
+			} else if ((finalxs[1] < finalxs[2]) && (finalys[1] > finalys[2])){
+					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
+						crash = true;
+					}
 				}
 				return crash;
 			}

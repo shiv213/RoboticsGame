@@ -9,7 +9,7 @@
 <body onload="startGame()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px;'>
 </canvas>
-<!--
+	<!--
 	<script>
 		(function() {
 			var
@@ -74,7 +74,7 @@
 		function startGame() {
 			myGamePiece = new component(30, 30, "red", 10, 120);
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "Blue", c.width * 2, 30, "text");
+			myScore = new component("15px", "Oswald", "Blue", (c.width * 2) - (myGameArea.canvas.width * 0.1), 30, "text");
 			myGameArea.start();
 		}
 
@@ -119,28 +119,6 @@
 					var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 					var finalys = findCoordinatesY(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 
-					// var centerX = [0, 0, 0, 0];
-					// var centerY = [0, 0, 0, 0];
-					// // top right
-					// centerX[0] = findCenterX(this.width, this.x);
-					// centerY[0] = findCenterY(this.height, this.y);
-					// // top left
-					// centerX[1] = findCenterX(this.width, this.x + 10);
-					// centerY[1] = findCenterY(this.height, this.y);
-					// // bottom left
-					// centerX[2] = findCenterX(this.width, this.x);
-					// centerY[2] = findCenterY(this.height, this.y + this.randomSize);
-					// // bottom right
-					// centerX[3] = findCenterX(this.width, this.x + 10);
-					// centerY[3] = findCenterY(this.height, this.y + this.randomSize);
-					// // m_ are the moved coordiantes to the center
-					// var finalxs = [0, 0, 0, 0];
-					// var finalys = [0, 0, 0, 0];
-					// for (var i = 0; i < 4; i++) {
-					// 	finalxs[i] = getFinalX(this.x, this.y, centerX[i], centerY[i], turnAngle);
-					// 	finalys[i] = getFinalY(this.x, this.y, centerX[i], centerY[i], turnAngle);
-					// }
-
 					ctx.beginPath();
 					ctx.moveTo(finalxs[1], finalys[1]);
 					ctx.lineTo(finalxs[0], finalys[0]);
@@ -152,23 +130,6 @@
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
 				}
-				// mx = this.x - centerX;
-				// my = this.y - centerY;
-				// newmx = mx * Math.cos(turnAngle) - my * Math.sin(turnAngle);
-				// newmy = mx * Math.sin(turnAngle) + my * Math.cos(turnAngle);
-				// finalx = newmx + centerX;
-				// finaly = newmy + centerY;
-
-				// c2.fillStyle = '#f00';
-				// ctx.beginPath();
-				// ctx.moveTo(finalxs[0], finalys[0]);
-				// ctx.lineTo(finalxs[1], finalys[1]);
-				// ctx.lineTo(finalxs[2], finalys[2]);
-				// ctx.lineTo(finalxs[3], finalys[3]);
-				// ctx.closePath();
-				// ctx.fill();
-
-				// ctx.fillRect(this.x, this.y, this.width, this.height);
 			}
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
@@ -195,6 +156,8 @@
 				var myright = this.x + (this.width);
 				var mytop = this.y;
 				var mybottom = this.y + (this.height);
+				var playerx = [myleft, myright, myright, myleft];
+				var playery = [mytop, mytop, mybottom, mybottom];
 
 				var width = otherobj.width;
 				var height = otherobj.height;
@@ -206,43 +169,55 @@
 				var finalxs = findCoordinatesX(width, height, x, y, randomSize, turnAngle);
 				var finalys = findCoordinatesY(width, height, x, y, randomSize, turnAngle);
 
-				// var otherleft = otherobj.x;
-				// var otherright = otherobj.x + (otherobj.width);
-				// var othertop = otherobj.y;
-				// var otherbottom = otherobj.y + (otherobj.height);
-				// top right
-				// ctx.moveTo(finalxs[1], finalys[1]);
-				// top left
-				// ctx.lineTo(finalxs[0], finalys[0]);
-				// bottom right
-				// ctx.lineTo(finalxs[2], finalys[2]);
-				// bottom left
-				// ctx.lineTo(finalxs[3], finalys[3]);
-
-				var crash = false;
-				// oriented like this \ with top at top left
-				if ((finalxs[1] > finalxs[2]) && (finalys[1] < finalys[2])){
-					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
-						crash = true;
-					}
-				//oriented like this / with top at top right
-			} else if ((finalxs[1] < finalxs[2]) && (finalys[1] < finalys[2])){
-					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
-						crash = true;
-					}
-				//oriented like this \ with top at bottom right
-			} else if ((finalxs[1] > finalxs[2]) && (finalys[1] > finalys[2])){
-					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
-						crash = true;
-					}
-				//oriented like this / with top at bottom left
-			} else if ((finalxs[1] < finalxs[2]) && (finalys[1] > finalys[2])){
-					if (((myleft > finalxs[]) || (myright > finalxs[])) && ((myleft < finalxs[]) || (myright < finalxs[])) && ) {
-						crash = true;
+				// check points from player inside obstacle
+				for (var i = 0; i < 4; i++) {
+					if (isPointInside(playerx[i], playery[i], finalxs, finalys)) {
+						return true;
 					}
 				}
-				return crash;
+
+				// check points from obstacle inside player
+				for (var i = 0; i < 4; i++) {
+					if (isPointInside(finalxs[i], finalys[i], playerx, playery)) {
+						return true;
+					}
+				}
+				return false;
 			}
+		}
+
+		function isPointInside(px, py, rectanglexs, rectangleys) {
+			var intersections = 0;
+			for (var i = 0; i < 4; i++) {
+				var nextPoint = i + 1;
+				if (nextPoint == 4) nextPoint = 0;
+				if (isHoriziontalToPointCrossingLine(px, py, rectanglexs[i], rectangleys[i], rectanglexs[nextPoint], rectangleys[nextPoint])) {
+					intersections++;
+				}
+			}
+			if (intersections % 2 == 1) {
+				return true;
+			}
+			return false;
+		}
+
+		function isHoriziontalToPointCrossingLine(px, py, lx1, ly1, lx2, ly2) {
+			var lineTop = Math.min(ly1, ly2);
+			var lineBottom = Math.max(ly1, ly2);
+			if ((py < lineBottom) && (py > lineTop)) {
+				if (lx2 === lx1) {
+					if (px > lx1) {
+						return true;
+					}
+					return false;
+				}
+				var m = (ly2 - ly1) / (lx2 - lx1);
+				var xOnLine = (py - ly2) / m + lx2;
+				if (px >= xOnLine) {
+					return true;
+				}
+			}
+			return false
 		}
 
 		function updateGameArea() {
@@ -254,16 +229,13 @@
 			}
 			myGameArea.clear();
 			myGameArea.frameNo += 1;
-			speed = 1;
+			speed = updateSpeed();
 			if (myGameArea.frameNo == 1 || everyinterval(300 * speed)) {
 				x = myGameArea.canvas.width;
-				// gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-				// myObstacles.push(new component(10, height, "green", x, 0));
-				// myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
 				var zones = Math.floor((Math.random() * 3))
-				console.log(zones);
+				// console.log(zones);
 				var y = Math.floor(Math.random() * (myGameArea.canvas.height * 0.7));
-				var height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.2);
+				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.2);
 				//height = Math.floor(Math.random()*(locations));
 				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
 				myObstacles.push(new component(10, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, height));
@@ -280,6 +252,15 @@
 			myScore.update();
 			myGamePiece.newPos();
 			myGamePiece.update();
+			cleanObstacles();
+		}
+
+		function cleanObstacles() {
+			for (var i = myObstacles.length - 1; i >= 0; i--) {
+				if (myObstacles[i].x < -myGameArea.canvas.width) {
+					myObstacles.splice(i, 1);
+				}
+			}
 		}
 
 		function everyinterval(n) {
@@ -353,7 +334,7 @@
 			return finalxs;
 		}
 
-		function findCoordinatesY(width, height, x, y, randomSize, turnAngle){
+		function findCoordinatesY(width, height, x, y, randomSize, turnAngle) {
 			var centerX = [0, 0, 0, 0];
 			var centerY = [0, 0, 0, 0];
 
@@ -378,20 +359,11 @@
 			}
 			return finalys;
 		}
-		// document.getElementById("script").onmousedown = function() {
-		// 	mouseDown()
-		// };
-		// document.getElementById("script").onmouseup = function() {
-		// 	mouseUp()
-		// };
-		//
-		// document.getElementById("script").touchstart = function() {
-		// 	mouseDown()
-		// };
-		// document.getElementById("script").touchend = function() {
-		// 	mouseUp()
-		// };
-		//
+
+		function updateSpeed() {
+			return (0.005*score) + 1;
+		}
+
 		function mouseDown() {
 			accelerate(-0.2);
 		}

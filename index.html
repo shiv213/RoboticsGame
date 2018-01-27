@@ -10,11 +10,14 @@
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px;'>
 </canvas>
 	<script>
-		// choose red aliance and blue, make switches oppositie (different patterns maybe (die or loose points))
-		// More frc themed
+		// choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
+		// Slightly more frc themed
 		// Dont forget powerups (boost, force, levitate)
 		// maybe automomous
 		// Collect power cubes for coins
+		// Spend coins (power cubes) on power ups
+		// coins never reset
+		// highscore saves in localStorage
 
 		window.addEventListener('touchstart', function() {
 			accelerate(-0.2);
@@ -28,12 +31,13 @@
 		var myCoins = [];
 		var myScore;
 		var score = 0;
-		var coinScore = 0;
+		var coinScore = localStorage.getItem('coins') || 0;
+		var highScore = localStorage.getItem('highScore') || 0;
 
 		function startGame() {
 			myGamePiece = new component(myGameArea.canvas.height * 0.15, myGameArea.canvas.height * 0.15, "red", myGameArea.canvas.width*0.05, myGameArea.canvas.height * 0.5);
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "Blue", (c.width * 2) - (myGameArea.canvas.width * 0.3), 30, "text");
+			myScore = new component("15px", "Oswald", "Blue", (c.width * 2) - (myGameArea.canvas.width * 0.67), 30, "text");
 			myGameArea.start();
 		}
 
@@ -202,12 +206,15 @@
 			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
 				if (myGamePiece.crashWith(myObstacles[i])) {
+					setTimeout(location.reload(), 500);
+
 					return;
 				}
 			}
 			for (i = 0; i < myCoins.length; i += 1) {
 				if (myGamePiece.crashWithCoin(myCoins[i])) {
 					coinScore++;
+					localStorage.setItem('coins', coinScore);
 				}
 			}
 			myGameArea.clear();
@@ -256,13 +263,19 @@
 			}
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
+
 			}
-			myScore.text = "SCORE: " + score + " COINS: " + coinScore;
+
+			myScore.text = "SCORE: " + score + "  COINS: " + coinScore + "  HIGHSCORE: " + highScore;
 			myScore.update();
 			myGamePiece.newPos();
 			myGamePiece.update();
 			cleanObstacles();
 			cleanCoins();
+			if (highScore < score) {
+				highScore = score;
+				localStorage.setItem('highScore', highScore);
+			}	
 		}
 
 		function cleanObstacles() {
@@ -386,13 +399,19 @@
 			return (0.05 * score) + 1;
 		}
 
-		// function mouseDown() {
-		// 	accelerate(-0.1);
-		// }
-    //
-		// function mouseUp() {
-		// 	accelerate(0.9);
-		// }
+		document.getElementById("script").onmousedown = function() {mouseDown()};
+		document.getElementById("script").onmouseup = function() {mouseUp()};
+
+		document.getElementById("script").touchstart = function() {mouseDown()};
+		document.getElementById("script").touchend = function() {mouseUp()};
+
+		function mouseDown() {
+			accelerate(-0.2);
+		}
+
+		function mouseUp() {
+			accelerate(0.1);
+		}
 	</script>
 	<br>
 </body>

@@ -10,28 +10,30 @@
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px;'>
 </canvas>
 	<script>
-	// choose red aliance and blue, make switches oppositie (different patterns maybe (die or loose points))
-	// More frc themed
-	// Dont forget powerups (boost, force, levitate)
-	// maybe automomous
-	// Collect power cubes for coins
-	
+		// choose red aliance and blue, make switches oppositie (different patterns maybe (die or loose points))
+		// More frc themed
+		// Dont forget powerups (boost, force, levitate)
+		// maybe automomous
+		// Collect power cubes for coins
+
 		window.addEventListener('touchstart', function() {
-			accelerate(-0.3);
+			accelerate(-0.2);
 		});
 		window.addEventListener('touchend', function() {
-			accelerate(0.2);
+			accelerate(0.1);
 		});
 
 		var myGamePiece;
 		var myObstacles = [];
+		var myCoins = [];
 		var myScore;
 		var score = 0;
+		var coinScore = 0;
 
 		function startGame() {
-			myGamePiece = new component(myGameArea.canvas.height * 0.15, myGameArea.canvas.height * 0.15, "red", 10, 120);
+			myGamePiece = new component(myGameArea.canvas.height * 0.15, myGameArea.canvas.height * 0.15, "red", myGameArea.canvas.width*0.05, myGameArea.canvas.height * 0.5);
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "Blue", (c.width * 2) - (myGameArea.canvas.width * 0.1), 30, "text");
+			myScore = new component("15px", "Oswald", "Blue", (c.width * 2) - (myGameArea.canvas.width * 0.3), 30, "text");
 			myGameArea.start();
 		}
 
@@ -81,8 +83,9 @@
 					ctx.lineTo(finalxs[3], finalys[3]);
 					ctx.closePath();
 					ctx.fill();
-				} else if (this.type == "Coin") {
-
+				} else if (this.type == "coin") {
+					ctx.fillStyle = color;
+					ctx.fillRect(this.x, this.y, this.width, this.height);
 				} else {
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -107,6 +110,26 @@
 					this.y = 0;
 					this.gravitySpeed = 0;
 				}
+			}
+			this.crashWithCoin = function(otherobj) {
+				var myleft = this.x;
+				var myright = this.x + (this.width);
+				var mytop = this.y;
+				var mybottom = this.y + (this.height);
+
+				var width = otherobj.width;
+				var height = otherobj.height;
+				var x = otherobj.x;
+				var y = otherobj.y;
+				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
+					for (var i = myCoins.length - 1; i >= 0; i--) {
+						if (myCoins[i].x < myGameArea.canvas.height * 0.15 && myCoins[i].x > 0) {
+							myCoins.splice(i, 1);
+						}
+					}
+					return true;
+				}
+				return false;
 			}
 			this.crashWith = function(otherobj) {
 				var myleft = this.x;
@@ -182,37 +205,78 @@
 					return;
 				}
 			}
+			for (i = 0; i < myCoins.length; i += 1) {
+				if (myGamePiece.crashWithCoin(myCoins[i])) {
+					coinScore++;
+				}
+			}
 			myGameArea.clear();
 			myGameArea.frameNo += 1;
 			speed = updateSpeed();
-			var interval = Math.floor(200 / speed)
-			if (myGameArea.frameNo == 1 || everyinterval(interval)) {
+			//console.log("(myGameArea.frameNo / interval) % 1: " + (myGameArea.frameNo / interval) % 1 + ", everyinterval(interval): " + everyinterval(interval));
+			if (myGameArea.frameNo == 1 || newObstacle()) {
 				x = myGameArea.canvas.width;
-				var zones = Math.floor((Math.random() * 3))
+				var zones = Math.floor((Math.random() * 3));
 				var randomness = (Math.random() * 0.3) + 0.7;
 				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.3);
 				width = myGameArea.canvas.height * 0.05;
 				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
 				myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
+				var chosenNumber = Math.floor(Math.random() * 2);
+				var chosenZone = 0;
+				if (zones == 0) {
+					if (chosenNumber == 0) {
+						chosenZone = 1
+					} else if (chosenNumber == 1) {
+						chosenZone = 2
+					}
+				} else if (zones == 1) {
+					if (chosenNumber == 0) {
+						chosenZone = 0
+					} else if (chosenNumber == 1) {
+						chosenZone = 2
+					}
+				} else if (zones == 2) {
+					if (chosenNumber == 0) {
+						chosenZone = 0
+					} else if (chosenNumber == 1) {
+						chosenZone = 1
+					}
+				}
+				var cy = Math.floor((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
 			}
 			for (i = 0; i < myObstacles.length; i += 1) {
 				myObstacles[i].x += -speed;
 				myObstacles[i].update();
 			}
+			for (i = 0; i < myCoins.length; i += 1) {
+				myCoins[i].x += -speed;
+				myCoins[i].update();
+			}
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
 			}
-			myScore.text = "SCORE: " + score;
+			myScore.text = "SCORE: " + score + " COINS: " + coinScore;
 			myScore.update();
 			myGamePiece.newPos();
 			myGamePiece.update();
 			cleanObstacles();
+			cleanCoins();
 		}
 
 		function cleanObstacles() {
 			for (var i = myObstacles.length - 1; i >= 0; i--) {
 				if (myObstacles[i].x < -myGameArea.canvas.width) {
 					myObstacles.splice(i, 1);
+				}
+			}
+		}
+
+		function cleanCoins() {
+			for (var i = myCoins.length - 1; i >= 0; i--) {
+				if (myCoins[i].x < -myGameArea.canvas.width) {
+					myCoins.splice(i, 1);
 				}
 			}
 		}
@@ -224,11 +288,17 @@
 			return false;
 		}
 
+		function newObstacle() {
+			if (myObstacles[myObstacles.length-1].x < myGameArea.canvas.width*0.6) {
+				return true;
+			}
+			return false;
+		}
+
 		function accelerate(n) {
 			if (!myGameArea.interval) {
 				myGameArea.interval = setInterval(updateGameArea, 15);
 			}
-
 			myGamePiece.gravity = n;
 		}
 
@@ -316,14 +386,15 @@
 			return (0.05 * score) + 1;
 		}
 
-		function mouseDown() {
-			accelerate(-0.2);
-		}
-
-		function mouseUp() {
-			accelerate(0.1);
-		}
+		// function mouseDown() {
+		// 	accelerate(-0.1);
+		// }
+    //
+		// function mouseUp() {
+		// 	accelerate(0.9);
+		// }
 	</script>
 	<br>
 </body>
+
 </html>

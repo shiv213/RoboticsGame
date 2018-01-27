@@ -9,61 +9,12 @@
 <body onload="startGame()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px;'>
 </canvas>
-	<!--
-	<script>
-		(function() {
-			var
-				// Obtain a reference to the canvas element
-				// using its id.
-				htmlCanvas = document.getElementById('c'),
-
-				// Obtain a graphics context on the
-				// canvas element for drawing.
-				context = htmlCanvas.getContext('2d');
-
-			// Start listening to resize events and
-			// draw canvas.
-			initialize();
-
-			function initialize() {
-				// Register an event listener to
-				// call the resizeCanvas() function each time
-				// the window is resized.
-				window.addEventListener('resize', resizeCanvas, false);
-
-				// Draw canvas border for the first time.
-				resizeCanvas();
-			}
-
-			// Display custom canvas.
-			// In this case it's a blue, 5 pixel border that
-			// resizes along with the browser window.
-			function redraw() {
-				context.strokeStyle = 'blue';
-				context.lineWidth = '1';
-				context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
-			}
-
-			// Runs each time the DOM window resize event fires.
-			// Resets the canvas dimensions to match window,
-			// then draws the new borders accordingly.
-			function resizeCanvas() {
-				htmlCanvas.width = window.innerWidth;
-				htmlCanvas.height = window.innerHeight;
-				redraw();
-			}
-
-		})();
-	</script>
--->
-
-
 	<script>
 		window.addEventListener('touchstart', function() {
 			accelerate(-0.3);
 		});
 		window.addEventListener('touchend', function() {
-			accelerate(0.1);
+			accelerate(0.2);
 		});
 
 		var myGamePiece;
@@ -72,7 +23,7 @@
 		var score = 0;
 
 		function startGame() {
-			myGamePiece = new component(30, 30, "red", 10, 120);
+			myGamePiece = new component(myGameArea.canvas.height * 0.15, myGameArea.canvas.height * 0.15, "red", 10, 120);
 			myGamePiece.gravity = 0.05;
 			myScore = new component("15px", "Oswald", "Blue", (c.width * 2) - (myGameArea.canvas.width * 0.1), 30, "text");
 			myGameArea.start();
@@ -113,9 +64,7 @@
 					ctx.fillStyle = color;
 					ctx.fillText(this.text, this.x, this.y);
 				} else if (this.type == "Obstacles") {
-					// make turn rect here
 					ctx.fillStyle = color;
-					// findCoordinatesX(width, height, x, y, randomSize)
 					var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 					var finalys = findCoordinatesY(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 
@@ -126,6 +75,8 @@
 					ctx.lineTo(finalxs[3], finalys[3]);
 					ctx.closePath();
 					ctx.fill();
+				} else if (this.type == "Coin") {
+
 				} else {
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -169,14 +120,12 @@
 				var finalxs = findCoordinatesX(width, height, x, y, randomSize, turnAngle);
 				var finalys = findCoordinatesY(width, height, x, y, randomSize, turnAngle);
 
-				// check points from player inside obstacle
 				for (var i = 0; i < 4; i++) {
 					if (isPointInside(playerx[i], playery[i], finalxs, finalys)) {
 						return true;
 					}
 				}
 
-				// check points from obstacle inside player
 				for (var i = 0; i < 4; i++) {
 					if (isPointInside(finalxs[i], finalys[i], playerx, playery)) {
 						return true;
@@ -221,7 +170,7 @@
 		}
 
 		function updateGameArea() {
-			var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
 				if (myGamePiece.crashWith(myObstacles[i])) {
 					return;
@@ -230,16 +179,15 @@
 			myGameArea.clear();
 			myGameArea.frameNo += 1;
 			speed = updateSpeed();
-			if (myGameArea.frameNo == 1 || everyinterval(300 * speed)) {
+			var interval = Math.floor(200 / speed)
+			if (myGameArea.frameNo == 1 || everyinterval(interval)) {
 				x = myGameArea.canvas.width;
 				var zones = Math.floor((Math.random() * 3))
-				// console.log(zones);
-				var y = Math.floor(Math.random() * (myGameArea.canvas.height * 0.7));
-				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.2);
-				//height = Math.floor(Math.random()*(locations));
+				var randomness = (Math.random() * 0.3) + 0.7;
+				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.3);
+				width = myGameArea.canvas.height * 0.05;
 				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
-				myObstacles.push(new component(10, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, height));
-				// myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+				myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
 			}
 			for (i = 0; i < myObstacles.length; i += 1) {
 				myObstacles[i].x += -speed;
@@ -271,8 +219,6 @@
 		}
 
 		function accelerate(n) {
-			//start around 30
-			// updateRate = (1 / Math.sqrt(myGameArea.frameNo + 1))*30
 			if (!myGameArea.interval) {
 				myGameArea.interval = setInterval(updateGameArea, 15);
 			}
@@ -309,59 +255,59 @@
 		}
 
 		function findCoordinatesX(width, height, x, y, randomSize, turnAngle) {
-			var centerX = [0, 0, 0, 0];
-			var centerY = [0, 0, 0, 0];
+			var centerX = findCenterX(width, x);
+			var centerY = findCenterY(height, y);
+			var xs = [0, 0, 0, 0];
+			var ys = [0, 0, 0, 0];
 
-			centerX[0] = findCenterX(width, x);
-			centerY[0] = findCenterY(height, y);
-			// top left
-			centerX[1] = findCenterX(width, x + 10);
-			centerY[1] = findCenterY(height, y);
-			// bottom left
-			centerX[2] = findCenterX(width, x);
-			centerY[2] = findCenterY(height, y + randomSize);
-			// bottom right
-			centerX[3] = findCenterX(width, x + 10);
-			centerY[3] = findCenterY(height, y + randomSize);
-			// m_ are the moved coordiantes to the center
+			xs[0] = x;
+			xs[1] = x + (width * randomSize);
+			xs[2] = x;
+			xs[3] = x + (width * randomSize);
+
+			ys[0] = y;
+			ys[1] = y;
+			ys[2] = y + (height * randomSize);
+			ys[3] = y + (height * randomSize);
+
 			var finalxs = [0, 0, 0, 0];
 			var finalys = [0, 0, 0, 0];
 
 			for (var i = 0; i < 4; i++) {
-				finalxs[i] = getFinalX(x, y, centerX[i], centerY[i], turnAngle);
-				finalys[i] = getFinalY(x, y, centerX[i], centerY[i], turnAngle);
+				finalxs[i] = getFinalX(xs[i], ys[i], centerX, centerY, turnAngle);
+				finalys[i] = getFinalY(xs[i], ys[i], centerX, centerY, turnAngle);
 			}
 			return finalxs;
 		}
 
 		function findCoordinatesY(width, height, x, y, randomSize, turnAngle) {
-			var centerX = [0, 0, 0, 0];
-			var centerY = [0, 0, 0, 0];
+			var centerX = findCenterX(width, x);
+			var centerY = findCenterY(height, y);
+			var xs = [0, 0, 0, 0];
+			var ys = [0, 0, 0, 0];
 
-			centerX[0] = findCenterX(width, x);
-			centerY[0] = findCenterY(height, y);
-			// top left
-			centerX[1] = findCenterX(width, x + 10);
-			centerY[1] = findCenterY(height, y);
-			// bottom left
-			centerX[2] = findCenterX(width, x);
-			centerY[2] = findCenterY(height, y + randomSize);
-			// bottom right
-			centerX[3] = findCenterX(width, x + 10);
-			centerY[3] = findCenterY(height, y + randomSize);
-			// m_ are the moved coordiantes to the center
+			xs[0] = x;
+			xs[1] = x + (width * randomSize);
+			xs[2] = x;
+			xs[3] = x + (width * randomSize);
+
+			ys[0] = y;
+			ys[1] = y;
+			ys[2] = y + (height * randomSize);
+			ys[3] = y + (height * randomSize);
+
 			var finalxs = [0, 0, 0, 0];
 			var finalys = [0, 0, 0, 0];
 
 			for (var i = 0; i < 4; i++) {
-				finalxs[i] = getFinalX(x, y, centerX[i], centerY[i], turnAngle);
-				finalys[i] = getFinalY(x, y, centerX[i], centerY[i], turnAngle);
+				finalxs[i] = getFinalX(xs[i], ys[i], centerX, centerY, turnAngle);
+				finalys[i] = getFinalY(xs[i], ys[i], centerX, centerY, turnAngle);
 			}
 			return finalys;
 		}
 
 		function updateSpeed() {
-			return (0.005*score) + 1;
+			return (0.05 * score) + 1;
 		}
 
 		function mouseDown() {
@@ -373,9 +319,5 @@
 		}
 	</script>
 	<br>
-
-	<!-- <button id="myButton" onmousedown="accelerate(-0.1)" onmouseup="accelerate(0.1)">ACCELERATE</button> //-->
-
 </body>
-
 </html>

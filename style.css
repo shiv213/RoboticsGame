@@ -5,4 +5,5 @@ html, body {
 	border: 0;
 	overflow: hidden; /*  Disable scrollbars */
 	display: block;  /* No floating content on sides */
+	/*background-image: url("crowd.png");*/
 }

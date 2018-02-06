@@ -6,98 +6,26 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-
 <body onload="mainMenu()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
 	<img id="source" src="crowd.png" style="opacity: 0.0;">
 	<script>
-		// function mainMenu() {
-		// 	var canvas = document.getElementById("c");
-		// 	var context = canvas.getContext("2d");
+		// TODO choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
+		// TODO Slightly more frc themed
+		// TODO Dont forget powerups (boost, force, levitate)
+		// TODO maybe automomous
+		// TODO Collect power cubes for coins
+		// TODO Spend coins (power cubes) on power ups
+		// TODO coins never reset
+		// TODO highscore saves in localStorage
 
-		// 	var width = canvas.getAttribute('width');
-		// 	var height = canvas.getAttribute('height');
-
-		// 	var bgImage = new Image();
-		// 	var logoImage = new Image();
-		// 	var playImage = new Image();
-		// 	var instructImage = new Image();
-		// 	var settingsImage = new Image();
-		// 	var creditsImage = new Image();
-
-		// 	var backgroundY = 0;
-		// 	var speed = 1;
-
-		// 	var buttonX = [192,110,149,160];
-		// 	var buttonY = [100,140,180,220];
-		// 	var buttonWidth = [96,260,182,160];
-		// 	var buttonHeight = [40,40,40,40];
-
-
-
-		// 	var frames = 30;
-		//     var timerId = 0;
-		// 	var fadeId = 0;
-		// 	var time = 0.0;
-		// 	bgImage.onload = function(){
-		// 		context.drawImage(bgImage, 0, backgroundY);
-		// 	};
-		// 	bgImage.src = "Images/Background.png";
-		// 	logoImage.onload = function(){
-		// 		context.drawImage(logoImage, 50, -10);
-		// 	}
-		// 	logoImage.src = "Images/logo.png";
-		// 	playImage.onload = function(){
-		// 		context.drawImage(playImage, buttonX[0], buttonY[0]);
-		// 	}
-		// 	playImage.src = "Images/play.png";
-		// 	instructImage.onload = function(){
-		// 		context.drawImage(instructImage, buttonX[1], buttonY[1]);
-		// 	}
-		// 	instructImage.src = "Images/instructions.png";
-		// 	settingsImage.onload = function(){
-		// 		context.drawImage(settingsImage, buttonX[2], buttonY[2]);
-		// 	}
-		// 	settingsImage.src = "Images/settings.png";
-		// 	creditsImage.onload = function(){
-		// 		context.drawImage(creditsImage, buttonX[3], buttonY[3]);
-		// 	}
-		// 	creditsImage.src = "Images/credits.png";
-
-		// 	function update() {
-		// 		clear();
-		// 		move();
-		// 		draw();
-		// 	}
-		// 	function clear() {
-		// 		context.clearRect(0, 0, width, height);
-		// 	}
-		// 	function move(){
-		// 		backgroundY -= speed;
-		// 		if(backgroundY == -1 * height){
-		// 			backgroundY = 0;
-		// 		}
-		// 	}
-		// 	function draw(){
-		// 		context.drawImage(bgImage, 0, backgroundY);
-		// 		context.drawImage(logoImage, 50,-10);
-		// 		context.drawImage(playImage, buttonX[0], buttonY[0]);
-		// 		context.drawImage(instructImage, buttonX[1], buttonY[1]);
-		// 		context.drawImage(settingsImage, buttonX[2], buttonY[2]);
-		// 		context.drawImage(creditsImage, buttonX[3], buttonY[3]);
-
-		// 	}
-		// }
-
-		// choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
-		// Slightly more frc themed
-		// Dont forget powerups (boost, force, levitate)
-		// maybe automomous
-		// Collect power cubes for coins
-		// Spend coins (power cubes) on power ups
-		// coins never reset
-		// highscore saves in localStorage
+		window.addEventListener('touchstart', function() {
+			accelerate(-0.2);
+		});
+		window.addEventListener('touchend', function() {
+			accelerate(0.1);
+		});
 
 		var myGamePiece;
 		var myObstacles = [];
@@ -107,27 +35,30 @@
 		var score = 0;
 		var coinScore = localStorage.getItem('coins') || 0;
 		var highScore = localStorage.getItem('highScore') || 0;
+
 		var started = 0;
 
 		function mainMenu() {
-			window.addEventListener('touchstart', function() {
-				if (started != 1) {
-					console.log(started);
-					started = 1;
-					startGame();
-				}
-			});
+			// startGame();
 			if (started != 1) {
-				myMainMenu.start();
+				window.addEventListener('touchstart', function() {
+					if(started!=1){
+						console.log(started);
+						started = 1;
+						startGame();
+					}
+				});
 			}
+			myMainMenu.start();
 		}
 
 		var myMainMenu = {
 			canvas: document.getElementById("c"),
 			start: function() {
-				console.log("yea");
+				console.log("Canvas dimensions ",this.canvas.height,this.canvas.width);
 				this.canvas.width = window.innerWidth;
 				this.canvas.height = window.innerHeight;
+				console.log("Window dimensions ",this.canvas.height,this.canvas.width);
 				this.context = this.canvas.getContext("2d");
 				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 				// startGame();
@@ -163,17 +94,15 @@
 
 				var frames = 30;
 				var timerId = 0;
-				if (started != 1) {
-					timerId = setInterval(update, 1000 / frames);
-				}
+				timerId = setInterval(update, 1000 / frames);
 
 				function update() {
 					if (started == 0) {
-						// console.log("esss");
 						clear();
 						move();
 						draw();
 					} else {
+						// clear();
 					}
 				}
 
@@ -204,27 +133,13 @@
 			}
 		}
 
-
-
 		function startGame() {
-
-			window.addEventListener('touchstart', function() {
-				accelerate(-0.2);
-			});
-			window.addEventListener('touchend', function() {
-				accelerate(0.1);
-			});
-
-			var canvas = document.getElementById("c");
-			var context = canvas.getContext("2d");
-
-			var width = canvas.getAttribute('width');
-			var height = canvas.getAttribute('height');
-
+			// canvas: document.getElementById("c");
+			// this.canvas.width = window.innerWidth;
+			// this.canvas.height = window.innerHeight;
 			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5);
-
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.5, 30, "text");
+			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.6, 30, "text");
 			myGameArea.start();
 		}
 
@@ -245,7 +160,6 @@
 			},
 			clear: function() {
 				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-				// context.clearRect(0, 0, width, height);
 			}
 		}
 
@@ -537,7 +451,9 @@
 			if (!myGameArea.interval) {
 				myGameArea.interval = setInterval(updateGameArea, 15);
 			}
-			myGamePiece.gravity = n;
+			if(myGamePiece!==undefined){
+				myGamePiece.gravity = n;
+			}
 		}
 
 		function makeToRad(Angle) {

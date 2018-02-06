@@ -15,10 +15,10 @@
 		// function mainMenu() {
 		// 	var canvas = document.getElementById("c");
 		// 	var context = canvas.getContext("2d");
-			
+
 		// 	var width = canvas.getAttribute('width');
 		// 	var height = canvas.getAttribute('height');
-			
+
 		// 	var bgImage = new Image();
 		// 	var logoImage = new Image();
 		// 	var playImage = new Image();
@@ -28,14 +28,14 @@
 
 		// 	var backgroundY = 0;
 		// 	var speed = 1;
-			
+
 		// 	var buttonX = [192,110,149,160];
 		// 	var buttonY = [100,140,180,220];
 		// 	var buttonWidth = [96,260,182,160];
 		// 	var buttonHeight = [40,40,40,40];
-			
-			
-			
+
+
+
 		// 	var frames = 30;
 		//     var timerId = 0;
 		// 	var fadeId = 0;
@@ -64,7 +64,7 @@
 		// 		context.drawImage(creditsImage, buttonX[3], buttonY[3]);
 		// 	}
 		// 	creditsImage.src = "Images/credits.png";
-			
+
 		// 	function update() {
 		// 		clear();
 		// 		move();
@@ -88,7 +88,7 @@
 		// 		context.drawImage(creditsImage, buttonX[3], buttonY[3]);
 
 		// 	}
-		// }		
+		// }
 
 		// choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
 		// Slightly more frc themed
@@ -110,21 +110,22 @@
 		var started = 0;
 
 		function mainMenu() {
-			if(started != 1) {
-				window.addEventListener('touchstart', function() {
+			window.addEventListener('touchstart', function() {
+				if (started != 1) {
 					console.log(started);
 					started = 1;
 					startGame();
-				});
-			}else {
-				accelerate(-0.2);
+				}
+			});
+			if (started != 1) {
+				myMainMenu.start();
 			}
-			myMainMenu.start();
 		}
 
 		var myMainMenu = {
 			canvas: document.getElementById("c"),
 			start: function() {
+				console.log("yea");
 				this.canvas.width = window.innerWidth;
 				this.canvas.height = window.innerHeight;
 				this.context = this.canvas.getContext("2d");
@@ -132,7 +133,7 @@
 				// startGame();
 				var canvas = document.getElementById("c");
 				var context = canvas.getContext("2d");
-				
+
 				var width = canvas.getAttribute('width');
 				var height = canvas.getAttribute('height');
 
@@ -140,55 +141,60 @@
 				var speed = 6;
 				var bgImage = new Image();
 				bgImage.src = "images/ladder.png";
-				var buttonX = [192,110,149,160];
-				var buttonY = [100,140,180,220];
-				var buttonWidth = [96,260,182,160];
-				var buttonHeight = [40,40,40,40];
+				var buttonX = [192, 110, 149, 160];
+				var buttonY = [100, 140, 180, 220];
+				var buttonWidth = [96, 260, 182, 160];
+				var buttonHeight = [40, 40, 40, 40];
 				var playImage = new Image();
 
 				playImage.src = "images/click to play.png";
-				
-				playImage.onload = function(){
-					if(started == 0){
+
+				playImage.onload = function() {
+					if (started == 0) {
 						context.drawImage(playImage, buttonX[1], buttonY[1]);
 					}
 				}
 
-				bgImage.onload = function()	{
-					if(started == 0){
+				bgImage.onload = function() {
+					if (started == 0) {
 						context.drawImage(bgImage, 0, backgroundY);
 					}
 				};
 
 				var frames = 30;
-				var timerId = 0; 
-				timerId = setInterval(update, 1000/frames);
+				var timerId = 0;
+				if (started != 1) {
+					timerId = setInterval(update, 1000 / frames);
+				}
 
 				function update() {
-					if(started == 0){
+					if (started == 0) {
+						// console.log("esss");
 						clear();
 						move();
 						draw();
-					}else{
-						clear();
+					} else {
 					}
 				}
+
 				function clear() {
 					context.clearRect(0, 0, width, height);
 				}
-				function move(){
+
+				function move() {
 					// DEBUG SMOOTH TRANSITIONS BELOW
 					// console.log(backgroundY)
 					// console.log(-4.2 * height)
 					backgroundY -= speed;
-					if(backgroundY <= -4.28 * height){
+					if (backgroundY <= -4.28 * height) {
 						backgroundY = 0;
 					}
 				}
-				function draw(){
-					if(started == 0){
+
+				function draw() {
+					if (started == 0) {
 						context.drawImage(bgImage, 0, backgroundY);
-						context.drawImage(playImage, width - 644, height - height + height/2 - 79);
+						context.drawImage(playImage, width - 644, height - height + height / 2 - 79);
 					}
 				}
 			},
@@ -198,7 +204,7 @@
 			}
 		}
 
-		
+
 
 		function startGame() {
 
@@ -209,10 +215,16 @@
 				accelerate(0.1);
 			});
 
-			myGamePiece = new component(myGameArea.canvas.height * 0.15, myGameArea.canvas.height * 0.15, "red", myGameArea.canvas.width*0.05, myGameArea.canvas.height * 0.5);
+			var canvas = document.getElementById("c");
+			var context = canvas.getContext("2d");
+
+			var width = canvas.getAttribute('width');
+			var height = canvas.getAttribute('height');
+
+			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5);
 
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "yellow", (c.width * 2) - (myGameArea.canvas.width * 0.67), 30, "text");
+			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.5, 30, "text");
 			myGameArea.start();
 		}
 
@@ -258,7 +270,7 @@
 			this.randomSize = randomSize;
 			this.update = function() {
 				ctx = myGameArea.context;
-				if (this.type == "background"){
+				if (this.type == "background") {
 					// console.log("called in background");
 					bctx = myGameArea.contextb;
 					var bkPic = document.getElementById('source');
@@ -448,8 +460,8 @@
 				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
 			}
 			// console.log(backgrounds[1].x);
-			for (var i = 0; i < backgrounds.length; i++){
-				if (backgrounds[i].x <= 5 && backgrounds.length < 3){
+			for (var i = 0; i < backgrounds.length; i++) {
+				if (backgrounds[i].x <= 5 && backgrounds.length < 3) {
 					// console.log("called yup");
 					backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", myGameArea.canvas.width, 0, "background"));
 				}
@@ -464,7 +476,7 @@
 				myCoins[i].update();
 			}
 			for (i = 0; i < backgrounds.length; i += 1) {
-				backgrounds[i].x += -(speed/2);
+				backgrounds[i].x += -(speed / 2);
 				backgrounds[i].update();
 			}
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
@@ -501,7 +513,7 @@
 
 		function cleanBackground() {
 			for (var i = backgrounds.length - 1; i >= 0; i--) {
-				if (backgrounds[i].x < -myGameArea.canvas.width){
+				if (backgrounds[i].x < -myGameArea.canvas.width) {
 					backgrounds.splice(i, 1);
 				}
 			}

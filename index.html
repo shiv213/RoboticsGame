@@ -19,9 +19,13 @@
 
 		var click = false;
 
+		// myGameArea.canvas.width
+
 		window.addEventListener('touchstart', function() {
+			// var touchPos = stage.getPointerPosition();
+			// if (touchPos.)
 			if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
-				console.log("y: " + myGamePiece.y);
+				// console.log("y: " + myGamePiece.y);
 				var accelRate = myGameArea.canvas.height;
 				accelerate(-0.2);
 			}
@@ -48,6 +52,8 @@
 		var myAuto = [];
 		var backgrounds = [];
 		var myScore;
+		var myBest;
+		var myCoinsNum;
 		var score = 0;
 		var coinScore = localStorage.getItem('coins') || 0;
 		var highScore = localStorage.getItem('highScore') || 0;
@@ -55,7 +61,8 @@
 		var started = 0;
 
 		function mainMenu() {
-			// startGame();
+			loadPowerupImages();
+
 			if (started != 1) {
 				window.addEventListener('touchstart', function() {
 					if (started != 1) {
@@ -152,7 +159,9 @@
 			// this.canvas.height = window.innerHeight;
 			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5);
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.6, 30, "text");
+			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
+			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
+			myCoinsNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
 			myGameArea.start();
 		}
 
@@ -233,6 +242,7 @@
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
 				}
+				drawPowerups();
 			}
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
@@ -246,7 +256,7 @@
 			}
 			this.changeGravity = function() {
 				if (this.gravitySpeed > 0 && click == true) {
-					console.log(this.gravity);
+					// console.log(this.gravity);
 					this.gravity = (0.4 - this.gravitySpeed);
 				} else if (this.gravitySpeed > 0 && click == false) {
 					this.gravity = 0.1;
@@ -481,8 +491,12 @@
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
 			}
-			myScore.text = "SCORE: " + score + "  COINS: " + coinScore + "  HIGHSCORE: " + highScore;
+			myScore.text = "SCORE: " + score;
 			myScore.update();
+			myBest.text = "HIGHSCORE: " + highScore;
+			myBest.update();
+			myCoinsNum.text = "POWER CUBES: " + coinScore;
+			myCoinsNum.update();
 			myGamePiece.newPos();
 			myGamePiece.update();
 			cleanObstacles();
@@ -493,6 +507,59 @@
 				highScore = score;
 				localStorage.setItem('highScore', highScore);
 			}
+
+
+			force();
+			levitate();
+			boost();
+		}
+
+
+		var forceImg = new Image();
+		var levitateImg = new Image();
+		var boostImg = new Image();
+		var pauseImg = new Image();
+
+		function loadPowerupImages() {
+			forceImg.src = "images/force.png";
+			levitateImg.src = "images/levitate.png";
+			boostImg.src = "images/boost.png";
+			pauseImg.src = "images/pause.png";
+		}
+
+		function drawPowerups() {
+			ctx = myGameArea.context;
+			ctx.drawImage(forceImg, 100, 200, myGameArea.canvas.height * 0.1, myGameArea.canvas.height * 0.1);
+			ctx.drawImage(levitateImg, 47, 90, myGameArea.canvas.height * 0.1, myGameArea.canvas.height * 0.1);
+			ctx.drawImage(boostImg, 263, 36, myGameArea.canvas.height * 0.1, myGameArea.canvas.height * 0.1);
+			ctx.drawImage(pauseImg, 32, 222, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
+
+			// ctx.drawImage("/images/force.png", 100, 200, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
+			// // ctx.font = this.width + " " + this.height;
+			// // ctx.fillStyle = color;
+			// // ctx.fillText(this.text, this.x, this.y);
+			// ctx.drawImage("/images/levitate.png", 47, 90, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
+			// // ctx.font = this.width + " " + this.height;
+			// // ctx.fillStyle = color;
+			// // ctx.fillText(this.text, this.x, this.y);
+			// ctx.drawImage("/images/boost.png", 263, 36, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
+			// // ctx.font = this.width + " " + this.height;
+			// // ctx.fillStyle = color;
+			// // ctx.fillText(this.text, this.x, this.y);
+			//
+			// ctx.drawImage("/images/pause.png", 32, 324, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
+		}
+
+		function force() {
+
+		}
+
+		function boost() {
+
+		}
+
+		function levitate() {
+
 		}
 
 		function cleanObstacles() {

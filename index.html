@@ -14,22 +14,38 @@
 		// TODO choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
 		// TODO Slightly more frc themed
 		// TODO Dont forget powerups (boost, force, levitate)
-		// TODO maybe automomous
-		// TODO Collect power cubes for coins
 		// TODO Spend coins (power cubes) on power ups
 		// TODO coins never reset
-		// TODO highscore saves in localStorage
+
+		var click = false;
 
 		window.addEventListener('touchstart', function() {
-			accelerate(-0.2);
-		});
-		window.addEventListener('touchend', function() {
-			accelerate(0.1);
+			if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
+				console.log("y: " + myGamePiece.y);
+				var accelRate = myGameArea.canvas.height;
+				accelerate(-0.2);
+			}
+			click = true;
 		});
 
-		var myGamePiece;
+		window.addEventListener('touchend', function() {
+			accelerate(0.1);
+			click = false;
+		});
+
+		document.addEventListener('contextmenu', function(e) {
+			e.preventDefault();
+		}, false);
+
+		var autoRunning = false;
+		var autoFrame = 0;
+		var myGamePiece = {
+			x: 0,
+			y: 0
+		};
 		var myObstacles = [];
 		var myCoins = [];
+		var myAuto = [];
 		var backgrounds = [];
 		var myScore;
 		var score = 0;
@@ -42,8 +58,7 @@
 			// startGame();
 			if (started != 1) {
 				window.addEventListener('touchstart', function() {
-					if(started!=1){
-						console.log(started);
+					if (started != 1) {
 						started = 1;
 						startGame();
 					}
@@ -55,10 +70,8 @@
 		var myMainMenu = {
 			canvas: document.getElementById("c"),
 			start: function() {
-				console.log("Canvas dimensions ",this.canvas.height,this.canvas.width);
 				this.canvas.width = window.innerWidth;
 				this.canvas.height = window.innerHeight;
-				console.log("Window dimensions ",this.canvas.height,this.canvas.width);
 				this.context = this.canvas.getContext("2d");
 				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 				// startGame();
@@ -155,6 +168,12 @@
 				this.contextb = this.canvasb.getContext("2d");
 				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 				this.frameNo = 0;
+				this.autoSection = 0;
+				this.section = 0;
+
+				this.force = false;
+				this.boost = false;
+				this.levitate = false;
 				backgrounding();
 				updateGameArea();
 			},
@@ -180,6 +199,7 @@
 			this.y = y;
 			this.gravity = 0;
 			this.gravitySpeed = 0;
+			this.otherGravitySpeed = 0;
 			this.turnAngle = turnAngle;
 			this.randomSize = randomSize;
 			this.update = function() {
@@ -218,8 +238,24 @@
 				this.gravitySpeed += this.gravity;
 				this.x += this.speedX;
 				this.y += this.speedY + this.gravitySpeed;
+				this.otherGravitySpeed = this.gravitySpeed;
+				this.endingAccel();
+				this.changeGravity();
 				this.hitBottom();
 				this.hitCelling();
+			}
+			this.changeGravity = function() {
+				if (this.gravitySpeed > 0 && click == true) {
+					console.log(this.gravity);
+					this.gravity = (0.4 - this.gravitySpeed);
+				} else if (this.gravitySpeed > 0 && click == false) {
+					this.gravity = 0.1;
+				}
+			}
+			this.endingAccel = function() {
+				if (myGamePiece.y < myGameArea.canvas.height * 0.63 && this.gravitySpeed <= 0) {
+					this.gravity = 0.1;
+				}
 			}
 			this.hitBottom = function() {
 				var rockbottom = myGameArea.canvas.height - this.height;
@@ -248,6 +284,26 @@
 					for (var i = myCoins.length - 1; i >= 0; i--) {
 						if (myCoins[i].x < myGameArea.canvas.height * 0.15 && myCoins[i].x > 0) {
 							myCoins.splice(i, 1);
+						}
+					}
+					return true;
+				}
+				return false;
+			}
+			this.crashWithAuto = function(otherobj) {
+				var myleft = this.x;
+				var myright = this.x + (this.width);
+				var mytop = this.y;
+				var mybottom = this.y + (this.height);
+
+				var width = otherobj.width;
+				var height = otherobj.height;
+				var x = otherobj.x;
+				var y = otherobj.y;
+				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
+					for (var i = myAuto.length - 1; i >= 0; i--) {
+						if (myAuto[i].x < myGameArea.canvas.height * 0.15 && myAuto[i].x > 0) {
+							myAuto.splice(i, 1);
 						}
 					}
 					return true;
@@ -322,10 +378,9 @@
 		}
 
 		function updateGameArea() {
-			// ctx.drawImage(backgrounds, base_image.width, base_image.height);
 			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
-				if (myGamePiece.crashWith(myObstacles[i])) {
+				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
 					setTimeout(location.reload(), 500);
 					return;
 				}
@@ -336,12 +391,25 @@
 					localStorage.setItem('coins', coinScore);
 				}
 			}
+
+			if (autoRunning == true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
+				endAutoRun();
+			}
+
+			for (i = 0; i < myAuto.length; i += 1) {
+				if (myGamePiece.crashWithAuto(myAuto[i])) {
+					autoRun();
+					myGameArea.section = myGameArea.autoSection;
+					localStorage.setItem('coins', coinScore);
+				}
+			}
 			myGameArea.clear();
 			myGameArea.frameNo += 1;
 			speed = updateSpeed();
 
 			//console.log("(myGameArea.frameNo / interval) % 1: " + (myGameArea.frameNo / interval) % 1 + ", everyinterval(interval): " + everyinterval(interval));
-			if (myGameArea.frameNo == 1 || newObstacle()) {
+			if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
+				myGameArea.section++;
 				x = myGameArea.canvas.width;
 				var zones = Math.floor((Math.random() * 3));
 				var randomness = (Math.random() * 0.3) + 0.7;
@@ -351,27 +419,40 @@
 				myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
 				var chosenNumber = Math.floor(Math.random() * 2);
 				var chosenZone = 0;
+				var otherZone = 0;
 				if (zones == 0) {
 					if (chosenNumber == 0) {
 						chosenZone = 1;
+						otherZone = 2;
 					} else if (chosenNumber == 1) {
 						chosenZone = 2;
+						otherZone = 1;
 					}
 				} else if (zones == 1) {
 					if (chosenNumber == 0) {
 						chosenZone = 0;
+						otherZone = 2;
 					} else if (chosenNumber == 1) {
 						chosenZone = 2;
+						otherZone = 0;
 					}
 				} else if (zones == 2) {
 					if (chosenNumber == 0) {
 						chosenZone = 0;
+						otherZone = 1;
 					} else if (chosenNumber == 1) {
 						chosenZone = 1;
+						otherZone = 0;
 					}
 				}
 				var cy = Math.floor((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+				var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+
 				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
+				var chance = Math.floor(Math.random() * 20) + 1;
+				if (chance == 2) {
+					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "coin"));
+				}
 			}
 			// console.log(backgrounds[1].x);
 			for (var i = 0; i < backgrounds.length; i++) {
@@ -389,6 +470,10 @@
 				myCoins[i].x += -speed;
 				myCoins[i].update();
 			}
+			for (i = 0; i < myAuto.length; i += 1) {
+				myAuto[i].x += -speed;
+				myAuto[i].update();
+			}
 			for (i = 0; i < backgrounds.length; i += 1) {
 				backgrounds[i].x += -(speed / 2);
 				backgrounds[i].update();
@@ -403,6 +488,7 @@
 			cleanObstacles();
 			cleanCoins();
 			cleanBackground();
+			cleanAuto();
 			if (highScore < score) {
 				highScore = score;
 				localStorage.setItem('highScore', highScore);
@@ -425,6 +511,14 @@
 			}
 		}
 
+		function cleanAuto() {
+			for (var i = myAuto.length - 1; i >= 0; i--) {
+				if (myAuto[i].x < -myGameArea.canvas.width) {
+					myAuto.splice(i, 1);
+				}
+			}
+		}
+
 		function cleanBackground() {
 			for (var i = backgrounds.length - 1; i >= 0; i--) {
 				if (backgrounds[i].x < -myGameArea.canvas.width) {
@@ -440,8 +534,8 @@
 			return false;
 		}
 
-		function newObstacle() {
-			if (myObstacles[myObstacles.length - 1].x < myGameArea.canvas.width * 0.6) {
+		function newObstacle(amount) {
+			if (myObstacles[myObstacles.length - 1].x < myGameArea.canvas.width * amount) {
 				return true;
 			}
 			return false;
@@ -451,7 +545,7 @@
 			if (!myGameArea.interval) {
 				myGameArea.interval = setInterval(updateGameArea, 15);
 			}
-			if(myGamePiece!==undefined){
+			if (myGamePiece !== undefined) {
 				myGamePiece.gravity = n;
 			}
 		}
@@ -540,6 +634,14 @@
 			return (0.05 * score) + 1;
 		}
 
+		function autoRun() {
+			autoRunning = true;
+		}
+
+		function endAutoRun() {
+			autoRunning = false;
+		}
+
 		document.getElementById("script").onmousedown = function() {
 			mouseDown()
 		};
@@ -555,7 +657,7 @@
 		};
 
 		function mouseDown() {
-			accelerate(-0.2);
+			accelerate(0.2);
 		}
 
 		function mouseUp() {

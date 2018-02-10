@@ -18,24 +18,125 @@
 		// TODO coins never reset
 
 		var click = false;
+		var touching = [0, 0, 0, 0];
+		window.addEventListener('touchstart', function(evt) {
+			var touches = evt.changedTouches;
+			touching[0] = touches[0].pageX;
+			touching[1] = touches[0].pageY;
+			touching[2] = 0;
+			touching[3] = 0;
 
-		// myGameArea.canvas.width
-
-		window.addEventListener('touchstart', function() {
-			// var touchPos = stage.getPointerPosition();
-			// if (touchPos.)
-			if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
-				// console.log("y: " + myGamePiece.y);
-				var accelRate = myGameArea.canvas.height;
-				accelerate(-0.2);
+			if (checkFirstTouch()) {
+				if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
+					var accelRate = myGameArea.canvas.height;
+					accelerate(-0.2);
+				}
+				click = true;
 			}
-			click = true;
 		});
 
-		window.addEventListener('touchend', function() {
-			accelerate(0.1);
-			click = false;
+		window.addEventListener('touchend', function(evt) {
+			var touches2 = evt.changedTouches;
+			touching[2] = touches2[0].pageX;
+			touching[3] = touches2[0].pageY;
+			if (checkSecondTouch()) {
+				accelerate(0.1);
+				click = false;
+			}
+			checkTouchLocation();
+			touching[0] = 0;
+			touching[1] = 0;
 		});
+
+		function checkFirstTouch() {
+				if (touching[0] >= myGameArea.canvas.width * 0.66 &&
+					touching[0] <= myGameArea.canvas.width * 0.71 &&
+					touching[1] >= myGameArea.canvas.width * 0.02 &&
+					touching[1] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
+					touching[0] <= myGameArea.canvas.width * 0.79 &&
+					touching[1] >= myGameArea.canvas.width * 0.02 &&
+					touching[1] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
+					touching[0] <= myGameArea.canvas.width * 0.87 &&
+					touching[1] >= myGameArea.canvas.width * 0.02 &&
+					touching[1] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
+					touching[0] <= myGameArea.canvas.width * 0.95 &&
+					touching[1] >= myGameArea.canvas.width * 0.02 &&
+					touching[1] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				}
+				return true;
+		}
+
+		function checkSecondTouch() {
+				if (touching[2] >= myGameArea.canvas.width * 0.66 &&
+					touching[2] <= myGameArea.canvas.width * 0.71 &&
+					touching[3] >= myGameArea.canvas.width * 0.02 &&
+					touching[3] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				} else if (touching[2] >= myGameArea.canvas.width * 0.74 &&
+					touching[2] <= myGameArea.canvas.width * 0.79 &&
+					touching[3] >= myGameArea.canvas.width * 0.02 &&
+					touching[3] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				} else if (touching[2] >= myGameArea.canvas.width * 0.82 &&
+					touching[2] <= myGameArea.canvas.width * 0.87 &&
+					touching[3] >= myGameArea.canvas.width * 0.02 &&
+					touching[3] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				} else if (touching[2] >= myGameArea.canvas.width * 0.9 &&
+					touching[2] <= myGameArea.canvas.width * 0.95 &&
+					touching[3] >= myGameArea.canvas.width * 0.02 &&
+					touching[3] <= myGameArea.canvas.width * 0.07) {
+					return false;
+				}
+				return true;
+		}
+
+		function checkTouchLocation() {
+			if (touching[0] >= myGameArea.canvas.width * 0.66 &&
+				touching[0] <= myGameArea.canvas.width * 0.71 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.66 &&
+				touching[2] <= myGameArea.canvas.width * 0.71 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				force();
+			} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
+				touching[0] <= myGameArea.canvas.width * 0.79 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.74 &&
+				touching[2] <= myGameArea.canvas.width * 0.79 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				levitate();
+			} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
+				touching[0] <= myGameArea.canvas.width * 0.87 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.82 &&
+				touching[2] <= myGameArea.canvas.width * 0.87 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				boost();
+			} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
+				touching[0] <= myGameArea.canvas.width * 0.95 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.9 &&
+				touching[2] <= myGameArea.canvas.width * 0.95 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				pause();
+			}
+		}
 
 		document.addEventListener('contextmenu', function(e) {
 			e.preventDefault();
@@ -507,11 +608,6 @@
 				highScore = score;
 				localStorage.setItem('highScore', highScore);
 			}
-
-
-			force();
-			levitate();
-			boost();
 		}
 
 
@@ -529,37 +625,26 @@
 
 		function drawPowerups() {
 			ctx = myGameArea.context;
-			ctx.drawImage(forceImg, 100, 200, myGameArea.canvas.height * 0.1, myGameArea.canvas.height * 0.1);
-			ctx.drawImage(levitateImg, 47, 90, myGameArea.canvas.height * 0.1, myGameArea.canvas.height * 0.1);
-			ctx.drawImage(boostImg, 263, 36, myGameArea.canvas.height * 0.1, myGameArea.canvas.height * 0.1);
-			ctx.drawImage(pauseImg, 32, 222, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
-
-			// ctx.drawImage("/images/force.png", 100, 200, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
-			// // ctx.font = this.width + " " + this.height;
-			// // ctx.fillStyle = color;
-			// // ctx.fillText(this.text, this.x, this.y);
-			// ctx.drawImage("/images/levitate.png", 47, 90, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
-			// // ctx.font = this.width + " " + this.height;
-			// // ctx.fillStyle = color;
-			// // ctx.fillText(this.text, this.x, this.y);
-			// ctx.drawImage("/images/boost.png", 263, 36, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
-			// // ctx.font = this.width + " " + this.height;
-			// // ctx.fillStyle = color;
-			// // ctx.fillText(this.text, this.x, this.y);
-			//
-			// ctx.drawImage("/images/pause.png", 32, 324, myGameArea.context.height * 0.1, myGameArea.context.height * 0.1);
+			ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 		}
 
 		function force() {
-
+			console.log("Force Activated");
 		}
 
 		function boost() {
-
+			console.log("Boost Activated");
 		}
 
 		function levitate() {
+			console.log("Levitate Activated");
+		}
 
+		function pause() {
+			console.log("Pause Activated");
 		}
 
 		function cleanObstacles() {

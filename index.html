@@ -15,26 +15,168 @@
 		// TODO choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
 		// TODO Slightly more frc themed
 		// TODO Dont forget powerups (boost, force, levitate)
-		// TODO maybe automomous
-		// TODO Collect power cubes for coins
 		// TODO Spend coins (power cubes) on power ups
 		// TODO coins never reset
-		// TODO highscore saves in localStorage
 
+		var click = false;
+		var touching = [0, 0, 0, 0];
 
-		window.addEventListener('touchstart', function() {
-			accelerate(-0.2);
+		var forceAction = false;
+		var levitateAction = false;
+		var boostAction = false;
+
+		window.addEventListener('touchstart', function(evt) {
+			var touches = evt.changedTouches;
+			touching[0] = touches[0].pageX;
+			touching[1] = touches[0].pageY;
+			touching[2] = 0;
+			touching[3] = 0;
+
+			if (checkFirstTouch()) {
+				if (levitateAction === false) {
+					if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
+						accelerate(-0.2);
+					}
+					click = true;
+				} else {
+					accelerate(-0.2);
+					click = true;
+				}
+			}
 		});
-		window.addEventListener('touchend', function() {
-			accelerate(0.1);
+
+		window.addEventListener('touchend', function(evt) {
+			var touches2 = evt.changedTouches;
+			touching[2] = touches2[0].pageX;
+			touching[3] = touches2[0].pageY;
+			if (checkSecondTouch()) {
+				accelerate(0.1);
+				click = false;
+			}
+			checkTouchLocation();
+			touching[0] = 0;
+			touching[1] = 0;
 		});
 
+		function checkFirstTouch() {
+			if (touching[0] >= myGameArea.canvas.width * 0.66 &&
+				touching[0] <= myGameArea.canvas.width * 0.71 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
+				touching[0] <= myGameArea.canvas.width * 0.79 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
+				touching[0] <= myGameArea.canvas.width * 0.87 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
+				touching[0] <= myGameArea.canvas.width * 0.95 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			}
+			return true;
+		}
 
-		var myGamePiece;
+		function checkSecondTouch() {
+			if (touching[2] >= myGameArea.canvas.width * 0.66 &&
+				touching[2] <= myGameArea.canvas.width * 0.71 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[2] >= myGameArea.canvas.width * 0.74 &&
+				touching[2] <= myGameArea.canvas.width * 0.79 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[2] >= myGameArea.canvas.width * 0.82 &&
+				touching[2] <= myGameArea.canvas.width * 0.87 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[2] >= myGameArea.canvas.width * 0.9 &&
+				touching[2] <= myGameArea.canvas.width * 0.95 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			}
+			return true;
+		}
+
+		function checkTouchLocation() {
+			if (touching[0] >= myGameArea.canvas.width * 0.66 &&
+				touching[0] <= myGameArea.canvas.width * 0.71 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.66 &&
+				touching[2] <= myGameArea.canvas.width * 0.71 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				force();
+			} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
+				touching[0] <= myGameArea.canvas.width * 0.79 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.74 &&
+				touching[2] <= myGameArea.canvas.width * 0.79 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				levitate();
+			} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
+				touching[0] <= myGameArea.canvas.width * 0.87 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.82 &&
+				touching[2] <= myGameArea.canvas.width * 0.87 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				boost();
+			} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
+				touching[0] <= myGameArea.canvas.width * 0.95 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07 &&
+				touching[2] >= myGameArea.canvas.width * 0.9 &&
+				touching[2] <= myGameArea.canvas.width * 0.95 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				pause();
+			}
+		}
+
+		document.addEventListener('contextmenu', function(e) {
+			e.preventDefault();
+		}, false);
+
+		var autoRunning = false;
+		var autoFrame = 0;
+		var myGamePiece = {
+			x: 0,
+			y: 0
+		};
 		var myObstacles = [];
 		var myCoins = [];
+		var myAuto = [];
 		var backgrounds = [];
 		var myScore;
+		var forceText;
+		var levitateText;
+		var boostText;
+		var autoText;
+		var forceNum;
+		var levitateNum;
+		var boostNum;
+
+		var forceAmount = 1;
+		var levitateAmount = 0;
+		var boostAmount = 5;
+
+		var myBest;
+		var myCoinsNum;
 		var score = 0;
 		var coinScore = localStorage.getItem('coins') || 0;
 		var highScore = localStorage.getItem('highScore') || 0;
@@ -42,11 +184,11 @@
 		var started = 0;
 
 		function mainMenu() {
-			// startGame();
+			loadPowerupImages();
+
 			if (started != 1) {
 				window.addEventListener('touchstart', function() {
-					if(started!=1){
-						console.log(started);
+					if (started != 1) {
 						started = 1;
 						startGame();
 					}
@@ -58,10 +200,8 @@
 		var myMainMenu = {
 			canvas: document.getElementById("c"),
 			start: function() {
-				console.log("Canvas dimensions ",this.canvas.height,this.canvas.width);
 				this.canvas.width = window.innerWidth;
 				this.canvas.height = window.innerHeight;
-				console.log("Window dimensions ",this.canvas.height,this.canvas.width);
 				this.context = this.canvas.getContext("2d");
 				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 				// startGame();
@@ -142,7 +282,23 @@
 			// this.canvas.height = window.innerHeight;
 			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5);
 			myGamePiece.gravity = 0.05;
-			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.6, 30, "text");
+			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
+			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
+			myCoinsNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
+
+			// ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			// ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			// ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			// ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+
+			forceText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.1, "text");
+			levitateText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.1, "text");
+			boostText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.1, "text");
+			autoText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 80, "text");
+
+			forceNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
+			levitateNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
+			boostNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
 			myGameArea.start();
 		}
 
@@ -158,6 +314,15 @@
 				this.contextb = this.canvasb.getContext("2d");
 				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 				this.frameNo = 0;
+				this.autoSection = 0;
+				this.forceSection = 0;
+				this.levitateSection = 0;
+				this.boostSection = 0;
+				this.section = 0;
+
+				this.force = false;
+				this.boost = false;
+				this.levitate = false;
 				backgrounding();
 				updateGameArea();
 			},
@@ -185,6 +350,7 @@
 			this.y = y;
 			this.gravity = 0;
 			this.gravitySpeed = 0;
+			this.otherGravitySpeed = 0;
 			this.turnAngle = turnAngle;
 			this.randomSize = randomSize;
 			this.update = function() {
@@ -279,14 +445,33 @@
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
 				}
+				drawPowerups();
 			}
 
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
 				this.x += this.speedX;
 				this.y += this.speedY + this.gravitySpeed;
+				this.otherGravitySpeed = this.gravitySpeed;
+				if (levitateAction === false) {
+					this.endingAccel();
+					this.changeGravity();
+				}
 				this.hitBottom();
 				this.hitCelling();
+			}
+			this.changeGravity = function() {
+				if (this.gravitySpeed > 0 && click == true) {
+					// console.log(this.gravity);
+					this.gravity = (0.4 - this.gravitySpeed);
+				} else if (this.gravitySpeed > 0 && click == false) {
+					this.gravity = 0.1;
+				}
+			}
+			this.endingAccel = function() {
+				if (myGamePiece.y < myGameArea.canvas.height * 0.63 && this.gravitySpeed <= 0) {
+					this.gravity = 0.1;
+				}
 			}
 			this.hitBottom = function() {
 				var rockbottom = myGameArea.canvas.height - this.height;
@@ -315,6 +500,26 @@
 					for (var i = myCoins.length - 1; i >= 0; i--) {
 						if (myCoins[i].x < myGameArea.canvas.height * 0.15 && myCoins[i].x > 0) {
 							myCoins.splice(i, 1);
+						}
+					}
+					return true;
+				}
+				return false;
+			}
+			this.crashWithAuto = function(otherobj) {
+				var myleft = this.x;
+				var myright = this.x + (this.width);
+				var mytop = this.y;
+				var mybottom = this.y + (this.height);
+
+				var width = otherobj.width;
+				var height = otherobj.height;
+				var x = otherobj.x;
+				var y = otherobj.y;
+				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
+					for (var i = myAuto.length - 1; i >= 0; i--) {
+						if (myAuto[i].x < myGameArea.canvas.height * 0.15 && myAuto[i].x > 0) {
+							myAuto.splice(i, 1);
 						}
 					}
 					return true;
@@ -389,13 +594,13 @@
 		}
 
 		function updateGameArea() {
-			// ctx.drawImage(backgrounds, base_image.width, base_image.height);
 			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
-				if (myGamePiece.crashWith(myObstacles[i])) {
+        
+				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
                     var die_snd = new Audio("sounds/hero-death-00.wav"); // buffers automatically when created
                     die_snd.play();
-				    setTimeout(location.reload(), 500);
+				            setTimeout(location.reload(), 500);
 					return;
 				}
 			}
@@ -404,6 +609,17 @@
                     var coin_snd = new Audio("sounds/collect-point-01.wav"); // buffers automatically when created
                     coin_snd.play();
 					coinScore++;
+					if (boostAction === true) {
+						coinScore++;
+					}
+					localStorage.setItem('coins', coinScore);
+				}
+			}
+
+			for (i = 0; i < myAuto.length; i += 1) {
+				if (myGamePiece.crashWithAuto(myAuto[i])) {
+					autoRun();
+					myGameArea.section = myGameArea.autoSection;
 					localStorage.setItem('coins', coinScore);
 				}
 			}
@@ -412,7 +628,8 @@
 			speed = updateSpeed();
 
 			//console.log("(myGameArea.frameNo / interval) % 1: " + (myGameArea.frameNo / interval) % 1 + ", everyinterval(interval): " + everyinterval(interval));
-			if (myGameArea.frameNo == 1 || newObstacle()) {
+			if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
+				myGameArea.section++;
 				x = myGameArea.canvas.width;
 				var zones = Math.floor((Math.random() * 3));
 				var randomness = (Math.random() * 0.3) + 0.7;
@@ -422,27 +639,40 @@
 				myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
 				var chosenNumber = Math.floor(Math.random() * 2);
 				var chosenZone = 0;
+				var otherZone = 0;
 				if (zones == 0) {
 					if (chosenNumber == 0) {
 						chosenZone = 1;
+						otherZone = 2;
 					} else if (chosenNumber == 1) {
 						chosenZone = 2;
+						otherZone = 1;
 					}
 				} else if (zones == 1) {
 					if (chosenNumber == 0) {
 						chosenZone = 0;
+						otherZone = 2;
 					} else if (chosenNumber == 1) {
 						chosenZone = 2;
+						otherZone = 0;
 					}
 				} else if (zones == 2) {
 					if (chosenNumber == 0) {
 						chosenZone = 0;
+						otherZone = 1;
 					} else if (chosenNumber == 1) {
 						chosenZone = 1;
+						otherZone = 0;
 					}
 				}
 				var cy = Math.floor((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+				var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+
 				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
+				var chance = Math.floor(Math.random() * 20) + 1;
+				if (chance == 2) {
+					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "coin"));
+				}
 			}
 			// console.log(backgrounds[1].x);
 			for (var i = 0; i < backgrounds.length; i++) {
@@ -460,23 +690,140 @@
 				myCoins[i].x += -speed;
 				myCoins[i].update();
 			}
+			for (i = 0; i < myAuto.length; i += 1) {
+				myAuto[i].x += -speed;
+				myAuto[i].update();
+			}
 			for (i = 0; i < backgrounds.length; i += 1) {
 				backgrounds[i].x += -(speed / 2);
 				backgrounds[i].update();
 			}
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
+				if (forceAction === true) {
+					coinScore++;
+				}
 			}
-			myScore.text = "SCORE: " + score + "  COINS: " + coinScore + "  HIGHSCORE: " + highScore;
+
+			if (autoRunning === true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
+				endAutoRun();
+			} else if (autoRunning === true) {
+				console.log("yea");
+        //  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
+				autoText.text = "AUTO TIME: " + (((myGameArea.section - myGameArea.autoSection) - 10) * -1);
+				autoText.update();
+			}
+
+			myScore.text = "SCORE: " + score;
 			myScore.update();
+			myBest.text = "HIGHSCORE: " + highScore;
+			myBest.update();
+			myCoinsNum.text = "POWER CUBES: " + coinScore;
+			myCoinsNum.update();
+
+			forceNum.text = forceAmount;
+			forceNum.update();
+			levitateNum.text = levitateAmount;
+			levitateNum.update();
+			boostNum.text = boostAmount;
+			boostNum.update();
+
 			myGamePiece.newPos();
 			myGamePiece.update();
 			cleanObstacles();
 			cleanCoins();
 			cleanBackground();
+			cleanAuto();
 			if (highScore < score) {
 				highScore = score;
 				localStorage.setItem('highScore', highScore);
+			}
+			if (forceAction === true) {
+				endForceAction();
+			}
+			if (levitateAction === true) {
+				endLevitateAction();
+			}
+			if (boostAction === true) {
+				endBoostAction();
+			}
+		}
+
+
+		var forceImg = new Image();
+		var levitateImg = new Image();
+		var boostImg = new Image();
+		var pauseImg = new Image();
+
+		function loadPowerupImages() {
+			forceImg.src = "images/force.png";
+			levitateImg.src = "images/levitate.png";
+			boostImg.src = "images/boost.png";
+			pauseImg.src = "images/pause.png";
+		}
+
+		function drawPowerups() {
+			ctx = myGameArea.context;
+			ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+		}
+
+		function force() {
+			forceAction = true;
+			myGameArea.section = myGameArea.forceSection;
+			console.log("Force Activated");
+		}
+
+		function levitate() {
+			levitateAction = true;
+			myGameArea.section = myGameArea.levitateSection;
+			console.log("Levitate Activated");
+		}
+
+		function boost() {
+			boostAction = true;
+			myGameArea.section = myGameArea.boostSection;
+			console.log("Boost Activated");
+		}
+
+		function pause() {
+			console.log("Pause Activated");
+		}
+
+		// myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
+		// myScore.text = "SCORE: " + score;
+		// myScore.update();
+		// var forceTime;
+		// var levitateTime;
+		// var boostTime;
+		// var autoTime;
+
+		function endForceAction() {
+			if ((myGameArea.section - myGameArea.forceSection) == 10) {
+				forceAction = false;
+			} else {
+				forceText.text = ((myGameArea.section - myGameArea.forceSection) - 10) * -1;
+				forceText.update();
+			}
+		}
+
+		function endLevitateAction() {
+			if ((myGameArea.section - myGameArea.levitateSection) == 10) {
+				levitateAction = false;
+			} else {
+				levitateText.text = ((myGameArea.section - myGameArea.levitateSection) - 10) * -1;
+				levitateText.update();
+			}
+		}
+
+		function endBoostAction() {
+			if ((myGameArea.section - myGameArea.boostSection) == 10) {
+				boostAction = false;
+			} else {
+				boostText.text = ((myGameArea.section - myGameArea.boostSection) - 10) * -1;
+				boostText.update();
 			}
 		}
 
@@ -496,6 +843,14 @@
 			}
 		}
 
+		function cleanAuto() {
+			for (var i = myAuto.length - 1; i >= 0; i--) {
+				if (myAuto[i].x < -myGameArea.canvas.width) {
+					myAuto.splice(i, 1);
+				}
+			}
+		}
+
 		function cleanBackground() {
 			for (var i = backgrounds.length - 1; i >= 0; i--) {
 				if (backgrounds[i].x < -myGameArea.canvas.width) {
@@ -511,8 +866,8 @@
 			return false;
 		}
 
-		function newObstacle() {
-			if (myObstacles[myObstacles.length - 1].x < myGameArea.canvas.width * 0.6) {
+		function newObstacle(amount) {
+			if (myObstacles[myObstacles.length - 1].x < myGameArea.canvas.width * amount) {
 				return true;
 			}
 			return false;
@@ -522,7 +877,7 @@
 			if (!myGameArea.interval) {
 				myGameArea.interval = setInterval(updateGameArea, 15);
 			}
-			if(myGamePiece!==undefined){
+			if (myGamePiece !== undefined) {
 				myGamePiece.gravity = n;
 			}
 		}
@@ -611,6 +966,14 @@
 			return (0.05 * score) + 1;
 		}
 
+		function autoRun() {
+			autoRunning = true;
+		}
+
+		function endAutoRun() {
+			autoRunning = false;
+		}
+
 		document.getElementById("script").onmousedown = function() {
 			mouseDown()
 		};
@@ -626,7 +989,7 @@
 		};
 
 		function mouseDown() {
-			accelerate(-0.2);
+			accelerate(0.2);
 		}
 
 		function mouseUp() {

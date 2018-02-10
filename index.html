@@ -19,6 +19,11 @@
 
 		var click = false;
 		var touching = [0, 0, 0, 0];
+
+		var forceAction = false;
+		var levitateAction = false;
+		var boostAction = false;
+
 		window.addEventListener('touchstart', function(evt) {
 			var touches = evt.changedTouches;
 			touching[0] = touches[0].pageX;
@@ -27,11 +32,15 @@
 			touching[3] = 0;
 
 			if (checkFirstTouch()) {
-				if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
-					var accelRate = myGameArea.canvas.height;
+				if (levitateAction === false) {
+					if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
+						accelerate(-0.2);
+					}
+					click = true;
+				} else {
 					accelerate(-0.2);
+					click = true;
 				}
-				click = true;
 			}
 		});
 
@@ -49,53 +58,53 @@
 		});
 
 		function checkFirstTouch() {
-				if (touching[0] >= myGameArea.canvas.width * 0.66 &&
-					touching[0] <= myGameArea.canvas.width * 0.71 &&
-					touching[1] >= myGameArea.canvas.width * 0.02 &&
-					touching[1] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
-					touching[0] <= myGameArea.canvas.width * 0.79 &&
-					touching[1] >= myGameArea.canvas.width * 0.02 &&
-					touching[1] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
-					touching[0] <= myGameArea.canvas.width * 0.87 &&
-					touching[1] >= myGameArea.canvas.width * 0.02 &&
-					touching[1] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
-					touching[0] <= myGameArea.canvas.width * 0.95 &&
-					touching[1] >= myGameArea.canvas.width * 0.02 &&
-					touching[1] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				}
-				return true;
+			if (touching[0] >= myGameArea.canvas.width * 0.66 &&
+				touching[0] <= myGameArea.canvas.width * 0.71 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
+				touching[0] <= myGameArea.canvas.width * 0.79 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
+				touching[0] <= myGameArea.canvas.width * 0.87 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
+				touching[0] <= myGameArea.canvas.width * 0.95 &&
+				touching[1] >= myGameArea.canvas.width * 0.02 &&
+				touching[1] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			}
+			return true;
 		}
 
 		function checkSecondTouch() {
-				if (touching[2] >= myGameArea.canvas.width * 0.66 &&
-					touching[2] <= myGameArea.canvas.width * 0.71 &&
-					touching[3] >= myGameArea.canvas.width * 0.02 &&
-					touching[3] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				} else if (touching[2] >= myGameArea.canvas.width * 0.74 &&
-					touching[2] <= myGameArea.canvas.width * 0.79 &&
-					touching[3] >= myGameArea.canvas.width * 0.02 &&
-					touching[3] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				} else if (touching[2] >= myGameArea.canvas.width * 0.82 &&
-					touching[2] <= myGameArea.canvas.width * 0.87 &&
-					touching[3] >= myGameArea.canvas.width * 0.02 &&
-					touching[3] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				} else if (touching[2] >= myGameArea.canvas.width * 0.9 &&
-					touching[2] <= myGameArea.canvas.width * 0.95 &&
-					touching[3] >= myGameArea.canvas.width * 0.02 &&
-					touching[3] <= myGameArea.canvas.width * 0.07) {
-					return false;
-				}
-				return true;
+			if (touching[2] >= myGameArea.canvas.width * 0.66 &&
+				touching[2] <= myGameArea.canvas.width * 0.71 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[2] >= myGameArea.canvas.width * 0.74 &&
+				touching[2] <= myGameArea.canvas.width * 0.79 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[2] >= myGameArea.canvas.width * 0.82 &&
+				touching[2] <= myGameArea.canvas.width * 0.87 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			} else if (touching[2] >= myGameArea.canvas.width * 0.9 &&
+				touching[2] <= myGameArea.canvas.width * 0.95 &&
+				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[3] <= myGameArea.canvas.width * 0.07) {
+				return false;
+			}
+			return true;
 		}
 
 		function checkTouchLocation() {
@@ -153,6 +162,18 @@
 		var myAuto = [];
 		var backgrounds = [];
 		var myScore;
+		var forceText;
+		var levitateText;
+		var boostText;
+		var autoText;
+		var forceNum;
+		var levitateNum;
+		var boostNum;
+
+		var forceAmount = 1;
+		var levitateAmount = 0;
+		var boostAmount = 5;
+
 		var myBest;
 		var myCoinsNum;
 		var score = 0;
@@ -263,6 +284,20 @@
 			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
 			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
 			myCoinsNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
+
+			// ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			// ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			// ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			// ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+
+			forceText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.1, "text");
+			levitateText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.1, "text");
+			boostText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.1, "text");
+			autoText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 80, "text");
+
+			forceNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
+			levitateNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
+			boostNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
 			myGameArea.start();
 		}
 
@@ -279,6 +314,9 @@
 				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 				this.frameNo = 0;
 				this.autoSection = 0;
+				this.forceSection = 0;
+				this.levitateSection = 0;
+				this.boostSection = 0;
 				this.section = 0;
 
 				this.force = false;
@@ -350,8 +388,10 @@
 				this.x += this.speedX;
 				this.y += this.speedY + this.gravitySpeed;
 				this.otherGravitySpeed = this.gravitySpeed;
-				this.endingAccel();
-				this.changeGravity();
+				if (levitateAction === false) {
+					this.endingAccel();
+					this.changeGravity();
+				}
 				this.hitBottom();
 				this.hitCelling();
 			}
@@ -499,12 +539,11 @@
 			for (i = 0; i < myCoins.length; i += 1) {
 				if (myGamePiece.crashWithCoin(myCoins[i])) {
 					coinScore++;
+					if (boostAction === true) {
+						coinScore++;
+					}
 					localStorage.setItem('coins', coinScore);
 				}
-			}
-
-			if (autoRunning == true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
-				endAutoRun();
 			}
 
 			for (i = 0; i < myAuto.length; i += 1) {
@@ -591,13 +630,34 @@
 			}
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
+				if (forceAction === true) {
+					coinScore++;
+				}
 			}
+
+			if (autoRunning === true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
+				endAutoRun();
+			} else if (autoRunning === true) {
+				console.log("yea");
+        //  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
+				autoText.text = "AUTO TIME: " + (((myGameArea.section - myGameArea.autoSection) - 10) * -1);
+				autoText.update();
+			}
+
 			myScore.text = "SCORE: " + score;
 			myScore.update();
 			myBest.text = "HIGHSCORE: " + highScore;
 			myBest.update();
 			myCoinsNum.text = "POWER CUBES: " + coinScore;
 			myCoinsNum.update();
+
+			forceNum.text = forceAmount;
+			forceNum.update();
+			levitateNum.text = levitateAmount;
+			levitateNum.update();
+			boostNum.text = boostAmount;
+			boostNum.update();
+
 			myGamePiece.newPos();
 			myGamePiece.update();
 			cleanObstacles();
@@ -607,6 +667,15 @@
 			if (highScore < score) {
 				highScore = score;
 				localStorage.setItem('highScore', highScore);
+			}
+			if (forceAction === true) {
+				endForceAction();
+			}
+			if (levitateAction === true) {
+				endLevitateAction();
+			}
+			if (boostAction === true) {
+				endBoostAction();
 			}
 		}
 
@@ -632,19 +701,60 @@
 		}
 
 		function force() {
+			forceAction = true;
+			myGameArea.section = myGameArea.forceSection;
 			console.log("Force Activated");
 		}
 
-		function boost() {
-			console.log("Boost Activated");
+		function levitate() {
+			levitateAction = true;
+			myGameArea.section = myGameArea.levitateSection;
+			console.log("Levitate Activated");
 		}
 
-		function levitate() {
-			console.log("Levitate Activated");
+		function boost() {
+			boostAction = true;
+			myGameArea.section = myGameArea.boostSection;
+			console.log("Boost Activated");
 		}
 
 		function pause() {
 			console.log("Pause Activated");
+		}
+
+		// myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
+		// myScore.text = "SCORE: " + score;
+		// myScore.update();
+		// var forceTime;
+		// var levitateTime;
+		// var boostTime;
+		// var autoTime;
+
+		function endForceAction() {
+			if ((myGameArea.section - myGameArea.forceSection) == 10) {
+				forceAction = false;
+			} else {
+				forceText.text = ((myGameArea.section - myGameArea.forceSection) - 10) * -1;
+				forceText.update();
+			}
+		}
+
+		function endLevitateAction() {
+			if ((myGameArea.section - myGameArea.levitateSection) == 10) {
+				levitateAction = false;
+			} else {
+				levitateText.text = ((myGameArea.section - myGameArea.levitateSection) - 10) * -1;
+				levitateText.update();
+			}
+		}
+
+		function endBoostAction() {
+			if ((myGameArea.section - myGameArea.boostSection) == 10) {
+				boostAction = false;
+			} else {
+				boostText.text = ((myGameArea.section - myGameArea.boostSection) - 10) * -1;
+				boostText.update();
+			}
 		}
 
 		function cleanObstacles() {

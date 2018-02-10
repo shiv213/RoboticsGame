@@ -31,8 +31,10 @@
 			touching[1] = touches[0].pageY;
 			touching[2] = 0;
 			touching[3] = 0;
+            // console.log(touches);
 
-			if (checkFirstTouch()) {
+
+            if (checkFirstTouch()) {
 				if (levitateAction === false) {
 					if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
 						accelerate(-0.2);
@@ -419,7 +421,6 @@
 
                     function update() {render(); }
                 // }
-
 					// console.log(finalxs[0], finalys[0]);
 					// console.log(finalxs[1], finalys[1]);
 					// console.log(finalxs[2], finalys[2]);
@@ -708,7 +709,7 @@
 			if (autoRunning === true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
 				endAutoRun();
 			} else if (autoRunning === true) {
-				console.log("yea");
+				// console.log("yea");
         //  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
 				autoText.text = "AUTO TIME: " + (((myGameArea.section - myGameArea.autoSection) - 10) * -1);
 				autoText.update();
@@ -772,24 +773,24 @@
 
 		function force() {
 			forceAction = true;
-			myGameArea.section = myGameArea.forceSection;
-			console.log("Force Activated");
+			myGameArea.forceSection = myGameArea.section;
+			// console.log("Force Activated");
 		}
 
 		function levitate() {
 			levitateAction = true;
-			myGameArea.section = myGameArea.levitateSection;
-			console.log("Levitate Activated");
+			myGameArea.levitateSection = myGameArea.section;
+			// console.log("Levitate Activated");
 		}
 
 		function boost() {
 			boostAction = true;
-			myGameArea.section = myGameArea.boostSection;
-			console.log("Boost Activated");
+			myGameArea.boostSection = myGameArea.section;
+			// console.log("Boost Activated");
 		}
 
 		function pause() {
-			console.log("Pause Activated");
+			// console.log("Pause Activated");
 		}
 
 		// myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");

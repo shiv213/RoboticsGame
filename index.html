@@ -11,6 +11,7 @@
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
 	<img id="source" src="crowd.png" style="opacity: 0.0;">
 	<script>
+
 		// TODO choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
 		// TODO Slightly more frc themed
 		// TODO Dont forget powerups (boost, force, levitate)
@@ -335,6 +336,8 @@
 			backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", 0, 0, "background"));
 			backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", x, 0, "background"));
 		}
+        var img = new Image(); //img.onload = go;
+        img.src = "images/obstaclenew.png";
 
 		function component(width, height, color, x, y, type, turnAngle, randomSize) {
 			this.type = type;
@@ -363,13 +366,74 @@
 					var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 					var finalys = findCoordinatesY(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 
-					ctx.beginPath();
-					ctx.moveTo(finalxs[1], finalys[1]);
-					ctx.lineTo(finalxs[0], finalys[0]);
-					ctx.lineTo(finalxs[2], finalys[2]);
-					ctx.lineTo(finalxs[3], finalys[3]);
-					ctx.closePath();
-					ctx.fill();
+
+                    var me = this,
+                        // stepEl = document.querySelector("input"),
+                        // stepTxt = document.querySelector("span"),
+                        c = document.querySelector("canvas"),
+                        ctx = c.getContext("2d"),
+                        corners = [
+                            {x: finalxs[2], y: finalys[2]},           // ul
+                            {x: finalxs[3], y: finalys[3]},           // ur
+                            {x: finalxs[1], y: finalys[1]},          // br
+                            {x: finalxs[0], y: finalys[0]}           // bl
+                        ],
+                        step = 2.5;                    // resolution
+
+                    update();
+
+                    // render image to quad using current settings
+                    function render() {
+
+                        var p1, p2, p3, p4, y1c, y2c, y1n, y2n,
+                            w = img.width - 1,         // -1 to give room for the "next" points
+                            h = img.height - 1;
+
+                        // ctx.clearRect(0, 0, c.width, c.height);
+
+                        for(y = 0; y < h; y += step) {
+                            for(x = 0; x < w; x += step) {
+                                y1c = lerp(corners[0], corners[3],  y / h);
+                                y2c = lerp(corners[1], corners[2],  y / h);
+                                y1n = lerp(corners[0], corners[3], (y + step) / h);
+                                y2n = lerp(corners[1], corners[2], (y + step) / h);
+
+                                // corners of the new sub-divided cell p1 (ul) -> p2 (ur) -> p3 (br) -> p4 (bl)
+                                p1 = lerp(y1c, y2c,  x / w);
+                                p2 = lerp(y1c, y2c, (x + step) / w);
+                                p3 = lerp(y1n, y2n, (x + step) / w);
+                                p4 = lerp(y1n, y2n,  x / w);
+
+                                ctx.drawImage(img, x, y, step, step,  p1.x, p1.y, // get most coverage for w/h:
+                                    Math.ceil(Math.max(step, Math.abs(p2.x - p1.x), Math.abs(p4.x - p3.x))) + 1,
+                                    Math.ceil(Math.max(step, Math.abs(p1.y - p4.y), Math.abs(p2.y - p3.y))) + 1)
+                            }
+                        }
+                    }
+
+                    function lerp(p1, p2, t) {
+                        return {
+                            x: p1.x + (p2.x - p1.x) * t,
+                            y: p1.y + (p2.y - p1.y) * t}
+                    }
+
+                    function update() {render(); }
+                // }
+
+					// console.log(finalxs[0], finalys[0]);
+					// console.log(finalxs[1], finalys[1]);
+					// console.log(finalxs[2], finalys[2]);
+					// console.log(finalxs[3], finalys[3]);
+					// console.log('-');
+
+					// ctx.beginPath();
+					// ctx.moveTo(finalxs[1], finalys[1]);
+					// ctx.lineTo(finalxs[0], finalys[0]);
+					// ctx.lineTo(finalxs[2], finalys[2]);
+					// ctx.lineTo(finalxs[3], finalys[3]);
+					// ctx.closePath();
+					// ctx.fill();
+
 				} else if (this.type == "coin") {
 					ctx.fillStyle = color;
 					ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -383,6 +447,7 @@
 				}
 				drawPowerups();
 			}
+
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
 				this.x += this.speedX;
@@ -531,13 +596,18 @@
 		function updateGameArea() {
 			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
+        
 				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
-					setTimeout(location.reload(), 500);
+                    var die_snd = new Audio("sounds/hero-death-00.wav"); // buffers automatically when created
+                    die_snd.play();
+				            setTimeout(location.reload(), 500);
 					return;
 				}
 			}
 			for (i = 0; i < myCoins.length; i += 1) {
 				if (myGamePiece.crashWithCoin(myCoins[i])) {
+                    var coin_snd = new Audio("sounds/collect-point-01.wav"); // buffers automatically when created
+                    coin_snd.play();
 					coinScore++;
 					if (boostAction === true) {
 						coinScore++;

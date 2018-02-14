@@ -75,10 +75,21 @@
 			var x = evt.changedTouches[0].pageX;
 			var y = evt.changedTouches[0].pageY;
 			console.log("checking pause buttons ", x, y)
-			if (x > 0 && x < 700 && y > 10 && y < 200) {
+			// xu, xb, yu, yb
+
+			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
+
+			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+			if (x > 0.28 * myGameArea.canvas.width + 40 / 353 * myGameArea.canvas.width * 0.44 &&
+				x < 0.28 * myGameArea.canvas.width + 312 / 353 * myGameArea.canvas.width * 0.44 &&
+				y > 0.22 * myGameArea.canvas.height + 87 / 260 * myGameArea.canvas.height * 0.56 &&
+				y < 0.22 * myGameArea.canvas.height + 133 / 260 * myGameArea.canvas.height * 0.56) {
 				// continueGame();
 				resumeGame();
-			} else if (x > 0 && x < 700 && y > 200 && y < 400) {
+			} else if (x > 0.28 * myGameArea.canvas.width + 90 / 353 * myGameArea.canvas.width * 0.44 &&
+				x < 0.28 * myGameArea.canvas.width + 264 / 353 * myGameArea.canvas.width * 0.44 &&
+				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
+				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
 				// quit game
 				console.log("Quit");
 				setTimeout(location.reload(), 500);
@@ -217,10 +228,10 @@
 				var canvasWidth = myGameArea.canvas.width;
 				var canvasHeight = myGameArea.canvas.height;
 				// button coords [x1, y1, x2, y2]
-				var playButtonCoords = [0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8,
-					0.25 * canvasHeight + 348 / 678 * canvasHeight * 0.5,
-					0.1 * canvasWidth + 795 / 1842 * canvasWidth * 0.8,
-					0.25 * canvasHeight + 640 / 678 * canvasHeight * 0.5
+				var playButtonCoords = [240 / 1920 * canvasWidth,
+					460 / 1080 * canvasHeight,
+					850 / 1920 * canvasWidth,
+					710 / 1080 * canvasHeight
 				];
 				if (x > playButtonCoords[0] && x < playButtonCoords[2] &&
 					y > playButtonCoords[1] && y < playButtonCoords[3]) {
@@ -228,15 +239,38 @@
 					started = 1;
 					startGame();
 				}
-				var storeButtonCoords = [0.1 * canvasWidth + 860 / 1842 * canvasWidth * 0.8,
-					0.25 * canvasHeight + 348 / 678 * canvasHeight * 0.5,
-					0.1 * canvasWidth + 1806 / 1842 * canvasWidth * 0.8,
-					0.25 * canvasHeight + 640 / 678 * canvasHeight * 0.5
+
+				var storeButtonCoords = [910 / 1920 * canvasWidth,
+					460 / 1080 * canvasHeight,
+					1680 / 1920 * canvasWidth,
+					710 / 1080 * canvasHeight
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
 					console.log("STORE button pressed");
 					window.location = "store.html";
+				}
+				// TODO About
+				var storeButtonCoords = [584 / 1920 * canvasWidth,
+					750 / 1080 * canvasHeight,
+					1274 / 1920 * canvasWidth,
+					960 / 1080 * canvasHeight
+				];
+				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
+					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
+					console.log("STORE button pressed");
+					window.location = "about.html";
+				}
+				// TODO Help
+				var storeButtonCoords = [1712 / 1920 * canvasWidth,
+					854 / 1080 * canvasHeight,
+					1888 / 1920 * canvasWidth,
+					1068 / 1080 * canvasHeight
+				];
+				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
+					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
+					console.log("STORE button pressed");
+					window.location = "help.html";
 				}
 			}
 		}
@@ -276,7 +310,7 @@
 				var buttonHeight = [40, 40, 40, 40];
 				var playImage = new Image();
 
-				playImage.src = "images/click to play.png";
+				playImage.src = "images/menu.png";
 
 				var frames = 30;
 				var timerId = 0;
@@ -312,7 +346,7 @@
 					// if (started == 0) {
 					context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
 					context.drawImage(bgImage, 0, backgroundY, width, height * 2);
-					context.drawImage(playImage, width * 0.1, height * 0.25, width * 0.8, height * 0.5);
+					context.drawImage(playImage, 0, 0, width, height);
 				}
 			},
 			clear: function() {
@@ -379,6 +413,14 @@
 		}
 		var img = new Image(); //img.onload = go;
 		img.src = "images/obstaclenew.png";
+		var playerPic = new Image();
+		playerPic.src = "images/robot.png";
+		var autoPic = new Image();
+		autoPic.src = "images/a.png";
+		var powercube = new Image();
+		powercube.src = "images/pc.png";
+		var pauseMenuPic = new Image();
+		pauseMenuPic.src = "images/pauseMenu.png";
 
 		function component(width, height, color, x, y, type, turnAngle, randomSize) {
 			this.type = type;
@@ -407,10 +449,6 @@
 					var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 					var finalys = findCoordinatesY(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
 					var me = this,
-						// stepEl = document.querySelector("input"),
-						// stepTxt = document.querySelector("span"),
-						c = document.querySelector("canvas"),
-						ctx = c.getContext("2d"),
 						corners = [{
 								x: finalxs[2],
 								y: finalys[2]
@@ -428,37 +466,18 @@
 								y: finalys[0]
 							} // bl
 						],
-						step = 2.5; // resolution
+						step = 5; // resolution
 
 					update();
-
 					// render image to quad using current settings
 					function render() {
-
-						var p1, p2, p3, p4, y1c, y2c, y1n, y2n,
-							w = img.width - 1, // -1 to give room for the "next" points
-							h = img.height - 1;
-
-						// ctx.clearRect(0, 0, c.width, c.height);
-
-						for (y = 0; y < h; y += step) {
-							for (x = 0; x < w; x += step) {
-								y1c = lerp(corners[0], corners[3], y / h);
-								y2c = lerp(corners[1], corners[2], y / h);
-								y1n = lerp(corners[0], corners[3], (y + step) / h);
-								y2n = lerp(corners[1], corners[2], (y + step) / h);
-
-								// corners of the new sub-divided cell p1 (ul) -> p2 (ur) -> p3 (br) -> p4 (bl)
-								p1 = lerp(y1c, y2c, x / w);
-								p2 = lerp(y1c, y2c, (x + step) / w);
-								p3 = lerp(y1n, y2n, (x + step) / w);
-								p4 = lerp(y1n, y2n, x / w);
-
-								ctx.drawImage(img, x, y, step, step, p1.x, p1.y, // get most coverage for w/h:
-									Math.ceil(Math.max(step, Math.abs(p2.x - p1.x), Math.abs(p4.x - p3.x))) + 1,
-									Math.ceil(Math.max(step, Math.abs(p1.y - p4.y), Math.abs(p2.y - p3.y))) + 1)
-							}
-						}
+						var centerX = (corners.map(pt => pt.x).reduce((a, b) => (a + b))) / 4,
+							centerY = (corners.map(pt => pt.y).reduce((a, b) => (a + b))) / 4;
+						ctx.save();
+						ctx.translate(centerX, centerY);
+						ctx.rotate(me.turnAngle);
+						ctx.drawImage(img, -me.width / 2, -me.height / 2, me.width, me.height);
+						ctx.restore();
 					}
 
 					function lerp(p1, p2, t) {
@@ -473,15 +492,21 @@
 					}
 
 				} else if (this.type == "coin") {
-					ctx.fillStyle = color;
-					ctx.fillRect(this.x, this.y, this.width, this.height);
-				} else if (this.type == "text") {
+					// ctx.fillStyle = color;
+					//
+					// ctx.fillRect(this.x, this.y, this.width, this.height);
+					ctx.drawImage(powercube, this.x, this.y, this.width, this.height);
+				} else if (this.type == "autoCoinY") {
+
+					ctx.drawImage(autoPic, this.x, this.y, this.width, this.height);
+				}else if (this.type == "text") {
 					ctx.font = this.width + " " + this.height;
 					ctx.fillStyle = color;
 					ctx.fillText(this.text, this.x, this.y);
 				} else {
-					ctx.fillStyle = color;
-					ctx.fillRect(this.x, this.y, this.width, this.height);
+					// ctx.fillStyle = color;
+					// ctx.fillRect(this.x, this.y, this.width, this.height);
+					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
 				}
 				drawPowerups();
 			}
@@ -712,7 +737,7 @@
 				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
 				var chance = Math.floor(Math.random() * 20) + 1;
 				if (chance == 2) {
-					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "coin"));
+					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "autoCoinY"));
 				}
 			}
 			// console.log(backgrounds[1].x);
@@ -836,7 +861,6 @@
 				boostAmount--;
 				localStorage.setItem('boostpowerup', boostAmount);
 			}
-			// console.log("Boost Activated");
 		}
 
 		function pause() {
@@ -855,19 +879,11 @@
 
 		function updatePause() {
 			ctx = myGameArea.context;
-			ctx.fillStyle = "rgba(#868686, 0.3)";
-			// ctx.globalAlpha = 0.2;
-			ctx.fillRect(0, 0, myGameArea.width, myGameArea.height);
-			// ctx.globalAlpha = 1;
-			ctx.fillStyle = "rgb(130, 130, 130)";
-			ctx.fillRect(myGameArea.canvas.width * 0.3, myGameArea.canvas.height * 0.1, myGameArea.canvas.width * 0.4, myGameArea.canvas.height * 0.8);
-
-			ctx.fillStyle = "rgb(170, 170, 170)";
-			ctx.fillRect(myGameArea.canvas.width * 0.35, myGameArea.canvas.height * 0.7, myGameArea.canvas.width * 0.3, myGameArea.canvas.height * 0.1);
-
-			ctx.font = "20px Georgia";
-			ctx.fillText("Hello World!", myGameArea.canvas.width * 0.3, myGameArea.canvas.height * 0.3);
-
+			ctx.fillStyle = "#000000";
+			ctx.globalAlpha = 0.01;
+			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+			ctx.globalAlpha = 1;
+			ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
 		}
 
 		function accelerate(n) {

@@ -11,6 +11,7 @@
   <script>
     var backgroundImage = new Image();
     var ctx;
+    var buttons = [];
 
     function draw() {
       var canvasWidth = window.innerWidth;
@@ -41,7 +42,7 @@
     function setButtons() {
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
-      addButton(382 / 1920 * canvasWidth, 951 / 1080 * canvasHeight, 690 / 1920 * canvasWidth, 1005 / 1080 * canvasHeight, backToMainMenu);
+      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
     }
 
     function checkButtons(evt){

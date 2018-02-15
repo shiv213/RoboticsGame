@@ -676,7 +676,7 @@
 					coin_snd.play();
 					coinScore++;
 					if (boostAction === true) {
-						coinScore++;
+						coinScore+=4;
 					}
 					localStorage.setItem('coins', coinScore);
 				}
@@ -767,7 +767,7 @@
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
 				if (forceAction === true) {
-					coinScore++;
+					score+=4;
 				}
 			}
 

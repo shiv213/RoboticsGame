@@ -26,11 +26,12 @@
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
       ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
-      ctx.font = "20px Georgia";
-      ctx.fillText("Score " + coinScore, canvasWidth * 0.3, canvasHeight * 0.3);
-      ctx.fillText("" + forcePowerups, canvasWidth * 0.5, canvasHeight * 0.63);
-      ctx.fillText("" + levitatePowerups, canvasWidth * 0.5, canvasHeight * 0.71);
-      ctx.fillText("" + boostPowerups, canvasWidth * 0.5, canvasHeight * 0.79);
+      ctx.font = 80 / 1080 * canvasHeight + "px Georgia";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText("" + coinScore, 1140 / 1920 * canvasWidth, 464 / 1080 * canvasHeight);
+      ctx.fillText("" + forcePowerups, 1000 / 1920 * canvasWidth, 612 / 1080 * canvasHeight);
+      ctx.fillText("" + levitatePowerups, 1092 / 1920 * canvasWidth, 716 / 1080 * canvasHeight);
+      ctx.fillText("" + boostPowerups, 1000 / 1920 * canvasWidth, 832 / 1080 * canvasHeight);
     }
 
     function loadBackgroundImage() {
@@ -46,7 +47,7 @@
     }
 
     function buyForce(){
-      console.log("Buy forcew!!!");
+      console.log("Buy force!!!");
       if(coinScore>=priceForce) {
         forcePowerups++;
         coinScore-=priceForce;
@@ -85,14 +86,14 @@
     function addButton(x1,y1,x2,y2,callback){
       buttons.push({x1:x1,y1:y1,x2:x2,y2:y2,callback:callback});
     }
-    
+
     function setButtons() {
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
-      addButton(382 / 1920 * canvasWidth, 642 / 1080 * canvasHeight, 690 / 1920 * canvasWidth, 706 / 1080 * canvasHeight, buyForce);
-      addButton(382 / 1920 * canvasWidth, 724 / 1080 * canvasHeight, 690 / 1920 * canvasWidth, 782 / 1080 * canvasHeight, buyLevitate);
-      addButton(382 / 1920 * canvasWidth, 808 / 1080 * canvasHeight, 690 / 1920 * canvasWidth, 860 / 1080 * canvasHeight, buyBoost);
-      addButton(382 / 1920 * canvasWidth, 951 / 1080 * canvasHeight, 690 / 1920 * canvasWidth, 1005 / 1080 * canvasHeight, backToMainMenu);
+      addButton(596 / 1920 * canvasWidth, 539 / 1080 * canvasHeight, 932 / 1920 * canvasWidth, 619 / 1080 * canvasHeight, buyForce);
+      addButton(505 / 1920 * canvasWidth, 649 / 1080 * canvasHeight, 1022 / 1920 * canvasWidth, 729 / 1080 * canvasHeight, buyLevitate);
+      addButton(593 / 1920 * canvasWidth, 760 / 1080 * canvasHeight, 938 / 1920 * canvasWidth, 840 / 1080 * canvasHeight, buyBoost);
+      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
     }
 
     function checkButtons(evt){

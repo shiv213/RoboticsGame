@@ -9,7 +9,7 @@
 <body onload="init()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
-	<img id="source" src="crowd.png" style="opacity: 0.0;">
+	<img id="source" src="images/background.png" style="opacity: 0.0;">
 	<script>
 		// TODO choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
 		// TODO Slightly more frc themed
@@ -358,7 +358,7 @@
 			window.addEventListener('touchstart', gameTouchStartEventListener);
 			window.addEventListener('touchend', gameTouchEndEventListener);
 
-			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5);
+			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5, "player");
 			myGamePiece.gravity = 0.05;
 			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
 			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
@@ -413,6 +413,8 @@
 		}
 		var img = new Image(); //img.onload = go;
 		img.src = "images/obstaclenew.png";
+		var playerBoosterPic = new Image();
+		playerBoosterPic.src = "images/robotWithBooster.png"
 		var playerPic = new Image();
 		playerPic.src = "images/robot.png";
 		var autoPic = new Image();
@@ -492,18 +494,16 @@
 					}
 
 				} else if (this.type == "coin") {
-					// ctx.fillStyle = color;
-					//
-					// ctx.fillRect(this.x, this.y, this.width, this.height);
 					ctx.drawImage(powercube, this.x, this.y, this.width, this.height);
 				} else if (this.type == "autoCoinY") {
-
 					ctx.drawImage(autoPic, this.x, this.y, this.width, this.height);
-				}else if (this.type == "text") {
+				} else if (this.type == "text") {
 					ctx.font = this.width + " " + this.height;
 					ctx.fillStyle = color;
 					ctx.fillText(this.text, this.x, this.y);
-				} else {
+				} else if (this.type == "playerBooster") {
+					ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
+				}	else if (this.type == "player") {
 					// ctx.fillStyle = color;
 					// ctx.fillRect(this.x, this.y, this.width, this.height);
 					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
@@ -526,9 +526,16 @@
 			this.changeGravity = function() {
 				if (this.gravitySpeed > 0 && click == true) {
 					// console.log(this.gravity);
-					this.gravity = 10 - this.gravitySpeed;
+					this.gravity = (0.4 - this.gravitySpeed);
+					this.type = "playerBooster";
+					this.height = myGameArea.canvas.height * 0.07;
 				} else if (this.gravitySpeed > 0 && click == false) {
 					this.gravity = 0.05;
+					this.type = "player";
+					this.height = myGameArea.canvas.height * 0.06;
+				} else {
+					this.type = "player";
+					this.height = myGameArea.canvas.height * 0.06;
 				}
 			}
 			this.endingAccel = function() {
@@ -676,7 +683,7 @@
 					coin_snd.play();
 					coinScore++;
 					if (boostAction === true) {
-						coinScore+=4;
+						coinScore += 4;
 					}
 					localStorage.setItem('coins', coinScore);
 				}
@@ -767,7 +774,7 @@
 			if (myGameArea.frameNo == 1 || everyinterval(50)) {
 				score += 1;
 				if (forceAction === true) {
-					score+=4;
+					score += 4;
 				}
 			}
 

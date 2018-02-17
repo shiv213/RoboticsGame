@@ -45,10 +45,16 @@
 					if (levitateAction === false) {
 						if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
 							accelerate(-0.2);
+							console.log("in if: " + myGamePiece.type);
+							myGamePiece.type = "playerBooster";
 						}
+						console.log("out if: " + myGamePiece.type);
+						myGamePiece.type = "playerBooster";
 						click = true;
 					} else {
 						accelerate(-0.2);
+						console.log(myGamePiece.type);
+						myGamePiece.type = "playerBooster";
 						click = true;
 					}
 				}
@@ -64,6 +70,7 @@
 			touching[3] = touches2[0].pageY;
 			if (checkSecondTouch()) {
 				accelerate(0.1);
+				myGamePiece.type = "player";
 				click = false;
 			}
 			if (gamePlay == true) checkTouchLocation();
@@ -415,6 +422,8 @@
 		img.src = "images/obstaclenew.png";
 		var playerBoosterPic = new Image();
 		playerBoosterPic.src = "images/robotWithBooster.png"
+		var playerTransparentPic = new Image();
+		playerTransparentPic.src = "images/robotTransparent.png"
 		var playerPic = new Image();
 		playerPic.src = "images/robot.png";
 		var autoPic = new Image();
@@ -503,6 +512,8 @@
 					ctx.fillText(this.text, this.x, this.y);
 				} else if (this.type == "playerBooster") {
 					ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
+				}	else if (this.type == "playerTransparent") {
+					ctx.drawImage(playerTransparentPic, this.x, this.y, this.width, this.height);
 				}	else if (this.type == "player") {
 					// ctx.fillStyle = color;
 					// ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -528,14 +539,13 @@
 					// console.log(this.gravity);
 					this.gravity = (0.4 - this.gravitySpeed);
 					this.type = "playerBooster";
-					this.height = myGameArea.canvas.height * 0.07;
 				} else if (this.gravitySpeed > 0 && click == false) {
 					this.gravity = 0.05;
 					this.type = "player";
-					this.height = myGameArea.canvas.height * 0.06;
+				} else if (click === true) {
+					this.type = "playerBooster";
 				} else {
 					this.type = "player";
-					this.height = myGameArea.canvas.height * 0.06;
 				}
 			}
 			this.endingAccel = function() {
@@ -671,7 +681,8 @@
 				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
 					var die_snd = new Audio("sounds/hero-death-00.wav"); // buffers automatically when created
 					die_snd.play();
-					setTimeout(location.reload(), 500);
+					
+					// setTimeout(location.reload(), 500);
 					// started = 0;
 					// mainMenu();
 					return;
@@ -781,6 +792,7 @@
 			if (autoRunning === true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
 				endAutoRun();
 			} else if (autoRunning === true) {
+				// myGamePiece.type = "playerTransparent";
 				// console.log("yea");
 				//  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
 				autoText.text = "AUTO TIME: " + (((myGameArea.section - myGameArea.autoSection) - 10) * -1);

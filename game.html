@@ -232,9 +232,9 @@
 		var myAuto = [];
 		var backgrounds = [];
 		var myScore;
-		var forceText;
-		var levitateText;
-		var boostText;
+		// var forceText;
+		// var levitateText;
+		// var boostText;
 		var autoText;
 		var forceNum;
 		var levitateNum;
@@ -395,9 +395,9 @@
 			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
 			myCoinsNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
 
-			forceText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.1, "text");
-			levitateText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.1, "text");
-			boostText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.1, "text");
+			// forceText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.1, "text");
+			// levitateText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.1, "text");
+			// boostText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.1, "text");
 			autoText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 80, "text");
 
 			forceNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
@@ -989,28 +989,31 @@
 		function endForceAction() {
 			if ((myGameArea.frameNo - myGameArea.forceSection) == 666) {
 				forceAction = false;
-			} else {
-				forceText.text = Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 3));
-				forceText.update();
 			}
+			// else {
+			// 	forceText.text = Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 3));
+			// 	forceText.update();
+			// }
 		}
 
 		function endLevitateAction() {
 			if ((myGameArea.frameNo - myGameArea.levitateSection) == 666) {
 				levitateAction = false;
-			} else {
-				levitateText.text = Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 3));
-				levitateText.update();
 			}
+			// else {
+			// 	levitateText.text = Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 3));
+			// 	levitateText.update();
+			// }
 		}
 
 		function endBoostAction() {
 			if ((myGameArea.frameNo - myGameArea.boostSection) == 666) {
 				boostAction = false;
-			} else {
-				boostText.text = Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 3));
-				boostText.update();
 			}
+			// else {
+			// 	boostText.text = Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 3));
+			// 	boostText.update();
+			// }
 		}
 
 		function cleanObstacles() {

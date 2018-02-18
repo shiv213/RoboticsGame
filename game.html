@@ -30,11 +30,14 @@
 		var levitateAction = false;
 		var boostAction = false;
 		var pauseAction = false;
+		var gameoverAction = false;
 		var gamePlay = true;
 
 		function gameTouchStartEventListener(evt) {
 			if (pauseAction === true) {
 				checkPauseButtons(evt);
+			} else if (gameoverAction === true) {
+				checkGameoverButtons(evt);
 			} else {
 				var touches = evt.changedTouches;
 				touching[0] = touches[0].pageX;
@@ -63,6 +66,8 @@
 
 		function gameTouchEndEventListener(evt) {
 			if (pauseAction === true) {
+				return;
+			} else if (gameoverAction === true) {
 				return;
 			}
 			var touches2 = evt.changedTouches;
@@ -94,6 +99,25 @@
 				// continueGame();
 				resumeGame();
 			} else if (x > 0.28 * myGameArea.canvas.width + 90 / 353 * myGameArea.canvas.width * 0.44 &&
+				x < 0.28 * myGameArea.canvas.width + 264 / 353 * myGameArea.canvas.width * 0.44 &&
+				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
+				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
+				// quit game
+				console.log("Quit");
+				setTimeout(location.reload(), 500);
+			}
+		}
+
+		function checkGameoverButtons(evt) {
+			var x = evt.changedTouches[0].pageX;
+			var y = evt.changedTouches[0].pageY;
+			// console.log("checking pause buttons ", x, y)
+			// xu, xb, yu, yb
+
+			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
+
+			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+			if (x > 0.28 * myGameArea.canvas.width + 90 / 353 * myGameArea.canvas.width * 0.44 &&
 				x < 0.28 * myGameArea.canvas.width + 264 / 353 * myGameArea.canvas.width * 0.44 &&
 				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
 				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
@@ -365,7 +389,7 @@
 			window.addEventListener('touchstart', gameTouchStartEventListener);
 			window.addEventListener('touchend', gameTouchEndEventListener);
 
-			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.05, myGameArea.canvas.height * 0.5, "player");
+			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
 			myGamePiece.gravity = 0.05;
 			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
 			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
@@ -432,6 +456,8 @@
 		powercube.src = "images/pc.png";
 		var pauseMenuPic = new Image();
 		pauseMenuPic.src = "images/pauseMenu.png";
+		var gameoverPic = new Image();
+		gameoverPic.src = "images/gameover.png";
 
 		function component(width, height, color, x, y, type, turnAngle, randomSize) {
 			this.type = type;
@@ -512,9 +538,9 @@
 					ctx.fillText(this.text, this.x, this.y);
 				} else if (this.type == "playerBooster") {
 					ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
-				}	else if (this.type == "playerTransparent") {
+				} else if (this.type == "playerTransparent") {
 					ctx.drawImage(playerTransparentPic, this.x, this.y, this.width, this.height);
-				}	else if (this.type == "player") {
+				} else if (this.type == "player") {
 					// ctx.fillStyle = color;
 					// ctx.fillRect(this.x, this.y, this.width, this.height);
 					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
@@ -580,7 +606,7 @@
 				var y = otherobj.y;
 				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
 					for (var i = myCoins.length - 1; i >= 0; i--) {
-						if (myCoins[i].x < myGameArea.canvas.height * 0.15 && myCoins[i].x > 0) {
+						if (myCoins[i].x < myGameArea.canvas.width * 0.3 && myCoins[i].x > myGameArea.canvas.width * 0.1) {
 							myCoins.splice(i, 1);
 						}
 					}
@@ -600,7 +626,7 @@
 				var y = otherobj.y;
 				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
 					for (var i = myAuto.length - 1; i >= 0; i--) {
-						if (myAuto[i].x < myGameArea.canvas.height * 0.15 && myAuto[i].x > 0) {
+						if (myAuto[i].x < myGameArea.canvas.width * 0.3 && myAuto[i].x > myGameArea.canvas.width * 0.1) {
 							myAuto.splice(i, 1);
 						}
 					}
@@ -681,7 +707,9 @@
 				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
 					var die_snd = new Audio("sounds/hero-death-00.wav"); // buffers automatically when created
 					die_snd.play();
-					
+
+					GameOverFunction();
+
 					// setTimeout(location.reload(), 500);
 					// started = 0;
 					// mainMenu();
@@ -703,7 +731,7 @@
 			for (i = 0; i < myAuto.length; i += 1) {
 				if (myGamePiece.crashWithAuto(myAuto[i])) {
 					autoRun();
-					myGameArea.section = myGameArea.autoSection;
+					myGameArea.autoSection = myGameArea.frameNo;
 					localStorage.setItem('coins', coinScore);
 				}
 			}
@@ -782,28 +810,28 @@
 				backgrounds[i].x += -(speed / 2);
 				backgrounds[i].update();
 			}
-			if (myGameArea.frameNo == 1 || everyinterval(50)) {
+			if (myGameArea.frameNo == 1 || everyinterval(Math.round(200 / 3))) {
 				score += 1;
 				if (forceAction === true) {
 					score += 4;
 				}
 			}
 
-			if (autoRunning === true && ((myGameArea.section - myGameArea.autoSection) == 10)) {
+			if (autoRunning === true && ((myGameArea.frameNo - myGameArea.autoSection) == 1000)) {
 				endAutoRun();
 			} else if (autoRunning === true) {
 				// myGamePiece.type = "playerTransparent";
 				// console.log("yea");
 				//  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
-				autoText.text = "AUTO TIME: " + (((myGameArea.section - myGameArea.autoSection) - 10) * -1);
+				autoText.text = "AUTO TIME: " + Math.round((((myGameArea.frameNo - myGameArea.autoSection) - 1000) * -1 / 200 / 3));
 				autoText.update();
 			}
 
-			myScore.text = "SCORE: " + score;
+			myScore.text = score + "M";
 			myScore.update();
-			myBest.text = "HIGHSCORE: " + highScore;
+			myBest.text = "BEST: " + highScore;
 			myBest.update();
-			myCoinsNum.text = "POWER CUBES: " + coinScore;
+			myCoinsNum.text = "PC: " + coinScore;
 			myCoinsNum.update();
 
 			forceNum.text = forceAmount;
@@ -838,36 +866,61 @@
 		var levitateImg = new Image();
 		var boostImg = new Image();
 		var pauseImg = new Image();
+		var buttonBackgroundImg = new Image();
+		var buttonBackgroundRedImg = new Image();
 
 		function loadPowerupImages() {
 			forceImg.src = "images/force.png";
 			levitateImg.src = "images/levitate.png";
 			boostImg.src = "images/boost.png";
 			pauseImg.src = "images/pause.png";
+			buttonBackgroundImg.src = "images/buttonBackground.png";
+			buttonBackgroundRedImg.src = "images/buttonBackgroundRed.png";
 		}
 
 		function drawPowerups() {
 			ctx = myGameArea.context;
+			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			if (forceAction === true) {
+				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			}
+			if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 12)) % 2 == 0){
+				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			}
 			ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			if (levitateAction === true) {
+				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			}
+			if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 12)) % 2 == 0){
+				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			}
 			ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			if (boostAction === true) {
+				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			}
+			if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 12)) % 2 == 0){
+				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			}
 			ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 		}
 
 		function force() {
 			if (forceAmount > 0 && forceAction === false) {
 				forceAction = true;
-				myGameArea.forceSection = myGameArea.section;
+				myGameArea.forceSection = myGameArea.frameNo;
 				forceAmount--;
 				localStorage.setItem('forcepowerup', forceAmount);
 			}
-			// console.log("Force Activated");
 		}
 
 		function levitate() {
 			if (levitateAmount > 0 && levitateAction === false) {
 				levitateAction = true;
-				myGameArea.levitateSection = myGameArea.section;
+				myGameArea.levitateSection = myGameArea.frameNo;
 				levitateAmount--;
 				localStorage.setItem('levitatepowerup', levitateAmount);
 			}
@@ -876,7 +929,7 @@
 		function boost() {
 			if (boostAmount > 0 && boostAction === false) {
 				boostAction = true;
-				myGameArea.boostSection = myGameArea.section;
+				myGameArea.boostSection = myGameArea.frameNo;
 				boostAmount--;
 				localStorage.setItem('boostpowerup', boostAmount);
 			}
@@ -886,7 +939,8 @@
 			console.log("pause function");
 			pauseAction = true;
 			clearInterval(myGameArea.interval);
-			myGameArea.interval = setInterval(updatePause, 15);
+			// myGameArea.interval = setInterval(updatePause, 15);
+			updatePause();
 		}
 
 		function resumeGame() {
@@ -899,10 +953,26 @@
 		function updatePause() {
 			ctx = myGameArea.context;
 			ctx.fillStyle = "#000000";
-			ctx.globalAlpha = 0.01;
+			ctx.globalAlpha = 0.4;
 			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 			ctx.globalAlpha = 1;
 			ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+		}
+
+		function GameOverFunction() {
+			// console.log("pause function");
+			gameoverAction = true;
+			clearInterval(myGameArea.interval);
+			updateGameover();
+		}
+
+		function updateGameover() {
+			ctx = myGameArea.context;
+			ctx.fillStyle = "#000000";
+			ctx.globalAlpha = 0.4;
+			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+			ctx.globalAlpha = 1;
+			ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
 		}
 
 		function accelerate(n) {
@@ -911,34 +981,34 @@
 				myGameArea.interval = setInterval(updateGameArea, 15);
 			}
 
-			if (myGamePiece !== undefined && pauseAction === false) {
+			if (myGamePiece !== undefined && pauseAction === false && gameoverAction === false) {
 				myGamePiece.gravity = n;
 			}
 		}
 
 		function endForceAction() {
-			if ((myGameArea.section - myGameArea.forceSection) == 10) {
+			if ((myGameArea.frameNo - myGameArea.forceSection) == 666) {
 				forceAction = false;
 			} else {
-				forceText.text = ((myGameArea.section - myGameArea.forceSection) - 10) * -1;
+				forceText.text = Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 3));
 				forceText.update();
 			}
 		}
 
 		function endLevitateAction() {
-			if ((myGameArea.section - myGameArea.levitateSection) == 10) {
+			if ((myGameArea.frameNo - myGameArea.levitateSection) == 666) {
 				levitateAction = false;
 			} else {
-				levitateText.text = ((myGameArea.section - myGameArea.levitateSection) - 10) * -1;
+				levitateText.text = Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 3));
 				levitateText.update();
 			}
 		}
 
 		function endBoostAction() {
-			if ((myGameArea.section - myGameArea.boostSection) == 10) {
+			if ((myGameArea.frameNo - myGameArea.boostSection) == 666) {
 				boostAction = false;
 			} else {
-				boostText.text = ((myGameArea.section - myGameArea.boostSection) - 10) * -1;
+				boostText.text = Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 3));
 				boostText.update();
 			}
 		}

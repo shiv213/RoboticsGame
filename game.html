@@ -117,10 +117,10 @@
 			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
 
 			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
-			if (x > 0.28 * myGameArea.canvas.width + 90 / 353 * myGameArea.canvas.width * 0.44 &&
-				x < 0.28 * myGameArea.canvas.width + 264 / 353 * myGameArea.canvas.width * 0.44 &&
-				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
-				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
+			if (x > 0.28 * myGameArea.canvas.width + 35 / 353 * myGameArea.canvas.width * 0.44 &&
+				x < 0.28 * myGameArea.canvas.width + 321 / 353 * myGameArea.canvas.width * 0.44 &&
+				y > 0.22 * myGameArea.canvas.height + 174 / 260 * myGameArea.canvas.height * 0.56 &&
+				y < 0.22 * myGameArea.canvas.height + 227 / 260 * myGameArea.canvas.height * 0.56) {
 				// quit game
 				console.log("Quit");
 				setTimeout(location.reload(), 500);
@@ -251,6 +251,7 @@
 		var highScore = localStorage.getItem('highScore') || 0;
 
 		var started = 0;
+		var mute = false;
 
 		function mainMenuTouchEventListener(evt) {
 			if (started != 1) {
@@ -281,7 +282,7 @@
 					console.log("STORE button pressed");
 					window.location = "store.html";
 				}
-				// TODO About
+
 				var storeButtonCoords = [584 / 1920 * canvasWidth,
 					750 / 1080 * canvasHeight,
 					1274 / 1920 * canvasWidth,
@@ -292,7 +293,7 @@
 					console.log("STORE button pressed");
 					window.location = "about.html";
 				}
-				// TODO Help
+
 				var storeButtonCoords = [1712 / 1920 * canvasWidth,
 					854 / 1080 * canvasHeight,
 					1888 / 1920 * canvasWidth,
@@ -302,6 +303,21 @@
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
 					console.log("STORE button pressed");
 					window.location = "help.html";
+				}
+
+				var muteButtonCoords = [37 / 1920 * canvasWidth,
+					838 / 1080 * canvasHeight,
+					213 / 1920 * canvasWidth,
+					1051 / 1080 * canvasHeight
+				];
+				if (x > muteButtonCoords[0] && x < muteButtonCoords[2] &&
+					y > muteButtonCoords[1] && y < muteButtonCoords[3]) {
+					console.log("MUTE button pressed");
+					if (mute === false) {
+						mute = true;
+					} else {
+						mute = false;
+					}
 				}
 			}
 		}
@@ -339,9 +355,10 @@
 				var buttonY = [100, 140, 180, 220];
 				var buttonWidth = [96, 260, 182, 160];
 				var buttonHeight = [40, 40, 40, 40];
-				var playImage = new Image();
-
-				playImage.src = "images/menu.png";
+				var menuUnmutedPic = new Image();
+				menuUnmutedPic.src = "images/menu_unmuted.png";
+				var menuMutedPic = new Image();
+				menuMutedPic.src = "images/menu_muted.png";
 
 				var frames = 30;
 				var timerId = 0;
@@ -349,6 +366,7 @@
 
 				function update() {
 					if (started == 0) {
+						// TODO add mute code here
 						clear();
 						move();
 						draw();
@@ -374,10 +392,13 @@
 				}
 
 				function draw() {
-					// if (started == 0) {
 					context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
 					context.drawImage(bgImage, 0, backgroundY, width, height * 2);
-					context.drawImage(playImage, 0, 0, width, height);
+					if (mute === false) {
+						context.drawImage(menuUnmutedPic, 0, 0, width, height);
+					} else {
+						context.drawImage(menuMutedPic, 0, 0, width, height);
+					}
 				}
 			},
 			clear: function() {
@@ -702,6 +723,7 @@
 		}
 
 		function updateGameArea() {
+			// TODO add mute code here
 			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
 				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
@@ -884,7 +906,7 @@
 			if (forceAction === true) {
 				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 12)) % 2 == 0){
+			if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 12)) % 2 == 0) {
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
 			ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
@@ -892,7 +914,7 @@
 			if (levitateAction === true) {
 				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 12)) % 2 == 0){
+			if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 12)) % 2 == 0) {
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
 			ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
@@ -900,7 +922,7 @@
 			if (boostAction === true) {
 				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 12)) % 2 == 0){
+			if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 12)) % 2 == 0) {
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
 			ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
@@ -973,6 +995,11 @@
 			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 			ctx.globalAlpha = 1;
 			ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+			ctx.font = 20 / 260 * myGameArea.canvas.height * 0.56 + "px Georgia";
+			ctx.fillStyle = "#ffffff";
+			ctx.fillText("" + score, 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("" + highScore, 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 135 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("" + coinScore, 0.28 * myGameArea.canvas.width + 177 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 164 / 260 * myGameArea.canvas.height * 0.56);
 		}
 
 		function accelerate(n) {

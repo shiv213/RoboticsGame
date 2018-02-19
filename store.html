@@ -9,6 +9,7 @@
 <body onload="init()" id="script">
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
+    document.body.requestFullscreen();
     var coinScore = localStorage.getItem('coins') || 0;
     var forcePowerups = localStorage.getItem('forcepowerup') || 0;
     var levitatePowerups = localStorage.getItem('levitatepowerup') || 0;

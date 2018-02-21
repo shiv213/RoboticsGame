@@ -9,38 +9,78 @@
 <body onload="init()" id="script">
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
+    var mute = localStorage.getItem('muteState') || false;
+
+    if (mute === true) {
+      // TODO add mute
+    } else if (mute === false) {
+      // TODO add mute
+    }
+
     var backgroundImage = new Image();
+    var qrCodeEtherImage = new Image();
+    var qrCodeMoneroImage = new Image();
+    var qrCodeBitcoinImage = new Image();
+    var xImage = new Image();
     var ctx;
     var buttons = [];
 
-    function draw() {
-      var canvasWidth = window.innerWidth;
-      var canvasHeight = window.innerHeight;
-      ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
-    }
-
-    function loadBackgroundImage() {
+    function draw(type) {
       var canvas = document.getElementById("c");
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      console.log("loading store background");
       backgroundImage.src = "images/donate.png";
       backgroundImage.onload = function() {
-        draw();
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      }
+      if (type === "qrCodeEther") {
+        qrCodeEtherImage.src = "images/qrCodeEther.png";
+        qrCodeEtherImage.onload = function() {
+          ctx.drawImage(qrCodeEtherImage, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
+        }
+        xImage.src = "images/x.png";
+        xImage.onload = function() {
+          ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
+        }
+      } else if (type === "qrCodeMonero") {
+        qrCodeMoneroImage.src = "images/qrCodeMonero.png";
+        qrCodeMoneroImage.onload = function() {
+          ctx.drawImage(qrCodeMoneroImage, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
+        }
+        xImage.src = "images/x.png";
+        xImage.onload = function() {
+          ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
+        }
+      } else if (type === "qrCodeBitcoin") {
+        qrCodeBitcoinImage.src = "images/qrCodeBitcoin.png";
+        qrCodeBitcoinImage.onload = function() {
+          ctx.drawImage(qrCodeBitcoinImage, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
+        }
+        xImage.src = "images/x.png";
+        xImage.onload = function() {
+          ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
+        }
       }
     }
 
     function goToDonate() {
-        window.location = "https://www.technotitans.org/donate.html";
+      window.location = "https://www.technotitans.org/donate.html";
     }
 
-    function backToMainMenu(){
+    function backToMainMenu() {
       window.location = "about.html";
     }
 
-    function addButton(x1,y1,x2,y2,callback){
-      buttons.push({x1:x1,y1:y1,x2:x2,y2:y2,callback:callback});
+    function addButton(x1, y1, x2, y2, callback, param) {
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback,
+        param: param
+      });
     }
 
     function setButtons() {
@@ -48,21 +88,26 @@
       var canvasHeight = window.innerHeight;
       addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
       addButton(118 / 1920 * canvasWidth, 315 / 1080 * canvasHeight, 352 / 1920 * canvasWidth, 373 / 1080 * canvasHeight, goToDonate);
+
+      addButton(1667 / 1920 * canvasWidth, 512 / 1080 * canvasHeight, 1817 / 1920 * canvasWidth, 662 / 1080 * canvasHeight, draw, "qrCodeEther");
+      addButton(1667 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1817 / 1920 * canvasWidth, 824 / 1080 * canvasHeight, draw, "qrCodeMonero");
+      addButton(1667 / 1920 * canvasWidth, 838 / 1080 * canvasHeight, 1817 / 1920 * canvasWidth, 988 / 1080 * canvasHeight, draw, "qrCodeBitcoin");
+      addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw);
     }
 
-    function checkButtons(evt){
-			var x = evt.changedTouches[0].pageX;
-			var y = evt.changedTouches[0].pageY;
-      for(var i=0;i<buttons.length;i++){
+    function checkButtons(evt) {
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
-        if(x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2){
-          b.callback();
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+          b.callback(b.param);
         }
       }
     }
 
     function init() {
-      loadBackgroundImage();
+      draw();
       setButtons();
       window.addEventListener('touchstart', checkButtons);
     }

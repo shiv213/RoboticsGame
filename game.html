@@ -11,12 +11,6 @@
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
 	<img id="source" src="images/background.png" style="opacity: 0.0;">
 	<script>
-		// TODO choose red aliance and blue, make switches opposite (different patterns maybe (die or loose points))
-		// TODO Slightly more frc themed
-		// TODO Dont forget powerups (boost, force, levitate)
-		// TODO Spend coins (power cubes) on power ups
-		// TODO coins never reset
-
 		var loadImageProcessing = false;
 
 		function init() {
@@ -48,15 +42,12 @@
 					if (levitateAction === false) {
 						if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
 							accelerate(-0.2);
-							console.log("in if: " + myGamePiece.type);
 							myGamePiece.type = "playerBooster";
 						}
-						console.log("out if: " + myGamePiece.type);
 						myGamePiece.type = "playerBooster";
 						click = true;
 					} else {
 						accelerate(-0.2);
-						console.log(myGamePiece.type);
 						myGamePiece.type = "playerBooster";
 						click = true;
 					}
@@ -86,10 +77,7 @@
 		function checkPauseButtons(evt) {
 			var x = evt.changedTouches[0].pageX;
 			var y = evt.changedTouches[0].pageY;
-			console.log("checking pause buttons ", x, y)
 			// xu, xb, yu, yb
-
-			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
 
 			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
 			if (x > 0.28 * myGameArea.canvas.width + 40 / 353 * myGameArea.canvas.width * 0.44 &&
@@ -103,7 +91,6 @@
 				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
 				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
 				// quit game
-				console.log("Quit");
 				setTimeout(location.reload(), 500);
 			}
 		}
@@ -111,7 +98,6 @@
 		function checkGameoverButtons(evt) {
 			var x = evt.changedTouches[0].pageX;
 			var y = evt.changedTouches[0].pageY;
-			// console.log("checking pause buttons ", x, y)
 			// xu, xb, yu, yb
 
 			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
@@ -122,7 +108,6 @@
 				y > 0.22 * myGameArea.canvas.height + 174 / 260 * myGameArea.canvas.height * 0.56 &&
 				y < 0.22 * myGameArea.canvas.height + 227 / 260 * myGameArea.canvas.height * 0.56) {
 				// quit game
-				console.log("Quit");
 				setTimeout(location.reload(), 500);
 			}
 		}
@@ -232,10 +217,6 @@
 		var myAuto = [];
 		var backgrounds = [];
 		var myScore;
-		// var forceText;
-		// var levitateText;
-		// var boostText;
-		var autoText;
 		var forceNum;
 		var levitateNum;
 		var boostNum;
@@ -251,7 +232,18 @@
 		var highScore = localStorage.getItem('highScore') || 0;
 
 		var started = 0;
-		var mute = false;
+
+		var mute = localStorage.getItem('muteState') || false;
+
+		function changeMuteState() {
+			if (mute === true) {
+        // TODO add mute
+				localStorage.setItem('muteState', true);
+			} else if (mute === false){
+				// TODO add mute
+				localStorage.setItem('muteState', false);
+			}
+		}
 
 		function mainMenuTouchEventListener(evt) {
 			if (started != 1) {
@@ -279,7 +271,6 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					console.log("STORE button pressed");
 					window.location = "store.html";
 				}
 
@@ -290,7 +281,6 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					console.log("STORE button pressed");
 					window.location = "about.html";
 				}
 
@@ -301,7 +291,6 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					console.log("STORE button pressed");
 					window.location = "help.html";
 				}
 
@@ -312,11 +301,12 @@
 				];
 				if (x > muteButtonCoords[0] && x < muteButtonCoords[2] &&
 					y > muteButtonCoords[1] && y < muteButtonCoords[3]) {
-					console.log("MUTE button pressed");
 					if (mute === false) {
 						mute = true;
+						changeMuteState();
 					} else {
 						mute = false;
+						changeMuteState();
 					}
 				}
 			}
@@ -378,9 +368,6 @@
 				}
 
 				function move() {
-					// DEBUG SMOOTH TRANSITIONS BELOW
-					// console.log(backgroundY)
-					// console.log(-4.2 * height)
 					backgroundY += speed;
 					backgroundY2 += speed;
 					if (backgroundY >= height) {
@@ -412,14 +399,11 @@
 
 			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
 			myGamePiece.gravity = 0.05;
+
+			//TODO change font here
 			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
 			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
 			myCoinsNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
-
-			// forceText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.1, "text");
-			// levitateText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.1, "text");
-			// boostText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.1, "text");
-			autoText = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 80, "text");
 
 			forceNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
 			levitateNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
@@ -467,6 +451,8 @@
 		img.src = "images/obstaclenew.png";
 		var playerBoosterPic = new Image();
 		playerBoosterPic.src = "images/robotWithBooster.png"
+		var playerBoosterTransparentPic = new Image();
+		playerBoosterTransparentPic.src = "images/robotWithBoosterTransparent.png";
 		var playerTransparentPic = new Image();
 		playerTransparentPic.src = "images/robotTransparent.png"
 		var playerPic = new Image();
@@ -480,728 +466,732 @@
 		var gameoverPic = new Image();
 		gameoverPic.src = "images/gameover.png";
 
-		function component(width, height, color, x, y, type, turnAngle, randomSize) {
-			this.type = type;
-			this.score = 0;
-			this.width = width;
-			this.height = height;
-			this.speedX = 0;
-			this.speedY = 0;
-			this.x = x;
-			this.y = y;
-			this.gravity = 0;
-			this.gravitySpeed = 0;
-			this.otherGravitySpeed = 0;
-			this.turnAngle = turnAngle;
-			this.randomSize = randomSize;
-			this.update = function() {
-				ctx = myGameArea.context;
-				if (this.type == "background") {
-					// console.log("called in background");
-					bctx = myGameArea.contextb;
-					var bkPic = document.getElementById('source');
-					bctx.drawImage(bkPic, this.x, this.y, this.width, this.height);
-					// ctx.drawImage(color, this.x, this.y, this.width, this.height);
-				} else if (this.type == "Obstacles") {
-					ctx.fillStyle = color;
-					var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
-					var finalys = findCoordinatesY(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
-					var me = this,
-						corners = [{
-								x: finalxs[2],
-								y: finalys[2]
-							}, // ul
-							{
-								x: finalxs[3],
-								y: finalys[3]
-							}, // ur
-							{
-								x: finalxs[1],
-								y: finalys[1]
-							}, // br
-							{
-								x: finalxs[0],
-								y: finalys[0]
-							} // bl
-						],
-						step = 5; // resolution
-
-					update();
-					// render image to quad using current settings
-					function render() {
-						var centerX = (corners.map(pt => pt.x).reduce((a, b) => (a + b))) / 4,
-							centerY = (corners.map(pt => pt.y).reduce((a, b) => (a + b))) / 4;
-						ctx.save();
-						ctx.translate(centerX, centerY);
-						ctx.rotate(me.turnAngle);
-						ctx.drawImage(img, -me.width / 2, -me.height / 2, me.width, me.height);
-						ctx.restore();
-					}
-
-					function lerp(p1, p2, t) {
-						return {
-							x: p1.x + (p2.x - p1.x) * t,
-							y: p1.y + (p2.y - p1.y) * t
-						}
-					}
-
-					function update() {
-						render();
-					}
-
-				} else if (this.type == "coin") {
-					ctx.drawImage(powercube, this.x, this.y, this.width, this.height);
-				} else if (this.type == "autoCoinY") {
-					ctx.drawImage(autoPic, this.x, this.y, this.width, this.height);
-				} else if (this.type == "text") {
-					ctx.font = this.width + " " + this.height;
-					ctx.fillStyle = color;
-					ctx.fillText(this.text, this.x, this.y);
-				} else if (this.type == "playerBooster") {
-					ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
-				} else if (this.type == "playerTransparent") {
-					ctx.drawImage(playerTransparentPic, this.x, this.y, this.width, this.height);
-				} else if (this.type == "player") {
-					// ctx.fillStyle = color;
-					// ctx.fillRect(this.x, this.y, this.width, this.height);
-					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
-				}
-				drawPowerups();
+		function checkAuto() {
+			myGamePiece.type = "playerTransparent";
+			// if (this.gravitySpeed > 0 && click == true) {
+			// 	this.gravity = (0.4 - this.gravitySpeed);
+			// 	this.type = "playerBooster";
+			// } else if (this.gravitySpeed > 0 && click == false) {
+			// 	this.gravity = 0.05;
+			// 	this.type = "player";
+			// } else
+			if (click === true) {
+				myGamePiece.type = "playerTransparentBooster";
 			}
 
-			this.newPos = function() {
-				this.gravitySpeed += this.gravity;
-				this.x += this.speedX;
-				this.y += this.speedY + this.gravitySpeed;
-				this.otherGravitySpeed = this.gravitySpeed;
-				if (levitateAction === false) {
-					this.endingAccel();
-					this.changeGravity();
+			if (myGameArea.frameNo - myGameArea.autoSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.autoSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+				if (myGamePiece.type == "playerTransparent") {
+					myGamePiece.type = "player";
+				} else if (myGamePiece.type == "playerTransparentBooster") {
+					myGamePiece.type = "playerBooster";
 				}
-				this.hitBottom();
-				this.hitCelling();
-			}
-			this.changeGravity = function() {
-				if (this.gravitySpeed > 0 && click == true) {
-					// console.log(this.gravity);
-					this.gravity = (0.4 - this.gravitySpeed);
-					this.type = "playerBooster";
-				} else if (this.gravitySpeed > 0 && click == false) {
-					this.gravity = 0.05;
-					this.type = "player";
-				} else if (click === true) {
-					this.type = "playerBooster";
-				} else {
-					this.type = "player";
-				}
-			}
-			this.endingAccel = function() {
-				if (myGamePiece.y < myGameArea.canvas.height * 0.63 && this.gravitySpeed <= 0) {
-					this.gravity = 0.1;
-				}
-			}
-
-
-			this.hitBottom = function() {
-				var rockbottom = myGameArea.canvas.height - this.height;
-				if (this.y > rockbottom) {
-					this.y = rockbottom;
-					this.gravitySpeed = 0;
-				}
-			}
-			this.hitCelling = function() {
-				if (this.y < 0) {
-					this.y = 0;
-					this.gravitySpeed = 0;
-				}
-			}
-			this.crashWithCoin = function(otherobj) {
-				var myleft = this.x;
-				var myright = this.x + (this.width);
-				var mytop = this.y;
-				var mybottom = this.y + (this.height);
-
-				var width = otherobj.width;
-				var height = otherobj.height;
-				var x = otherobj.x;
-				var y = otherobj.y;
-				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
-					for (var i = myCoins.length - 1; i >= 0; i--) {
-						if (myCoins[i].x < myGameArea.canvas.width * 0.3 && myCoins[i].x > myGameArea.canvas.width * 0.1) {
-							myCoins.splice(i, 1);
-						}
-					}
-					return true;
-				}
-				return false;
-			}
-			this.crashWithAuto = function(otherobj) {
-				var myleft = this.x;
-				var myright = this.x + (this.width);
-				var mytop = this.y;
-				var mybottom = this.y + (this.height);
-
-				var width = otherobj.width;
-				var height = otherobj.height;
-				var x = otherobj.x;
-				var y = otherobj.y;
-				if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
-					for (var i = myAuto.length - 1; i >= 0; i--) {
-						if (myAuto[i].x < myGameArea.canvas.width * 0.3 && myAuto[i].x > myGameArea.canvas.width * 0.1) {
-							myAuto.splice(i, 1);
-						}
-					}
-					return true;
-				}
-				return false;
-			}
-			this.crashWith = function(otherobj) {
-				var myleft = this.x;
-				var myright = this.x + (this.width);
-				var mytop = this.y;
-				var mybottom = this.y + (this.height);
-				var playerx = [myleft, myright, myright, myleft];
-				var playery = [mytop, mytop, mybottom, mybottom];
-
-				var width = otherobj.width;
-				var height = otherobj.height;
-				var randomSize = otherobj.randomSize;
-				var turnAngle = otherobj.turnAngle;
-				var x = otherobj.x;
-				var y = otherobj.y;
-
-				var finalxs = findCoordinatesX(width, height, x, y, randomSize, turnAngle);
-				var finalys = findCoordinatesY(width, height, x, y, randomSize, turnAngle);
-
-				for (var i = 0; i < 4; i++) {
-					if (isPointInside(playerx[i], playery[i], finalxs, finalys)) {
-						return true;
-					}
-				}
-
-				for (var i = 0; i < 4; i++) {
-					if (isPointInside(finalxs[i], finalys[i], playerx, playery)) {
-						return true;
-					}
-				}
-				return false;
 			}
 		}
 
-		function isPointInside(px, py, rectanglexs, rectangleys) {
-			var intersections = 0;
-			for (var i = 0; i < 4; i++) {
-				var nextPoint = i + 1;
-				if (nextPoint == 4) nextPoint = 0;
-				if (isHoriziontalToPointCrossingLine(px, py, rectanglexs[i], rectangleys[i], rectanglexs[nextPoint], rectangleys[nextPoint])) {
-					intersections++;
-				}
-			}
-			if (intersections % 2 == 1) {
-				return true;
-			}
-			return false;
-		}
+			function component(width, height, color, x, y, type, turnAngle, randomSize) {
+				this.type = type;
+				this.score = 0;
+				this.width = width;
+				this.height = height;
+				this.speedX = 0;
+				this.speedY = 0;
+				this.x = x;
+				this.y = y;
+				this.gravity = 0;
+				this.gravitySpeed = 0;
+				this.otherGravitySpeed = 0;
+				this.turnAngle = turnAngle;
+				this.randomSize = randomSize;
+				this.update = function() {
+					ctx = myGameArea.context;
+					if (autoRunning === true) {
+						checkAuto();
+					}
+					if (this.type == "background") {
+						bctx = myGameArea.contextb;
+						var bkPic = document.getElementById('source');
+						bctx.drawImage(bkPic, this.x, this.y, this.width, this.height);
+						// ctx.drawImage(color, this.x, this.y, this.width, this.height);
+					} else if (this.type == "Obstacles") {
+						ctx.fillStyle = color;
+						var finalxs = findCoordinatesX(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
+						var finalys = findCoordinatesY(this.width, this.height, this.x, this.y, this.randomSize, this.turnAngle);
+						var me = this,
+							corners = [{
+									x: finalxs[2],
+									y: finalys[2]
+								}, // ul
+								{
+									x: finalxs[3],
+									y: finalys[3]
+								}, // ur
+								{
+									x: finalxs[1],
+									y: finalys[1]
+								}, // br
+								{
+									x: finalxs[0],
+									y: finalys[0]
+								} // bl
+							],
+							step = 5; // resolution
 
-		function isHoriziontalToPointCrossingLine(px, py, lx1, ly1, lx2, ly2) {
-			var lineTop = Math.min(ly1, ly2);
-			var lineBottom = Math.max(ly1, ly2);
-			if ((py < lineBottom) && (py > lineTop)) {
-				if (lx2 === lx1) {
-					if (px > lx1) {
+						update();
+						// render image to quad using current settings
+						function render() {
+							var centerX = (corners.map(pt => pt.x).reduce((a, b) => (a + b))) / 4,
+								centerY = (corners.map(pt => pt.y).reduce((a, b) => (a + b))) / 4;
+							ctx.save();
+							ctx.translate(centerX, centerY);
+							ctx.rotate(me.turnAngle);
+							ctx.drawImage(img, -me.width / 2, -me.height / 2, me.width, me.height);
+							ctx.restore();
+						}
+
+						function lerp(p1, p2, t) {
+							return {
+								x: p1.x + (p2.x - p1.x) * t,
+								y: p1.y + (p2.y - p1.y) * t
+							}
+						}
+
+						function update() {
+							render();
+						}
+
+					} else if (this.type == "coin") {
+						ctx.drawImage(powercube, this.x, this.y, this.width, this.height);
+					} else if (this.type == "autoCoinY") {
+						ctx.drawImage(autoPic, this.x, this.y, this.width, this.height);
+					} else if (this.type == "text") {
+						ctx.font = this.width + " " + this.height;
+						ctx.fillStyle = color;
+						ctx.fillText(this.text, this.x, this.y);
+					} else if (this.type == "playerBooster") {
+						ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
+					} else if (this.type == "playerTransparent") {
+						ctx.drawImage(playerTransparentPic, this.x, this.y, this.width, this.height);
+					} else if (this.type == "playerTransparentBooster") {
+						ctx.drawImage(playerBoosterTransparentPic, this.x, this.y, this.width, this.height);
+					} else if (this.type == "player") {
+						// ctx.fillStyle = color;
+						// ctx.fillRect(this.x, this.y, this.width, this.height);
+						ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
+					}
+					drawPowerups();
+				}
+
+				this.newPos = function() {
+					this.gravitySpeed += this.gravity;
+					this.x += this.speedX;
+					this.y += this.speedY + this.gravitySpeed;
+					this.otherGravitySpeed = this.gravitySpeed;
+					if (levitateAction === false) {
+						this.endingAccel();
+						this.changeGravity();
+					}
+					this.hitBottom();
+					this.hitCelling();
+				}
+				this.changeGravity = function() {
+					if (this.gravitySpeed > 0 && click == true) {
+						this.gravity = (0.4 - this.gravitySpeed);
+						this.type = "playerBooster";
+					} else if (this.gravitySpeed > 0 && click == false) {
+						this.gravity = 0.05;
+						this.type = "player";
+					} else if (click === true) {
+						this.type = "playerBooster";
+					} else {
+						this.type = "player";
+					}
+				}
+				this.endingAccel = function() {
+					if (myGamePiece.y < myGameArea.canvas.height * 0.63 && this.gravitySpeed <= 0) {
+						this.gravity = 0.1;
+					}
+				}
+
+
+				this.hitBottom = function() {
+					var rockbottom = myGameArea.canvas.height - this.height;
+					if (this.y > rockbottom) {
+						this.y = rockbottom;
+						this.gravitySpeed = 0;
+					}
+				}
+				this.hitCelling = function() {
+					if (this.y < 0) {
+						this.y = 0;
+						this.gravitySpeed = 0;
+					}
+				}
+				this.crashWithCoin = function(otherobj) {
+					var myleft = this.x;
+					var myright = this.x + (this.width);
+					var mytop = this.y;
+					var mybottom = this.y + (this.height);
+
+					var width = otherobj.width;
+					var height = otherobj.height;
+					var x = otherobj.x;
+					var y = otherobj.y;
+					if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
+						for (var i = myCoins.length - 1; i >= 0; i--) {
+							if (myCoins[i].x < myGameArea.canvas.width * 0.3 && myCoins[i].x > myGameArea.canvas.width * 0.1) {
+								myCoins.splice(i, 1);
+							}
+						}
 						return true;
 					}
 					return false;
 				}
-				var m = (ly2 - ly1) / (lx2 - lx1);
-				var xOnLine = (py - ly2) / m + lx2;
-				if (px >= xOnLine) {
+				this.crashWithAuto = function(otherobj) {
+					var myleft = this.x;
+					var myright = this.x + (this.width);
+					var mytop = this.y;
+					var mybottom = this.y + (this.height);
+
+					var width = otherobj.width;
+					var height = otherobj.height;
+					var x = otherobj.x;
+					var y = otherobj.y;
+					if (myleft < x + width && myright > x && mytop < y + height && mybottom > y) {
+						for (var i = myAuto.length - 1; i >= 0; i--) {
+							if (myAuto[i].x < myGameArea.canvas.width * 0.3 && myAuto[i].x > myGameArea.canvas.width * 0.1) {
+								myAuto.splice(i, 1);
+							}
+						}
+						return true;
+					}
+					return false;
+				}
+				this.crashWith = function(otherobj) {
+					var myleft = this.x;
+					var myright = this.x + (this.width);
+					var mytop = this.y;
+					var mybottom = this.y + (this.height);
+					var playerx = [myleft, myright, myright, myleft];
+					var playery = [mytop, mytop, mybottom, mybottom];
+
+					var width = otherobj.width;
+					var height = otherobj.height;
+					var randomSize = otherobj.randomSize;
+					var turnAngle = otherobj.turnAngle;
+					var x = otherobj.x;
+					var y = otherobj.y;
+
+					var finalxs = findCoordinatesX(width, height, x, y, randomSize, turnAngle);
+					var finalys = findCoordinatesY(width, height, x, y, randomSize, turnAngle);
+
+					for (var i = 0; i < 4; i++) {
+						if (isPointInside(playerx[i], playery[i], finalxs, finalys)) {
+							return true;
+						}
+					}
+
+					for (var i = 0; i < 4; i++) {
+						if (isPointInside(finalxs[i], finalys[i], playerx, playery)) {
+							return true;
+						}
+					}
+					return false;
+				}
+			}
+
+			function isPointInside(px, py, rectanglexs, rectangleys) {
+				var intersections = 0;
+				for (var i = 0; i < 4; i++) {
+					var nextPoint = i + 1;
+					if (nextPoint == 4) nextPoint = 0;
+					if (isHoriziontalToPointCrossingLine(px, py, rectanglexs[i], rectangleys[i], rectanglexs[nextPoint], rectangleys[nextPoint])) {
+						intersections++;
+					}
+				}
+				if (intersections % 2 == 1) {
 					return true;
 				}
+				return false;
 			}
-			return false;
-		}
 
-		function updateGameArea() {
-			// TODO add mute code here
-			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
-			for (i = 0; i < myObstacles.length; i += 1) {
-				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
-					var die_snd = new Audio("sounds/hero-death-00.wav"); // buffers automatically when created
-					die_snd.play();
-
-					GameOverFunction();
-
-					// setTimeout(location.reload(), 500);
-					// started = 0;
-					// mainMenu();
-					return;
-				}
-			}
-			for (i = 0; i < myCoins.length; i += 1) {
-				if (myGamePiece.crashWithCoin(myCoins[i])) {
-					var coin_snd = new Audio("sounds/collect-point-01.wav"); // buffers automatically when created
-					coin_snd.play();
-					coinScore++;
-					if (boostAction === true) {
-						coinScore += 4;
+			function isHoriziontalToPointCrossingLine(px, py, lx1, ly1, lx2, ly2) {
+				var lineTop = Math.min(ly1, ly2);
+				var lineBottom = Math.max(ly1, ly2);
+				if ((py < lineBottom) && (py > lineTop)) {
+					if (lx2 === lx1) {
+						if (px > lx1) {
+							return true;
+						}
+						return false;
 					}
-					localStorage.setItem('coins', coinScore);
-				}
-			}
-
-			for (i = 0; i < myAuto.length; i += 1) {
-				if (myGamePiece.crashWithAuto(myAuto[i])) {
-					autoRun();
-					myGameArea.autoSection = myGameArea.frameNo;
-					localStorage.setItem('coins', coinScore);
-				}
-			}
-			myGameArea.clear();
-			myGameArea.frameNo += 1;
-			speed = updateSpeed();
-
-			//console.log("(myGameArea.frameNo / interval) % 1: " + (myGameArea.frameNo / interval) % 1 + ", everyinterval(interval): " + everyinterval(interval));
-			if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
-				myGameArea.section++;
-				x = myGameArea.canvas.width;
-				var zones = Math.floor((Math.random() * 3));
-				var randomness = (Math.random() * 0.3) + 0.7;
-				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.3);
-				width = myGameArea.canvas.height * 0.05;
-				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
-				myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
-				var chosenNumber = Math.floor(Math.random() * 2);
-				var chosenZone = 0;
-				var otherZone = 0;
-				if (zones == 0) {
-					if (chosenNumber == 0) {
-						chosenZone = 1;
-						otherZone = 2;
-					} else if (chosenNumber == 1) {
-						chosenZone = 2;
-						otherZone = 1;
-					}
-				} else if (zones == 1) {
-					if (chosenNumber == 0) {
-						chosenZone = 0;
-						otherZone = 2;
-					} else if (chosenNumber == 1) {
-						chosenZone = 2;
-						otherZone = 0;
-					}
-				} else if (zones == 2) {
-					if (chosenNumber == 0) {
-						chosenZone = 0;
-						otherZone = 1;
-					} else if (chosenNumber == 1) {
-						chosenZone = 1;
-						otherZone = 0;
+					var m = (ly2 - ly1) / (lx2 - lx1);
+					var xOnLine = (py - ly2) / m + lx2;
+					if (px >= xOnLine) {
+						return true;
 					}
 				}
-				var cy = Math.floor((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
-				var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
-
-				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
-				var chance = Math.floor(Math.random() * 20) + 1;
-				if (chance == 2) {
-					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "autoCoinY"));
-				}
-			}
-			// console.log(backgrounds[1].x);
-			for (var i = 0; i < backgrounds.length; i++) {
-				if (backgrounds[i].x <= 5 && backgrounds.length < 3) {
-					// console.log("called yup");
-					backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", myGameArea.canvas.width, 0, "background"));
-				}
+				return false;
 			}
 
-			for (i = 0; i < myObstacles.length; i += 1) {
-				myObstacles[i].x += -speed;
-				myObstacles[i].update();
-			}
-			for (i = 0; i < myCoins.length; i += 1) {
-				myCoins[i].x += -speed;
-				myCoins[i].update();
-			}
-			for (i = 0; i < myAuto.length; i += 1) {
-				myAuto[i].x += -speed;
-				myAuto[i].update();
-			}
-			for (i = 0; i < backgrounds.length; i += 1) {
-				backgrounds[i].x += -(speed / 2);
-				backgrounds[i].update();
-			}
-			if (myGameArea.frameNo == 1 || everyinterval(Math.round(200 / 3))) {
-				score += 1;
+			function updateGameArea() {
+				// TODO add mute code here
+				var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
+				for (i = 0; i < myObstacles.length; i += 1) {
+					if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
+						var die_snd = new Audio("sounds/hero-death-00.wav"); // buffers automatically when created
+						die_snd.play();
+
+						GameOverFunction();
+
+						// setTimeout(location.reload(), 500);
+						// started = 0;
+						// mainMenu();
+						return;
+					}
+				}
+				for (i = 0; i < myCoins.length; i += 1) {
+					if (myGamePiece.crashWithCoin(myCoins[i])) {
+						var coin_snd = new Audio("sounds/collect-point-01.wav"); // buffers automatically when created
+						coin_snd.play();
+						coinScore++;
+						if (boostAction === true) {
+							coinScore += 4;
+						}
+						localStorage.setItem('coins', coinScore);
+					}
+				}
+
+				for (i = 0; i < myAuto.length; i += 1) {
+					if (myGamePiece.crashWithAuto(myAuto[i])) {
+						autoRun();
+						myGameArea.autoSection = myGameArea.frameNo;
+						localStorage.setItem('coins', coinScore);
+					}
+				}
+				myGameArea.clear();
+				myGameArea.frameNo += 1;
+				speed = updateSpeed();
+				if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
+					myGameArea.section++;
+					x = myGameArea.canvas.width;
+					var zones = Math.floor((Math.random() * 3));
+					var randomness = (Math.random() * 0.3) + 0.7;
+					height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.3);
+					width = myGameArea.canvas.height * 0.05;
+					var turnInRads = makeToRad(Math.floor(Math.random() * 361));
+					myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
+					var chosenNumber = Math.floor(Math.random() * 2);
+					var chosenZone = 0;
+					var otherZone = 0;
+					if (zones == 0) {
+						if (chosenNumber == 0) {
+							chosenZone = 1;
+							otherZone = 2;
+						} else if (chosenNumber == 1) {
+							chosenZone = 2;
+							otherZone = 1;
+						}
+					} else if (zones == 1) {
+						if (chosenNumber == 0) {
+							chosenZone = 0;
+							otherZone = 2;
+						} else if (chosenNumber == 1) {
+							chosenZone = 2;
+							otherZone = 0;
+						}
+					} else if (zones == 2) {
+						if (chosenNumber == 0) {
+							chosenZone = 0;
+							otherZone = 1;
+						} else if (chosenNumber == 1) {
+							chosenZone = 1;
+							otherZone = 0;
+						}
+					}
+					var cy = Math.floor((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+					var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+
+					myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
+					// TODO this line random 5 to 20
+					var chance = Math.floor(Math.random() * 5) + 1;
+					if (chance == 2) {
+						myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "autoCoinY"));
+					}
+				}
+				for (var i = 0; i < backgrounds.length; i++) {
+					if (backgrounds[i].x <= 5 && backgrounds.length < 3) {
+						backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", myGameArea.canvas.width, 0, "background"));
+					}
+				}
+
+				for (i = 0; i < myObstacles.length; i += 1) {
+					myObstacles[i].x += -speed;
+					myObstacles[i].update();
+				}
+				for (i = 0; i < myCoins.length; i += 1) {
+					myCoins[i].x += -speed;
+					myCoins[i].update();
+				}
+				for (i = 0; i < myAuto.length; i += 1) {
+					myAuto[i].x += -speed;
+					myAuto[i].update();
+				}
+				for (i = 0; i < backgrounds.length; i += 1) {
+					backgrounds[i].x += -(speed / 2);
+					backgrounds[i].update();
+				}
+				if (myGameArea.frameNo == 1 || everyinterval(Math.round(200 / 3))) {
+					score += 1;
+					if (forceAction === true) {
+						score += 4;
+					}
+				}
+
+				if (autoRunning === true && ((myGameArea.frameNo - myGameArea.autoSection) == 1000)) {
+					endAutoRun();
+				} else if (autoRunning === true) {
+					myGamePiece.type = "playerTransparent";
+					//  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
+				}
+
+				myScore.text = score + "M";
+				myScore.update();
+				myBest.text = "BEST: " + highScore;
+				myBest.update();
+				myCoinsNum.text = "PC: " + coinScore;
+				myCoinsNum.update();
+
+				forceNum.text = forceAmount;
+				forceNum.update();
+				levitateNum.text = levitateAmount;
+				levitateNum.update();
+				boostNum.text = boostAmount;
+				boostNum.update();
+
+				myGamePiece.newPos();
+				myGamePiece.update();
+				cleanObstacles();
+				cleanCoins();
+				cleanBackground();
+				cleanAuto();
+				if (highScore < score) {
+					highScore = score;
+					localStorage.setItem('highScore', highScore);
+				}
 				if (forceAction === true) {
-					score += 4;
+					endForceAction();
+				}
+				if (levitateAction === true) {
+					endLevitateAction();
+				}
+				if (boostAction === true) {
+					endBoostAction();
 				}
 			}
 
-			if (autoRunning === true && ((myGameArea.frameNo - myGameArea.autoSection) == 1000)) {
-				endAutoRun();
-			} else if (autoRunning === true) {
-				// myGamePiece.type = "playerTransparent";
-				// console.log("yea");
-				//  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
-				autoText.text = "AUTO TIME: " + Math.round((((myGameArea.frameNo - myGameArea.autoSection) - 1000) * -1 / 200 / 3));
-				autoText.update();
+			var forceImg = new Image();
+			var levitateImg = new Image();
+			var boostImg = new Image();
+			var pauseImg = new Image();
+			var buttonBackgroundImg = new Image();
+			var buttonBackgroundRedImg = new Image();
+
+			function loadPowerupImages() {
+				forceImg.src = "images/force.png";
+				levitateImg.src = "images/levitate.png";
+				boostImg.src = "images/boost.png";
+				pauseImg.src = "images/pause.png";
+				buttonBackgroundImg.src = "images/buttonBackground.png";
+				buttonBackgroundRedImg.src = "images/buttonBackgroundRed.png";
 			}
 
-			myScore.text = score + "M";
-			myScore.update();
-			myBest.text = "BEST: " + highScore;
-			myBest.update();
-			myCoinsNum.text = "PC: " + coinScore;
-			myCoinsNum.update();
-
-			forceNum.text = forceAmount;
-			forceNum.update();
-			levitateNum.text = levitateAmount;
-			levitateNum.update();
-			boostNum.text = boostAmount;
-			boostNum.update();
-
-			myGamePiece.newPos();
-			myGamePiece.update();
-			cleanObstacles();
-			cleanCoins();
-			cleanBackground();
-			cleanAuto();
-			if (highScore < score) {
-				highScore = score;
-				localStorage.setItem('highScore', highScore);
-			}
-			if (forceAction === true) {
-				endForceAction();
-			}
-			if (levitateAction === true) {
-				endLevitateAction();
-			}
-			if (boostAction === true) {
-				endBoostAction();
-			}
-		}
-
-		var forceImg = new Image();
-		var levitateImg = new Image();
-		var boostImg = new Image();
-		var pauseImg = new Image();
-		var buttonBackgroundImg = new Image();
-		var buttonBackgroundRedImg = new Image();
-
-		function loadPowerupImages() {
-			forceImg.src = "images/force.png";
-			levitateImg.src = "images/levitate.png";
-			boostImg.src = "images/boost.png";
-			pauseImg.src = "images/pause.png";
-			buttonBackgroundImg.src = "images/buttonBackground.png";
-			buttonBackgroundRedImg.src = "images/buttonBackgroundRed.png";
-		}
-
-		function drawPowerups() {
-			ctx = myGameArea.context;
-			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			if (forceAction === true) {
-				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			}
-			if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 12)) % 2 == 0) {
+			function drawPowerups() {
+				ctx = myGameArea.context;
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			}
-			ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			if (levitateAction === true) {
-				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			}
-			if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 12)) % 2 == 0) {
+				if (forceAction === true) {
+					ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				}
+				if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+					ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				}
+				ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			}
-			ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			if (boostAction === true) {
-				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			}
-			if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 468 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 12)) % 2 == 0) {
+				if (levitateAction === true) {
+					ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				}
+				if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+					ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				}
+				ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				if (boostAction === true) {
+					ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				}
+				if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+					ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				}
+				ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
+				ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-			ctx.drawImage(pauseImg, myGameArea.canvas.width * 0.9, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
-		}
 
-		function force() {
-			if (forceAmount > 0 && forceAction === false) {
-				forceAction = true;
-				myGameArea.forceSection = myGameArea.frameNo;
-				forceAmount--;
-				localStorage.setItem('forcepowerup', forceAmount);
+			function force() {
+				if (forceAmount > 0 && forceAction === false) {
+					forceAction = true;
+					myGameArea.forceSection = myGameArea.frameNo;
+					forceAmount--;
+					localStorage.setItem('forcepowerup', forceAmount);
+				}
 			}
-		}
 
-		function levitate() {
-			if (levitateAmount > 0 && levitateAction === false) {
-				levitateAction = true;
-				myGameArea.levitateSection = myGameArea.frameNo;
-				levitateAmount--;
-				localStorage.setItem('levitatepowerup', levitateAmount);
+			function levitate() {
+				if (levitateAmount > 0 && levitateAction === false) {
+					levitateAction = true;
+					myGameArea.levitateSection = myGameArea.frameNo;
+					levitateAmount--;
+					localStorage.setItem('levitatepowerup', levitateAmount);
+				}
 			}
-		}
 
-		function boost() {
-			if (boostAmount > 0 && boostAction === false) {
-				boostAction = true;
-				myGameArea.boostSection = myGameArea.frameNo;
-				boostAmount--;
-				localStorage.setItem('boostpowerup', boostAmount);
+			function boost() {
+				if (boostAmount > 0 && boostAction === false) {
+					boostAction = true;
+					myGameArea.boostSection = myGameArea.frameNo;
+					boostAmount--;
+					localStorage.setItem('boostpowerup', boostAmount);
+				}
 			}
-		}
 
-		function pause() {
-			console.log("pause function");
-			pauseAction = true;
-			clearInterval(myGameArea.interval);
-			// myGameArea.interval = setInterval(updatePause, 15);
-			updatePause();
-		}
+			function pause() {
+				pauseAction = true;
+				clearInterval(myGameArea.interval);
+				// myGameArea.interval = setInterval(updatePause, 15);
+				updatePause();
+			}
 
-		function resumeGame() {
-			console.log("Resume");
-			clearInterval(myGameArea.interval);
-			myGameArea.interval = setInterval(updateGameArea, 15);
-			pauseAction = false;
-		}
-
-		function updatePause() {
-			ctx = myGameArea.context;
-			ctx.fillStyle = "#000000";
-			ctx.globalAlpha = 0.4;
-			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
-			ctx.globalAlpha = 1;
-			ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
-		}
-
-		function GameOverFunction() {
-			// console.log("pause function");
-			gameoverAction = true;
-			clearInterval(myGameArea.interval);
-			updateGameover();
-		}
-
-		function updateGameover() {
-			ctx = myGameArea.context;
-			ctx.fillStyle = "#000000";
-			ctx.globalAlpha = 0.4;
-			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
-			ctx.globalAlpha = 1;
-			ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
-			ctx.font = 20 / 260 * myGameArea.canvas.height * 0.56 + "px Georgia";
-			ctx.fillStyle = "#ffffff";
-			ctx.fillText("" + score, 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
-			ctx.fillText("" + highScore, 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 135 / 260 * myGameArea.canvas.height * 0.56);
-			ctx.fillText("" + coinScore, 0.28 * myGameArea.canvas.width + 177 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 164 / 260 * myGameArea.canvas.height * 0.56);
-		}
-
-		function accelerate(n) {
-			// console.log("hi" + n);
-			if (!myGameArea.interval) {
+			function resumeGame() {
+				clearInterval(myGameArea.interval);
 				myGameArea.interval = setInterval(updateGameArea, 15);
+				pauseAction = false;
 			}
 
-			if (myGamePiece !== undefined && pauseAction === false && gameoverAction === false) {
-				myGamePiece.gravity = n;
+			function updatePause() {
+				ctx = myGameArea.context;
+				ctx.fillStyle = "#000000";
+				ctx.globalAlpha = 0.4;
+				ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+				ctx.globalAlpha = 1;
+				ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
 			}
-		}
 
-		function endForceAction() {
-			if ((myGameArea.frameNo - myGameArea.forceSection) == 666) {
-				forceAction = false;
+			function GameOverFunction() {
+				gameoverAction = true;
+				clearInterval(myGameArea.interval);
+				updateGameover();
 			}
-			// else {
-			// 	forceText.text = Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 666) * -1 / (200 / 3));
-			// 	forceText.update();
+
+			function updateGameover() {
+				ctx = myGameArea.context;
+				ctx.fillStyle = "#000000";
+				ctx.globalAlpha = 0.4;
+				ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+				ctx.globalAlpha = 1;
+				ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+				ctx.font = 20 / 260 * myGameArea.canvas.height * 0.56 + "px Georgia";
+				ctx.fillStyle = "#ffffff";
+        // TODO change font here
+				ctx.fillText("" + score, 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
+				ctx.fillText("" + highScore, 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 135 / 260 * myGameArea.canvas.height * 0.56);
+				ctx.fillText("" + coinScore, 0.28 * myGameArea.canvas.width + 177 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 164 / 260 * myGameArea.canvas.height * 0.56);
+			}
+
+			function accelerate(n) {
+				if (!myGameArea.interval) {
+					myGameArea.interval = setInterval(updateGameArea, 15);
+				}
+
+				if (myGamePiece !== undefined && pauseAction === false && gameoverAction === false) {
+					myGamePiece.gravity = n;
+				}
+			}
+
+			function endForceAction() {
+				if ((myGameArea.frameNo - myGameArea.forceSection) == 1000) {
+					forceAction = false;
+				}
+			}
+
+			function endLevitateAction() {
+				if ((myGameArea.frameNo - myGameArea.levitateSection) == 1000) {
+					levitateAction = false;
+				}
+			}
+
+			function endBoostAction() {
+				if ((myGameArea.frameNo - myGameArea.boostSection) == 1000) {
+					boostAction = false;
+				}
+			}
+
+			function cleanObstacles() {
+				for (var i = myObstacles.length - 1; i >= 0; i--) {
+					if (myObstacles[i].x < -myGameArea.canvas.width) {
+						myObstacles.splice(i, 1);
+					}
+				}
+			}
+
+			function cleanCoins() {
+				for (var i = myCoins.length - 1; i >= 0; i--) {
+					if (myCoins[i].x < -myGameArea.canvas.width) {
+						myCoins.splice(i, 1);
+					}
+				}
+			}
+
+			function cleanAuto() {
+				for (var i = myAuto.length - 1; i >= 0; i--) {
+					if (myAuto[i].x < -myGameArea.canvas.width) {
+						myAuto.splice(i, 1);
+					}
+				}
+			}
+
+			function cleanBackground() {
+				for (var i = backgrounds.length - 1; i >= 0; i--) {
+					if (backgrounds[i].x < -myGameArea.canvas.width) {
+						backgrounds.splice(i, 1);
+					}
+				}
+			}
+
+			function everyinterval(n) {
+				if ((myGameArea.frameNo / n) % 1 == 0) {
+					return true;
+				}
+				return false;
+			}
+
+			function newObstacle(amount) {
+				if (myObstacles[myObstacles.length - 1].x < myGameArea.canvas.width * amount) {
+					return true;
+				}
+				return false;
+			}
+
+			function makeToRad(Angle) {
+				return ((Angle * Math.PI) / 180);
+			}
+
+			function findCenterX(width, x) {
+				return ((width / 2) + x);
+			}
+
+			function findCenterY(height, y) {
+				return ((height / 2) + y);
+			}
+
+			function getFinalX(x, y, centerX, centerY, turnAngle, my) {
+				var mx = x - centerX;
+				var my = y - centerY;
+				var newmx = mx * Math.cos(turnAngle) - my * Math.sin(turnAngle);
+				var finalx = newmx + centerX;
+				return finalx;
+			}
+
+			function getFinalY(x, y, centerX, centerY, turnAngle, mx) {
+				var mx = x - centerX;
+				var my = y - centerY;
+				var newmy = mx * Math.sin(turnAngle) + my * Math.cos(turnAngle);
+				var finaly = newmy + centerY;
+				return finaly;
+			}
+
+			function findCoordinatesX(width, height, x, y, randomSize, turnAngle) {
+				var centerX = findCenterX(width, x);
+				var centerY = findCenterY(height, y);
+				var xs = [0, 0, 0, 0];
+				var ys = [0, 0, 0, 0];
+
+				xs[0] = x;
+				xs[1] = x + (width * randomSize);
+				xs[2] = x;
+				xs[3] = x + (width * randomSize);
+
+				ys[0] = y;
+				ys[1] = y;
+				ys[2] = y + (height * randomSize);
+				ys[3] = y + (height * randomSize);
+
+				var finalxs = [0, 0, 0, 0];
+				var finalys = [0, 0, 0, 0];
+
+				for (var i = 0; i < 4; i++) {
+					finalxs[i] = getFinalX(xs[i], ys[i], centerX, centerY, turnAngle);
+					finalys[i] = getFinalY(xs[i], ys[i], centerX, centerY, turnAngle);
+				}
+				return finalxs;
+			}
+
+			function findCoordinatesY(width, height, x, y, randomSize, turnAngle) {
+				var centerX = findCenterX(width, x);
+				var centerY = findCenterY(height, y);
+				var xs = [0, 0, 0, 0];
+				var ys = [0, 0, 0, 0];
+
+				xs[0] = x;
+				xs[1] = x + (width * randomSize);
+				xs[2] = x;
+				xs[3] = x + (width * randomSize);
+
+				ys[0] = y;
+				ys[1] = y;
+				ys[2] = y + (height * randomSize);
+				ys[3] = y + (height * randomSize);
+
+				var finalxs = [0, 0, 0, 0];
+				var finalys = [0, 0, 0, 0];
+
+				for (var i = 0; i < 4; i++) {
+					finalxs[i] = getFinalX(xs[i], ys[i], centerX, centerY, turnAngle);
+					finalys[i] = getFinalY(xs[i], ys[i], centerX, centerY, turnAngle);
+				}
+				return finalys;
+			}
+
+			function updateSpeed() {
+				return (0.05 * score) + 1;
+			}
+
+			function autoRun() {
+				autoRunning = true;
+			}
+
+			function endAutoRun() {
+				autoRunning = false;
+			}
+
+			// document.getElementById("script").onmousedown = function() {
+			// 	mouseDown()
+			// };
+			// document.getElementById("script").onmouseup = function() {
+			// 	mouseUp()
+			// };
+			//
+			// document.getElementById("script").touchstart = function() {
+			// 	mouseDown()
+			// };
+			// document.getElementById("script").touchend = function() {
+			// 	mouseUp()
+			// };
+
+			// function mouseDown() {
+			// 	accelerate(0.2);
 			// }
-		}
-
-		function endLevitateAction() {
-			if ((myGameArea.frameNo - myGameArea.levitateSection) == 666) {
-				levitateAction = false;
-			}
-			// else {
-			// 	levitateText.text = Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 666) * -1 / (200 / 3));
-			// 	levitateText.update();
+			//
+			// function mouseUp() {
+			// 	accelerate(0.1);
 			// }
-		}
-
-		function endBoostAction() {
-			if ((myGameArea.frameNo - myGameArea.boostSection) == 666) {
-				boostAction = false;
-			}
-			// else {
-			// 	boostText.text = Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 666) * -1 / (200 / 3));
-			// 	boostText.update();
-			// }
-		}
-
-		function cleanObstacles() {
-			for (var i = myObstacles.length - 1; i >= 0; i--) {
-				if (myObstacles[i].x < -myGameArea.canvas.width) {
-					myObstacles.splice(i, 1);
-				}
-			}
-		}
-
-		function cleanCoins() {
-			for (var i = myCoins.length - 1; i >= 0; i--) {
-				if (myCoins[i].x < -myGameArea.canvas.width) {
-					myCoins.splice(i, 1);
-				}
-			}
-		}
-
-		function cleanAuto() {
-			for (var i = myAuto.length - 1; i >= 0; i--) {
-				if (myAuto[i].x < -myGameArea.canvas.width) {
-					myAuto.splice(i, 1);
-				}
-			}
-		}
-
-		function cleanBackground() {
-			for (var i = backgrounds.length - 1; i >= 0; i--) {
-				if (backgrounds[i].x < -myGameArea.canvas.width) {
-					backgrounds.splice(i, 1);
-				}
-			}
-		}
-
-		function everyinterval(n) {
-			if ((myGameArea.frameNo / n) % 1 == 0) {
-				return true;
-			}
-			return false;
-		}
-
-		function newObstacle(amount) {
-			if (myObstacles[myObstacles.length - 1].x < myGameArea.canvas.width * amount) {
-				return true;
-			}
-			return false;
-		}
-
-		function makeToRad(Angle) {
-			return ((Angle * Math.PI) / 180);
-		}
-
-		function findCenterX(width, x) {
-			return ((width / 2) + x);
-		}
-
-		function findCenterY(height, y) {
-			return ((height / 2) + y);
-		}
-
-		function getFinalX(x, y, centerX, centerY, turnAngle, my) {
-			var mx = x - centerX;
-			var my = y - centerY;
-			var newmx = mx * Math.cos(turnAngle) - my * Math.sin(turnAngle);
-			var finalx = newmx + centerX;
-			return finalx;
-		}
-
-		function getFinalY(x, y, centerX, centerY, turnAngle, mx) {
-			var mx = x - centerX;
-			var my = y - centerY;
-			var newmy = mx * Math.sin(turnAngle) + my * Math.cos(turnAngle);
-			var finaly = newmy + centerY;
-			return finaly;
-		}
-
-		function findCoordinatesX(width, height, x, y, randomSize, turnAngle) {
-			var centerX = findCenterX(width, x);
-			var centerY = findCenterY(height, y);
-			var xs = [0, 0, 0, 0];
-			var ys = [0, 0, 0, 0];
-
-			xs[0] = x;
-			xs[1] = x + (width * randomSize);
-			xs[2] = x;
-			xs[3] = x + (width * randomSize);
-
-			ys[0] = y;
-			ys[1] = y;
-			ys[2] = y + (height * randomSize);
-			ys[3] = y + (height * randomSize);
-
-			var finalxs = [0, 0, 0, 0];
-			var finalys = [0, 0, 0, 0];
-
-			for (var i = 0; i < 4; i++) {
-				finalxs[i] = getFinalX(xs[i], ys[i], centerX, centerY, turnAngle);
-				finalys[i] = getFinalY(xs[i], ys[i], centerX, centerY, turnAngle);
-			}
-			return finalxs;
-		}
-
-		function findCoordinatesY(width, height, x, y, randomSize, turnAngle) {
-			var centerX = findCenterX(width, x);
-			var centerY = findCenterY(height, y);
-			var xs = [0, 0, 0, 0];
-			var ys = [0, 0, 0, 0];
-
-			xs[0] = x;
-			xs[1] = x + (width * randomSize);
-			xs[2] = x;
-			xs[3] = x + (width * randomSize);
-
-			ys[0] = y;
-			ys[1] = y;
-			ys[2] = y + (height * randomSize);
-			ys[3] = y + (height * randomSize);
-
-			var finalxs = [0, 0, 0, 0];
-			var finalys = [0, 0, 0, 0];
-
-			for (var i = 0; i < 4; i++) {
-				finalxs[i] = getFinalX(xs[i], ys[i], centerX, centerY, turnAngle);
-				finalys[i] = getFinalY(xs[i], ys[i], centerX, centerY, turnAngle);
-			}
-			return finalys;
-		}
-
-		function updateSpeed() {
-			return (0.05 * score) + 1;
-		}
-
-		function autoRun() {
-			autoRunning = true;
-		}
-
-		function endAutoRun() {
-			autoRunning = false;
-		}
-
-		// document.getElementById("script").onmousedown = function() {
-		// 	mouseDown()
-		// };
-		// document.getElementById("script").onmouseup = function() {
-		// 	mouseUp()
-		// };
-		//
-		// document.getElementById("script").touchstart = function() {
-		// 	mouseDown()
-		// };
-		// document.getElementById("script").touchend = function() {
-		// 	mouseUp()
-		// };
-
-		// function mouseDown() {
-		// 	accelerate(0.2);
-		// }
-		//
-		// function mouseUp() {
-		// 	accelerate(0.1);
-		// }
 	</script>
 	<br>
 </body>

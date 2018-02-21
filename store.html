@@ -9,24 +9,34 @@
 <body onload="init()" id="script">
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
-    document.body.requestFullscreen();
+    var mute = localStorage.getItem('muteState') || false;
+
+    if (mute === true) {
+      // TODO add mute
+    } else if (mute === false) {
+      // TODO add mute
+    }
+
+    // document.body.requestFullscreen();
     var coinScore = localStorage.getItem('coins') || 0;
     var forcePowerups = localStorage.getItem('forcepowerup') || 0;
     var levitatePowerups = localStorage.getItem('levitatepowerup') || 0;
     var boostPowerups = localStorage.getItem('boostpowerup') || 0;
 
+
     var backgroundImage = new Image();
     var ctx;
     var buttons = [];
 
-    var priceForce = 25;
-    var priceLevitate = 50;
-    var priceBoost = 30;
+    var priceForce = 20;
+    var priceLevitate = 30;
+    var priceBoost = 25;
 
     function draw() {
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
       ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+      // TODO change font here
       ctx.font = 80 / 1080 * canvasHeight + "px Georgia";
       ctx.fillStyle = "#ffffff";
       ctx.fillText("" + coinScore, 1140 / 1920 * canvasWidth, 464 / 1080 * canvasHeight);
@@ -47,45 +57,51 @@
       }
     }
 
-    function buyForce(){
+    function buyForce() {
       console.log("Buy force!!!");
-      if(coinScore>=priceForce) {
+      if (coinScore >= priceForce) {
         forcePowerups++;
-        coinScore-=priceForce;
-        localStorage.setItem('coins',coinScore);
-        localStorage.setItem('forcepowerup',forcePowerups);
+        coinScore -= priceForce;
+        localStorage.setItem('coins', coinScore);
+        localStorage.setItem('forcepowerup', forcePowerups);
         draw();
       }
     }
 
-    function buyLevitate(){
+    function buyLevitate() {
       console.log("Buy levitate!!!");
-      if(coinScore>=priceLevitate) {
+      if (coinScore >= priceLevitate) {
         levitatePowerups++;
-        coinScore-=priceLevitate;
-        localStorage.setItem('coins',coinScore);
-        localStorage.setItem('levitatepowerup',levitatePowerups);
+        coinScore -= priceLevitate;
+        localStorage.setItem('coins', coinScore);
+        localStorage.setItem('levitatepowerup', levitatePowerups);
         draw();
       }
     }
 
-    function buyBoost(){
+    function buyBoost() {
       console.log("Buy levitate!!!");
-      if(coinScore>=priceBoost) {
+      if (coinScore >= priceBoost) {
         boostPowerups++;
-        coinScore-=priceBoost;
-        localStorage.setItem('coins',coinScore);
-        localStorage.setItem('boostpowerup',boostPowerups);
+        coinScore -= priceBoost;
+        localStorage.setItem('coins', coinScore);
+        localStorage.setItem('boostpowerup', boostPowerups);
         draw();
       }
     }
 
-    function backToMainMenu(){
+    function backToMainMenu() {
       window.location = "game.html";
     }
 
-    function addButton(x1,y1,x2,y2,callback){
-      buttons.push({x1:x1,y1:y1,x2:x2,y2:y2,callback:callback});
+    function addButton(x1, y1, x2, y2, callback) {
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback
+      });
     }
 
     function setButtons() {
@@ -97,12 +113,12 @@
       addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
     }
 
-    function checkButtons(evt){
-			var x = evt.changedTouches[0].pageX;
-			var y = evt.changedTouches[0].pageY;
-      for(var i=0;i<buttons.length;i++){
+    function checkButtons(evt) {
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
-        if(x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2){
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
           b.callback();
         }
       }

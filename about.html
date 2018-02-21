@@ -9,6 +9,14 @@
 <body onload="init()" id="script">
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
+    var mute = localStorage.getItem('muteState') || false;
+
+    if (mute === true) {
+      // TODO add mute
+    } else if (mute === false) {
+      // TODO add mute
+    }
+
     var backgroundImage = new Image();
     var ctx;
     var buttons = [];
@@ -24,7 +32,6 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      console.log("loading store background");
       backgroundImage.src = "images/about.png";
       backgroundImage.onload = function() {
         draw();
@@ -35,12 +42,18 @@
       window.location = "donate.html";
     }
 
-    function backToMainMenu(){
+    function backToMainMenu() {
       window.location = "game.html";
     }
 
-    function addButton(x1,y1,x2,y2,callback){
-      buttons.push({x1:x1,y1:y1,x2:x2,y2:y2,callback:callback});
+    function addButton(x1, y1, x2, y2, callback) {
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback
+      });
     }
 
     function setButtons() {
@@ -50,12 +63,12 @@
       addButton(60 / 1920 * canvasWidth, 805 / 1080 * canvasHeight, 758 / 1920 * canvasWidth, 943 / 1080 * canvasHeight, goToDonate);
     }
 
-    function checkButtons(evt){
-			var x = evt.changedTouches[0].pageX;
-			var y = evt.changedTouches[0].pageY;
-      for(var i=0;i<buttons.length;i++){
+    function checkButtons(evt) {
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
-        if(x>b.x1 && x<b.x2 && y>b.y1 && y<b.y2){
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
           b.callback();
         }
       }

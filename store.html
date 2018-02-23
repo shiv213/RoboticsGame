@@ -9,12 +9,13 @@
 <body onload="init()" id="script">
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
-    var mute = localStorage.getItem('muteState') || false;
-
-    if (mute === true) {
-      // TODO add mute
-    } else if (mute === false) {
-      // TODO add mute
+    var mute = localStorage.getItem('muteState') || "no";
+    var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
+    if (mute === "yes") {
+        music.pause();
+    } else if (mute === "no"){
+        music.loop = true;
+        music.play();
     }
 
     // document.body.requestFullscreen();
@@ -37,12 +38,12 @@
       var canvasHeight = window.innerHeight;
       ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
       // TODO change font here
-      ctx.font = 80 / 1080 * canvasHeight + "px Georgia";
-      ctx.fillStyle = "#ffffff";
-      ctx.fillText("" + coinScore, 1140 / 1920 * canvasWidth, 464 / 1080 * canvasHeight);
-      ctx.fillText("" + forcePowerups, 860 / 1920 * canvasWidth, 612 / 1080 * canvasHeight);
-      ctx.fillText("" + levitatePowerups, 952 / 1920 * canvasWidth, 716 / 1080 * canvasHeight);
-      ctx.fillText("" + boostPowerups, 860 / 1920 * canvasWidth, 832 / 1080 * canvasHeight);
+      ctx.font = 85 / 1080 * canvasHeight + 'px "PressStart2P';
+      ctx.fillStyle = "#009bd4";
+      ctx.fillText("" + coinScore, 1140 / 1920 * canvasWidth, 480 / 1080 * canvasHeight);
+      ctx.fillText("" + forcePowerups, 800 / 1920 * canvasWidth, 630 / 1080 * canvasHeight);
+      ctx.fillText("" + levitatePowerups, 860 / 1920 * canvasWidth, 738 / 1080 * canvasHeight);
+      ctx.fillText("" + boostPowerups, 800 / 1920 * canvasWidth, 850 / 1080 * canvasHeight);
     }
 
     function loadBackgroundImage() {
@@ -51,7 +52,7 @@
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
       console.log("loading store background");
-      backgroundImage.src = "images/store.png";
+      backgroundImage.src = "images/store.png?801724";
       backgroundImage.onload = function() {
         draw();
       }

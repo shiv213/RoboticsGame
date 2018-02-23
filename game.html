@@ -9,7 +9,7 @@
 <body onload="init()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
-	<img id="source" src="images/background.png" style="opacity: 0.0;">
+	<img id="source" src="images/bkgnd.jpg" style="opacity: 0.0;">
 	<script>
 		var loadImageProcessing = false;
 
@@ -26,8 +26,10 @@
 		var pauseAction = false;
 		var gameoverAction = false;
 		var gamePlay = true;
+        var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
 
-		function gameTouchStartEventListener(evt) {
+
+        function gameTouchStartEventListener(evt) {
 			if (pauseAction === true) {
 				checkPauseButtons(evt);
 			} else if (gameoverAction === true) {
@@ -40,7 +42,7 @@
 				touching[3] = 0;
 				if (checkFirstTouch()) {
 					if (levitateAction === false) {
-						if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.06)) {
+						if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.08)) {
 							accelerate(-0.2);
 							myGamePiece.type = "playerBooster";
 						}
@@ -233,15 +235,15 @@
 
 		var started = 0;
 
-		var mute = localStorage.getItem('muteState') || false;
+		var mute = localStorage.getItem('muteState') || "no";
 
 		function changeMuteState() {
-			if (mute === true) {
-        // TODO add mute
-				localStorage.setItem('muteState', true);
-			} else if (mute === false){
+			if (mute === "yes") {
+                // TODO add mute
+			    localStorage.setItem('muteState', "yes");
+			} else if (mute === "no"){
 				// TODO add mute
-				localStorage.setItem('muteState', false);
+				localStorage.setItem('muteState', "no");
 			}
 		}
 
@@ -301,11 +303,16 @@
 				];
 				if (x > muteButtonCoords[0] && x < muteButtonCoords[2] &&
 					y > muteButtonCoords[1] && y < muteButtonCoords[3]) {
-					if (mute === false) {
-						mute = true;
+                    // console.log("mute pressed");
+					if (mute === "no") {
+						mute = "yes";
+                        // music.play();
+                        music.pause();
 						changeMuteState();
 					} else {
-						mute = false;
+						mute = "no";
+						music.loop = true;
+                        music.play();
 						changeMuteState();
 					}
 				}
@@ -313,6 +320,13 @@
 		}
 
 		function mainMenu() {
+            if (mute === "no") {
+                music.loop = true;
+                music.play();
+            } else {
+                // music.play();
+                music.pause();
+            }
 			// loadImage();
 			loadPowerupImages();
 
@@ -381,7 +395,7 @@
 				function draw() {
 					context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
 					context.drawImage(bgImage, 0, backgroundY, width, height * 2);
-					if (mute === false) {
+					if (mute === "no") {
 						context.drawImage(menuUnmutedPic, 0, 0, width, height);
 					} else {
 						context.drawImage(menuMutedPic, 0, 0, width, height);
@@ -397,17 +411,17 @@
 			window.addEventListener('touchstart', gameTouchStartEventListener);
 			window.addEventListener('touchend', gameTouchEndEventListener);
 
-			myGamePiece = new component(myGameArea.canvas.height * 0.06, myGameArea.canvas.height * 0.06, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
+			myGamePiece = new component(myGameArea.canvas.height * 0.08, myGameArea.canvas.height * 0.08, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
 			myGamePiece.gravity = 0.05;
 
 			//TODO change font here
-			myScore = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
-			myBest = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
-			myCoinsNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
+			myScore = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
+			myBest = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
+			myCoinsNum = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
 
-			forceNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
-			levitateNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
-			boostNum = new component("15px", "Oswald", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
+			forceNum = new component("10px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
+			levitateNum = new component("10px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
+			boostNum = new component("10px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
 			myGameArea.start();
 		}
 
@@ -464,7 +478,7 @@
 		var pauseMenuPic = new Image();
 		pauseMenuPic.src = "images/pauseMenu.png";
 		var gameoverPic = new Image();
-		gameoverPic.src = "images/gameover.png";
+		gameoverPic.src = "images/gamover.png";
 
 		function checkAuto() {
 			myGamePiece.type = "playerTransparent";
@@ -813,7 +827,7 @@
 
 					myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
 					// TODO this line random 5 to 20
-					var chance = Math.floor(Math.random() * 5) + 1;
+					var chance = Math.floor(Math.random() * 20) + 1;
 					if (chance == 2) {
 						myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "autoCoinY"));
 					}
@@ -854,11 +868,11 @@
 					//  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
 				}
 
-				myScore.text = score + "M";
+				myScore.text = "DISTANCE:" + score + "M";
 				myScore.update();
-				myBest.text = "BEST: " + highScore;
+				myBest.text = "BEST:" + highScore + "M";
 				myBest.update();
-				myCoinsNum.text = "PC: " + coinScore;
+				myCoinsNum.text = "PC:" + coinScore;
 				myCoinsNum.update();
 
 				forceNum.text = forceAmount;
@@ -997,12 +1011,12 @@
 				ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 				ctx.globalAlpha = 1;
 				ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
-				ctx.font = 20 / 260 * myGameArea.canvas.height * 0.56 + "px Georgia";
+				ctx.font = 20 / 260 * myGameArea.canvas.height * 0.99 + 'px "Escapists"';
 				ctx.fillStyle = "#ffffff";
         // TODO change font here
-				ctx.fillText("" + score, 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
-				ctx.fillText("" + highScore, 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 135 / 260 * myGameArea.canvas.height * 0.56);
-				ctx.fillText("" + coinScore, 0.28 * myGameArea.canvas.width + 177 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 164 / 260 * myGameArea.canvas.height * 0.56);
+				ctx.fillText("          " + score + " M", 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
+				ctx.fillText("          " + highScore + " M", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 135 / 260 * myGameArea.canvas.height * 0.56);
+				ctx.fillText("          " + coinScore + " PC", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 164 / 260 * myGameArea.canvas.height * 0.56);
 			}
 
 			function accelerate(n) {

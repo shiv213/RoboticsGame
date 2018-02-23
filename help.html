@@ -9,12 +9,13 @@
 <body onload="init()" id="script">
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
-    var mute = localStorage.getItem('muteState') || false;
-
-    if (mute === true) {
-      // TODO add mute
-    } else if (mute === false) {
-      // TODO add mute
+    var mute = localStorage.getItem('muteState') || "no";
+    var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
+    if (mute === "yes") {
+        music.pause();
+    } else if (mute === "no"){
+        music.loop = true;
+        music.play();
     }
 
     var backgroundImage = new Image();

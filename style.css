@@ -7,3 +7,18 @@ html, body {
 	display: block;  /* No floating content on sides */
 	/*background-image: url("crowd.png");*/
 }
+@font-face {
+    font-family: "Escapists";
+        src: url("fonts/Escapists.eot");
+        src: url("fonts/Escapists.ttf") format("truetype");
+}
+@font-face {
+    font-family: "BACKTO1982";
+        src: url("fonts/BACKTO1982.eot");
+        src: url("fonts/BACKTO1982.TTF") format("truetype");
+}
+@font-face {
+    font-family: "PressStart2P";
+        src: url("fonts/PressStart2P.eot");
+        src: url("fonts/PressStart2P.ttf")format("truetype");
+}

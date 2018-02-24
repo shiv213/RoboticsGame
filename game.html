@@ -11,7 +11,7 @@
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
 	<img id="source" src="images/bkgnd.jpg" style="opacity: 0.0;">
 	<script>
-        // console.log('Orientation is ' + screen.orientation.type);
+		// console.log('Orientation is ' + screen.orientation.type);
 		var loadImageProcessing = false;
 
 		function init() {
@@ -516,7 +516,7 @@
 			this.turnAngle = turnAngle;
 			this.randomSize = randomSize;
 			this.update = function() {
-                ctx = myGameArea.context;
+				ctx = myGameArea.context;
 				if (autoRunning === true) {
 					checkAuto();
 				}
@@ -776,6 +776,10 @@
 
 			for (i = 0; i < myAuto.length; i += 1) {
 				if (myGamePiece.crashWithAuto(myAuto[i])) {
+					if (mute === "no") {
+						var auto_snd = new Audio("sounds/auto.wav"); // buffers automatically when created
+						auto_snd.play();
+					}
 					autoRun();
 					myGameArea.autoSection = myGameArea.frameNo;
 					localStorage.setItem('coins', coinScore);
@@ -950,6 +954,10 @@
 
 		function force() {
 			if (forceAmount > 0 && forceAction === false) {
+				if (mute === "no") {
+					var force_snd = new Audio("sounds/force.wav"); // buffers automatically when created
+					force_snd.play();
+				}
 				forceAction = true;
 				myGameArea.forceSection = myGameArea.frameNo;
 				forceAmount--;
@@ -959,6 +967,10 @@
 
 		function levitate() {
 			if (levitateAmount > 0 && levitateAction === false) {
+				if (mute === "no") {
+					var levitate_snd = new Audio("sounds/levitate.wav"); // buffers automatically when created
+					levitate_snd.play();
+				}
 				levitateAction = true;
 				myGameArea.levitateSection = myGameArea.frameNo;
 				levitateAmount--;
@@ -968,6 +980,10 @@
 
 		function boost() {
 			if (boostAmount > 0 && boostAction === false) {
+				if (mute === "no") {
+					var boost_snd = new Audio("sounds/boost.wav"); // buffers automatically when created
+					boost_snd.play();
+				}
 				boostAction = true;
 				myGameArea.boostSection = myGameArea.frameNo;
 				boostAmount--;
@@ -984,7 +1000,9 @@
 		}
 
 		function resumeGame() {
-			music.play();
+			if (mute === "no") {
+				music.play();
+			}
 			clearInterval(myGameArea.interval);
 			myGameArea.interval = setInterval(updateGameArea, 15);
 			pauseAction = false;

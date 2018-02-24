@@ -6,6 +6,11 @@ html, body {
 	overflow: hidden; /*  Disable scrollbars */
 	display: block;  /* No floating content on sides */
 	/*background-image: url("crowd.png");*/
+    background-color: black !important;
+    -webkit-touch-callout: none;
+    /* prevent callout to copy image, etc when tap to hold */
+    -webkit-user-select: none;
+    /* prevent copy paste, to allow, change 'none' to 'text' */
 }
 @font-face {
     font-family: "Escapists";
@@ -13,12 +18,9 @@ html, body {
         src: url("fonts/Escapists.ttf") format("truetype");
 }
 @font-face {
-    font-family: "BACKTO1982";
-        src: url("fonts/BACKTO1982.eot");
-        src: url("fonts/BACKTO1982.TTF") format("truetype");
-}
-@font-face {
     font-family: "PressStart2P";
         src: url("fonts/PressStart2P.eot");
         src: url("fonts/PressStart2P.ttf")format("truetype");
 }
+
+

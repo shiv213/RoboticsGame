@@ -11,6 +11,7 @@
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
 	<img id="source" src="images/bkgnd.jpg" style="opacity: 0.0;">
 	<script>
+        // console.log('Orientation is ' + screen.orientation.type);
 		var loadImageProcessing = false;
 
 		function init() {
@@ -352,7 +353,7 @@
 
 				var backgroundY = height * -1;
 				var backgroundY2 = height * -3;
-				var speed = 6;
+				var speed = 3;
 				var bgImage = new Image();
 				bgImage.src = "images/bbackground.png";
 				var buttonX = [192, 110, 149, 160];
@@ -417,9 +418,9 @@
 			myBest = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
 			myCoinsNum = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
 
-			forceNum = new component("10px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
-			levitateNum = new component("10px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
-			boostNum = new component("10px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
+			forceNum = new component("20px", "Escapists", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
+			levitateNum = new component("20px", "Escapists", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
+			boostNum = new component("20px", "Escapists", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
 			myGameArea.start();
 		}
 
@@ -515,7 +516,7 @@
 			this.turnAngle = turnAngle;
 			this.randomSize = randomSize;
 			this.update = function() {
-				ctx = myGameArea.context;
+                ctx = myGameArea.context;
 				if (autoRunning === true) {
 					checkAuto();
 				}
@@ -824,8 +825,8 @@
 				var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
 
 				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
-				// TODO this line random 5 to 20
-				var chance = Math.floor(Math.random() * 20) + 1;
+				// TODO this line random 5 to 35
+				var chance = Math.floor(Math.random() * 35) + 1;
 				if (chance == 2) {
 					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "autoCoinY"));
 				}
@@ -1015,8 +1016,8 @@
 			ctx.fillStyle = "#ffffff";
 			// TODO change font here
 			ctx.fillText("          " + score + " M", 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
-			ctx.fillText("          " + highScore + " M", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 135 / 260 * myGameArea.canvas.height * 0.56);
-			ctx.fillText("          " + coinScore + " PC", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 164 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("          " + highScore + " M", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 137 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("          " + coinScore + " PC", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 170 / 260 * myGameArea.canvas.height * 0.56);
 		}
 
 		function accelerate(n) {

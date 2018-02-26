@@ -94,6 +94,8 @@
 				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
 				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
 				// quit game
+				var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+				navFor_snd.play();
 				setTimeout(location.reload(), 500);
 			}
 		}
@@ -105,12 +107,15 @@
 
 			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
 
+
 			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
 			if (x > 0.28 * myGameArea.canvas.width + 35 / 353 * myGameArea.canvas.width * 0.44 &&
 				x < 0.28 * myGameArea.canvas.width + 321 / 353 * myGameArea.canvas.width * 0.44 &&
 				y > 0.22 * myGameArea.canvas.height + 174 / 260 * myGameArea.canvas.height * 0.56 &&
 				y < 0.22 * myGameArea.canvas.height + 227 / 260 * myGameArea.canvas.height * 0.56) {
 				// quit game
+				var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+				navFor_snd.play();
 				setTimeout(location.reload(), 500);
 			}
 		}
@@ -274,7 +279,13 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					window.location = "store.html";
+						if (mute === "no") {
+			        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+			        navFor_snd.play();
+			      }
+			      navFor_snd.onended = function() {
+			        window.location = "store.html";
+			      };
 				}
 
 				var storeButtonCoords = [584 / 1920 * canvasWidth,
@@ -284,7 +295,13 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					window.location = "about.html";
+						if (mute === "no") {
+			        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+			        navFor_snd.play();
+			      }
+			      navFor_snd.onended = function() {
+			        window.location = "about.html";
+			      };
 				}
 
 				var storeButtonCoords = [1712 / 1920 * canvasWidth,
@@ -294,7 +311,13 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					window.location = "help.html";
+						if (mute === "no") {
+			        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+			        navFor_snd.play();
+			      }
+			      navFor_snd.onended = function() {
+			        window.location = "help.html";
+			      };
 				}
 
 				var muteButtonCoords = [37 / 1920 * canvasWidth,
@@ -865,6 +888,10 @@
 			}
 
 			if (autoRunning === true && ((myGameArea.frameNo - myGameArea.autoSection) == 1000)) {
+				if (mute === "no") {
+					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
+					backwards_snd.play();
+				}
 				endAutoRun();
 			} else if (autoRunning === true) {
 				myGamePiece.type = "playerTransparent";
@@ -1018,6 +1045,7 @@
 		}
 
 		function GameOverFunction() {
+			music.pause();
 			gameoverAction = true;
 			clearInterval(myGameArea.interval);
 			updateGameover();
@@ -1050,18 +1078,30 @@
 
 		function endForceAction() {
 			if ((myGameArea.frameNo - myGameArea.forceSection) == 1000) {
+				if (mute === "no") {
+					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
+					backwards_snd.play();
+				}
 				forceAction = false;
 			}
 		}
 
 		function endLevitateAction() {
 			if ((myGameArea.frameNo - myGameArea.levitateSection) == 1000) {
+				if (mute === "no") {
+					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
+					backwards_snd.play();
+				}
 				levitateAction = false;
 			}
 		}
 
 		function endBoostAction() {
 			if ((myGameArea.frameNo - myGameArea.boostSection) == 1000) {
+				if (mute === "no") {
+					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
+					backwards_snd.play();
+				}
 				boostAction = false;
 			}
 		}

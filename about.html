@@ -12,10 +12,10 @@
     var mute = localStorage.getItem('muteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
     if (mute === "yes") {
-        music.pause();
-    } else if (mute === "no"){
-        music.loop = true;
-        music.play();
+      music.pause();
+    } else if (mute === "no") {
+      music.loop = true;
+      music.play();
     }
 
     var backgroundImage = new Image();
@@ -40,11 +40,23 @@
     }
 
     function goToDonate() {
-      window.location = "donate.html";
+      if (mute === "no") {
+        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+        navFor_snd.play();
+      }
+      navFor_snd.onended = function() {
+        window.location = "donate.html";
+      };
     }
 
     function backToMainMenu() {
-      window.location = "game.html";
+      if (mute === "no") {
+        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        navBack_snd.play();
+      }
+      navBack_snd.onended = function() {
+        window.location = "game.html";
+      };
     }
 
     function addButton(x1, y1, x2, y2, callback) {

@@ -12,10 +12,10 @@
     var mute = localStorage.getItem('muteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
     if (mute === "yes") {
-        music.pause();
-    } else if (mute === "no"){
-        music.loop = true;
-        music.play();
+      music.pause();
+    } else if (mute === "no") {
+      music.loop = true;
+      music.play();
     }
 
     // document.body.requestFullscreen();
@@ -59,8 +59,11 @@
     }
 
     function buyForce() {
-      console.log("Buy force!!!");
       if (coinScore >= priceForce) {
+        if (mute === "no") {
+          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+          cash_snd.play();
+        }
         forcePowerups++;
         coinScore -= priceForce;
         localStorage.setItem('coins', coinScore);
@@ -70,8 +73,11 @@
     }
 
     function buyLevitate() {
-      console.log("Buy levitate!!!");
       if (coinScore >= priceLevitate) {
+        if (mute === "no") {
+          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+          cash_snd.play();
+        }
         levitatePowerups++;
         coinScore -= priceLevitate;
         localStorage.setItem('coins', coinScore);
@@ -81,8 +87,11 @@
     }
 
     function buyBoost() {
-      console.log("Buy levitate!!!");
       if (coinScore >= priceBoost) {
+        if (mute === "no") {
+          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+          cash_snd.play();
+        }
         boostPowerups++;
         coinScore -= priceBoost;
         localStorage.setItem('coins', coinScore);
@@ -92,7 +101,13 @@
     }
 
     function backToMainMenu() {
-      window.location = "game.html";
+      if (mute === "no") {
+        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        navBack_snd.play();
+      }
+      navBack_snd.onended = function() {
+        window.location = "game.html";
+      };
     }
 
     function addButton(x1, y1, x2, y2, callback) {

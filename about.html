@@ -10,10 +10,11 @@
   <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
   <script>
     var mute = localStorage.getItem('muteState') || "no";
+    var musicMute = localStorage.getItem('musicMuteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
     if (mute === "yes") {
       music.pause();
-    } else if (mute === "no") {
+    } else if (mute === "no" && musicMute === "no") {
       music.loop = true;
       music.play();
     }

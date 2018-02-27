@@ -242,6 +242,7 @@
 		var started = 0;
 
 		var mute = localStorage.getItem('muteState') || "no";
+		var musicMute = localStorage.getItem('musicMuteState') || "no";
 
 		function changeMuteState() {
 			if (mute === "yes") {
@@ -250,6 +251,16 @@
 			} else if (mute === "no") {
 				// TODO add mute
 				localStorage.setItem('muteState', "no");
+			}
+		}
+
+		function changeMusicMuteState() {
+			if (musicMute === "yes") {
+				// TODO add mute
+				localStorage.setItem('musicMuteState', "yes");
+			} else if (musicMute === "no") {
+				// TODO add mute
+				localStorage.setItem('musicMuteState', "no");
 			}
 		}
 
@@ -279,13 +290,13 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-						if (mute === "no") {
-			        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-			        navFor_snd.play();
-			      }
-			      navFor_snd.onended = function() {
-			        window.location = "store.html";
-			      };
+					if (mute === "no") {
+						var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+						navFor_snd.play();
+					}
+					navFor_snd.onended = function() {
+						window.location = "store.html";
+					};
 				}
 
 				var storeButtonCoords = [584 / 1920 * canvasWidth,
@@ -295,13 +306,13 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-						if (mute === "no") {
-			        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-			        navFor_snd.play();
-			      }
-			      navFor_snd.onended = function() {
-			        window.location = "about.html";
-			      };
+					if (mute === "no") {
+						var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+						navFor_snd.play();
+					}
+					navFor_snd.onended = function() {
+						window.location = "about.html";
+					};
 				}
 
 				var storeButtonCoords = [1712 / 1920 * canvasWidth,
@@ -311,13 +322,13 @@
 				];
 				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
 					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-						if (mute === "no") {
-			        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-			        navFor_snd.play();
-			      }
-			      navFor_snd.onended = function() {
-			        window.location = "help.html";
-			      };
+					if (mute === "no") {
+						var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+						navFor_snd.play();
+					}
+					navFor_snd.onended = function() {
+						window.location = "help.html";
+					};
 				}
 
 				var muteButtonCoords = [37 / 1920 * canvasWidth,
@@ -340,11 +351,32 @@
 						changeMuteState();
 					}
 				}
+
+				var musicMuteButtonCoords = [250 / 1920 * canvasWidth,
+					838 / 1080 * canvasHeight,
+					426 / 1920 * canvasWidth,
+					1051 / 1080 * canvasHeight
+				];
+				if (x > musicMuteButtonCoords[0] && x < musicMuteButtonCoords[2] &&
+					y > musicMuteButtonCoords[1] && y < musicMuteButtonCoords[3]) {
+					if (musicMute === "no") {
+						musicMute = "yes";
+						music.pause();
+						changeMusicMuteState();
+					} else {
+						musicMute = "no";
+						if (mute === "no") {
+							music.loop = true;
+							music.play();
+						}
+						changeMusicMuteState();
+					}
+				}
 			}
 		}
 
 		function mainMenu() {
-			if (mute === "no") {
+			if (mute === "no" && musicMute === "no") {
 				music.loop = true;
 				music.play();
 			} else {
@@ -388,6 +420,11 @@
 				var menuMutedPic = new Image();
 				menuMutedPic.src = "images/menu_muted.png";
 
+				var musicMutedPic = new Image();
+				musicMutedPic.src = "images/music_muted.png";
+				var musicUnmutedPic = new Image();
+				musicUnmutedPic.src = "images/music_unmuted.png";
+
 				var frames = 30;
 				var timerId = 0;
 				timerId = setInterval(update, 1000 / frames);
@@ -418,6 +455,12 @@
 				function draw() {
 					context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
 					context.drawImage(bgImage, 0, backgroundY, width, height * 2);
+					if (musicMute === "no") {
+						context.drawImage(musicUnmutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
+					} else {
+						context.drawImage(musicMutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
+					}
+
 					if (mute === "no") {
 						context.drawImage(menuUnmutedPic, 0, 0, width, height);
 					} else {

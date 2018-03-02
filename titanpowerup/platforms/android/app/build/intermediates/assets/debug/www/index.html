@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body onload="init()" id="script">
+	<canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
+	<script>
+        function init() {
+			loadImages("LoadingScreen.png", "LoadingScreen2.png");
+		}
+
+		function loadImages(loadingPic1, loadingPic2) {
+			var alpha = 1;
+			var delta = -0.012;
+			var canvas = document.getElementById("c");
+			var ctx = canvas.getContext("2d");
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			var loadingImage = new Image();
+			loadingImage.src = "images/" + loadingPic1;
+			loop();
+
+			function loop() {
+				alpha += delta;
+				if (alpha <= 0.01) delta = -delta;
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.globalAlpha = 1;
+				ctx.drawImage(loadingImage, 0, 0, window.innerWidth, window.innerHeight);
+				ctx.globalAlpha = alpha;
+                ctx.font = 1 + 'px "Escapists"';
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText("#SunnyisaH03", canvas.width * 2, canvas.height * 3);
+                ctx.font = 1 + 'px "PressStart2P"';
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText("#WatergameConfirmed", canvas.width * 2, canvas.height * 2);
+                ctx.fillStyle = "black";
+				ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+				if (alpha <= 1) requestAnimationFrame(loop);
+				else {
+					if (loadingPic2 != undefined) {
+						loadImages(loadingPic2, undefined);
+					} else {
+						// load game.html
+						window.location = 'game.html';
+					}
+				}
+			}
+		}
+
+	</script>
+	<br>
+</body>
+
+</html>

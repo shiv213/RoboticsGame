@@ -1,0 +1,24 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	border: 0;
+	overflow: hidden; /*  Disable scrollbars */
+	display: block;  /* No floating content on sides */
+	/*background-image: url("crowd.png");*/
+    background-color: black !important;
+    -webkit-touch-callout: none;
+    /* prevent callout to copy image, etc when tap to hold */
+    -webkit-user-select: none;
+    /* prevent copy paste, to allow, change 'none' to 'text' */
+}
+@font-face {
+    font-family: "Escapists";
+        src: url("fonts/Escapists.eot");
+        src: url("fonts/Escapists.ttf") format("truetype");
+}
+@font-face {
+    font-family: "PressStart2P";
+        src: url("fonts/PressStart2P.eot");
+        src: url("fonts/PressStart2P.ttf")format("truetype");
+}

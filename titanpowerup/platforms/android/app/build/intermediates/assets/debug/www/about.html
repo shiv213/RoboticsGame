@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body onload="init()" id="script">
+  <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+  <script>
+    var mute = localStorage.getItem('muteState') || "no";
+    var musicMute = localStorage.getItem('musicMuteState') || "no";
+    var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
+    if (mute === "yes") {
+      music.pause();
+    } else if (mute === "no" && musicMute === "no") {
+      music.loop = true;
+      music.play();
+    }
+
+    var backgroundImage = new Image();
+    var ctx;
+    var buttons = [];
+
+    function draw() {
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+      ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+    }
+
+    function loadBackgroundImage() {
+      var canvas = document.getElementById("c");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx = canvas.getContext("2d");
+      backgroundImage.src = "images/about.png";
+      backgroundImage.onload = function() {
+        draw();
+      }
+    }
+
+    function goToDonate() {
+      if (mute === "no") {
+        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+        navFor_snd.play();
+      }
+      navFor_snd.onended = function() {
+        window.location = "https://www.technotitans.org/donate.html";
+      };
+    }
+
+    function backToMainMenu() {
+      if (mute === "no") {
+        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        navBack_snd.play();
+      }
+      navBack_snd.onended = function() {
+        window.location = "game.html";
+      };
+    }
+
+    function addButton(x1, y1, x2, y2, callback) {
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback
+      });
+    }
+
+    function setButtons() {
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+      addButton(44 / 1920 * canvasWidth, 72 / 1080 * canvasHeight, 408 / 1920 * canvasWidth, 182 / 1080 * canvasHeight, backToMainMenu);
+      addButton(60 / 1920 * canvasWidth, 805 / 1080 * canvasHeight, 758 / 1920 * canvasWidth, 943 / 1080 * canvasHeight, goToDonate);
+    }
+
+    function checkButtons(evt) {
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+          b.callback();
+        }
+      }
+    }
+
+    function init() {
+      loadBackgroundImage();
+      setButtons();
+      window.addEventListener('touchstart', checkButtons);
+    }
+  </script>
+</body>
+
+</html>

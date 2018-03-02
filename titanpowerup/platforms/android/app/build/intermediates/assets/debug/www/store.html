@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body onload="init()" id="script">
+  <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+  <script>
+    var mute = localStorage.getItem('muteState') || "no";
+    var musicMute = localStorage.getItem('musicMuteState') || "no";
+    var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
+    if (mute === "yes") {
+      music.pause();
+    } else if (mute === "no" && musicMute === "no") {
+      music.loop = true;
+      music.play();
+    }
+
+    // document.body.requestFullscreen();
+    var coinScore = localStorage.getItem('coins') || 0;
+    var forcePowerups = localStorage.getItem('forcepowerup') || 0;
+    var levitatePowerups = localStorage.getItem('levitatepowerup') || 0;
+    var boostPowerups = localStorage.getItem('boostpowerup') || 0;
+
+
+    var backgroundImage = new Image();
+    var ctx;
+    var buttons = [];
+
+    var priceForce = 20;
+    var priceLevitate = 30;
+    var priceBoost = 25;
+
+    function draw() {
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+      ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+      // TODO change font here
+      ctx.font = 85 / 1080 * canvasHeight + 'px "PressStart2P';
+      ctx.fillStyle = "#009bd4";
+      ctx.fillText("" + coinScore, 1140 / 1920 * canvasWidth, 480 / 1080 * canvasHeight);
+      ctx.fillText("" + forcePowerups, 800 / 1920 * canvasWidth, 630 / 1080 * canvasHeight);
+      ctx.fillText("" + levitatePowerups, 860 / 1920 * canvasWidth, 738 / 1080 * canvasHeight);
+      ctx.fillText("" + boostPowerups, 800 / 1920 * canvasWidth, 850 / 1080 * canvasHeight);
+    }
+
+    function loadBackgroundImage() {
+      var canvas = document.getElementById("c");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx = canvas.getContext("2d");
+      console.log("loading store background");
+      backgroundImage.src = "images/store.png?801724";
+      backgroundImage.onload = function() {
+        draw();
+      }
+    }
+
+    function buyForce() {
+      if (coinScore >= priceForce) {
+        if (mute === "no") {
+          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+          cash_snd.play();
+        }
+        forcePowerups++;
+        coinScore -= priceForce;
+        localStorage.setItem('coins', coinScore);
+        localStorage.setItem('forcepowerup', forcePowerups);
+        draw();
+      }
+    }
+
+    function buyLevitate() {
+      if (coinScore >= priceLevitate) {
+        if (mute === "no") {
+          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+          cash_snd.play();
+        }
+        levitatePowerups++;
+        coinScore -= priceLevitate;
+        localStorage.setItem('coins', coinScore);
+        localStorage.setItem('levitatepowerup', levitatePowerups);
+        draw();
+      }
+    }
+
+    function buyBoost() {
+      if (coinScore >= priceBoost) {
+        if (mute === "no") {
+          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+          cash_snd.play();
+        }
+        boostPowerups++;
+        coinScore -= priceBoost;
+        localStorage.setItem('coins', coinScore);
+        localStorage.setItem('boostpowerup', boostPowerups);
+        draw();
+      }
+    }
+
+    function backToMainMenu() {
+      if (mute === "no") {
+        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        navBack_snd.play();
+      }
+      navBack_snd.onended = function() {
+        window.location = "game.html";
+      };
+    }
+
+    function addButton(x1, y1, x2, y2, callback) {
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback
+      });
+    }
+
+    function setButtons() {
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+      addButton(1469 / 1920 * canvasWidth, 539 / 1080 * canvasHeight, 1682 / 1920 * canvasWidth, 619 / 1080 * canvasHeight, buyForce);
+      addButton(1469 / 1920 * canvasWidth, 649 / 1080 * canvasHeight, 1682 / 1920 * canvasWidth, 729 / 1080 * canvasHeight, buyLevitate);
+      addButton(1469 / 1920 * canvasWidth, 760 / 1080 * canvasHeight, 1682 / 1920 * canvasWidth, 840 / 1080 * canvasHeight, buyBoost);
+      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
+    }
+
+    function checkButtons(evt) {
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+          b.callback();
+        }
+      }
+    }
+
+    function init() {
+      loadBackgroundImage();
+      setButtons();
+      window.addEventListener('touchstart', checkButtons);
+    }
+  </script>
+</body>
+
+</html>

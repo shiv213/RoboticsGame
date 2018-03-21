@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body onload="init()" id="script">
+    <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+    <script src="https://unpkg.com/lodash"></script>
+    <script src="js/leaderboard.js"></script>
+    <script>
+    var mute = localStorage.getItem('muteState') || "no";
+    var musicMute = localStorage.getItem('musicMuteState') || "no";
+    var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
+    if (mute === "yes") {
+        music.pause();
+    } else if (mute === "no" && musicMute === "no") {
+        music.loop = true;
+        music.play();
+    }
+
+    var backgroundImage = new Image();
+    var ctx;
+    var buttons = [];
+
+    function draw(type) {
+        var canvas = document.getElementById("c");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx = canvas.getContext("2d");
+        backgroundImage.onload = function() {
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            ctx.font = 20 / 260 * ctx.canvas.height * 0.99 + 'px "Escapists"';
+            ctx.fillStyle = "black";
+            ctx.fillText(".", 1, 1);
+
+            setTimeout(function() {
+                getHighScore().then(drawScores);
+            }, 400);
+        }
+        backgroundImage.src = "images/leaderboard.png";
+
+    }
+
+    function drawScores(highScores) {
+        var canvas = document.getElementById("c");
+        ctx = canvas.getContext("2d");
+        // ctx.fillStyle = "#000000";
+        // ctx.globalAlpha = 0.4;
+        // ctx.fillRect(0, 0, .canvas.width, .canvas.height);
+        // ctx.globalAlpha = 1;
+        // ctx.drawImage(gameoverPic, .canvas.width * 0.28, .canvas.height * 0.22, .canvas.width * 0.44, .canvas.height * 0.56);
+        ctx.font = 20 / 260 * ctx.canvas.height * 0.99 + 'px "Escapists"';
+        ctx.fillStyle = "#ffffff";
+        // 1st
+        ctx.fillText("1", 150 / 1920 * ctx.canvas.width, 415 / 1080 * ctx.canvas.height);
+        ctx.fillText(highScores[0], 545 / 1920 * ctx.canvas.width, 415 / 1080 * ctx.canvas.height);
+        ctx.fillText(highScores[1], 1370 / 1920 * ctx.canvas.width, 415 / 1080 * ctx.canvas.height);
+        // 2nd
+        ctx.fillText("2", 150 / 1920 * ctx.canvas.width, 535 / 1080 * ctx.canvas.height);
+        ctx.fillText("HeadassBerk", 545 / 1920 * ctx.canvas.width, 535 / 1080 * ctx.canvas.height);
+        ctx.fillText("20", 1370 / 1920 * ctx.canvas.width, 535 / 1080 * ctx.canvas.height);
+        // 3rd
+        ctx.fillText("3", 150 / 1920 * ctx.canvas.width, 655 / 1080 * ctx.canvas.height);
+        ctx.fillText("rip_language_filters", 545 / 1920 * ctx.canvas.width, 655 / 1080 * ctx.canvas.height);
+        ctx.fillText("10", 1370 / 1920 * ctx.canvas.width, 655 / 1080 * ctx.canvas.height);
+        // Player + 1
+        ctx.fillText("81", 150 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
+        ctx.fillText("player2_nick", 545 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
+        ctx.fillText("player2_score", 1370 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
+        // Player
+        ctx.fillStyle = "#CA222D";
+        ctx.fillText("80", 150 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+        ctx.fillText(localStorage.getItem('name'), 545 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+        ctx.fillText(localStorage.getItem('highScore') || 0, 1370 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+    }
+
+    function goToDonate() {
+        window.location = "https://www.technotitans.org/donate.html";
+    }
+
+    function backToMainMenu() {
+        if (mute === "no") {
+            var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+            navBack_snd.play();
+            navBack_snd.onended = function() {
+                window.location = "game.html";
+            }
+        } else {
+            window.location = "game.html";
+        };
+    }
+
+    function addButton(x1, y1, x2, y2, callback, param) {
+        buttons.push({
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2,
+            callback: callback,
+            param: param
+        });
+    }
+
+    function setButtons() {
+        var canvasWidth = window.innerWidth;
+        var canvasHeight = window.innerHeight;
+        addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
+        // addButton(118 / 1920 * canvasWidth, 400 / 1080 * canvasHeight, 352 / 1920 * canvasWidth, 469 / 1080 * canvasHeight, goToDonate);
+
+        // addButton(103 / 1920 * canvasWidth, 512 / 1080 * canvasHeight, 1817 / 1920 * canvasWidth, 662 / 1080 * canvasHeight, draw, "qrCodeEther");
+        // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1817 / 1920 * canvasWidth, 824 / 1080 * canvasHeight, draw, "qrCodeMonero");
+        // addButton(103 / 1920 * canvasWidth, 838 / 1080 * canvasHeight, 1817 / 1920 * canvasWidth, 988 / 1080 * canvasHeight, draw, "qrCodeBitcoin");
+        // addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw);
+    }
+
+    function checkButtons(evt) {
+        var x = evt.changedTouches[0].pageX;
+        var y = evt.changedTouches[0].pageY;
+        for (var i = 0; i < buttons.length; i++) {
+            var b = buttons[i];
+            if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+                b.callback(b.param);
+            }
+        }
+    }
+
+    function init() {
+        draw();
+        // getHighScore().then(drawScores);
+        setButtons();
+        window.addEventListener('touchstart', checkButtons);
+    }
+    </script>
+</body>
+
+</html>

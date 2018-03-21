@@ -8,6 +8,7 @@ html, body {
 	/*background-image: url("crowd.png");*/
     background-color: black !important;
     -webkit-touch-callout: none;
+	-webkit-text-size-adjust: none;
     /* prevent callout to copy image, etc when tap to hold */
     -webkit-user-select: none;
     /* prevent copy paste, to allow, change 'none' to 'text' */

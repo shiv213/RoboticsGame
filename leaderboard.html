@@ -78,10 +78,6 @@
         ctx.fillText(localStorage.getItem('highScore') || 0, 1370 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
     }
 
-    function goToDonate() {
-        window.location = "https://www.technotitans.org/donate.html";
-    }
-
     function backToMainMenu() {
         if (mute === "no") {
             var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created

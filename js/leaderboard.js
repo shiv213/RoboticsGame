@@ -40,15 +40,15 @@ function getScores() {
     });
 }
 
-function getHighScore() {
-    return getScores().then(function(scoreList) {
-        var obj =  _.maxBy(scoreList, (aScore) => aScore.score);
-        var string = JSON.stringify(obj);
-        var text = JSON.parse(string);
-        // text.name = new Date(text.name);
-        return [text.name, text.score];
-    });
-}
+// function getHighScore() {
+//     return getScores().then(function(scoreList) {
+//         var obj =  _.maxBy(scoreList, (aScore) => aScore.score);
+//         var string = JSON.stringify(obj);
+//         var text = JSON.parse(string);
+//         // text.name = new Date(text.name);
+//         return [text.name, text.score];
+//     });
+// }
 
 getScores(); // initial data
     

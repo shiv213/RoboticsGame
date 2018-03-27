@@ -21,7 +21,6 @@
         music.play();
     }
 
-    var inputType = 1;
     var input = new CanvasInput({
         canvas: document.getElementById('c'),
         x: 1535 / 1920 * document.getElementById('c').width,
@@ -57,24 +56,17 @@
         backgroundImage.onload = function() {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         }
-        // if (musicMute === "yes") {
-        //     ctx.drawImage(musicMutePic, 1070 / 1920 * canvas.width, 638 / 1080 * canvas.height, 1326 / 1920 * canvas.width, 945 / 1080 * canvas.height);
-        // }
+        if (musicMute === "yes") {
+            ctx.drawImage(musicMutePic, 1070 / 1920 * canvas.width, 638 / 1080 * canvas.height, 1326 / 1920 * canvas.width, 945 / 1080 * canvas.height);
+        }
 
-        // if (mute === "yes") {
-        //     ctx.drawImage(MutePic, 250 / 1920 * canvas.width, 838 / 1080 * canvas.height, (176 / 1920) * canvas.width, 213 / 1080 * canvas.height);
-        // }
+        if (mute === "yes") {
+            ctx.drawImage(MutePic, 250 / 1920 * canvas.width, 838 / 1080 * canvas.height, (176 / 1920) * canvas.width, 213 / 1080 * canvas.height);
+        }
         setTimeout(function() {
             input.render();
         }, 400);
 
-    }
-
-    if (inputType == 0) {
-        input.blur();
-        name = input.value();
-        input._x = -200000000;
-        input.destroy();
     }
 
     function setName() {
@@ -82,6 +74,7 @@
         if (input.value().length <= maxNameLength && input.value().length != 0) { //LIMIT Name length
             console.log("acceptable name")
             localStorage.setItem('name', input.value());
+            location.reload();
             // input._x = -200000000;
         } else {
             // input.blur();

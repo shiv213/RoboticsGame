@@ -29,7 +29,7 @@
       canvas: document.getElementById('c'),
       x: 702 / 1920 * window.innerWidth,
       y: 305 / 1080 * window.innerHeight,
-      fontSize: 30,
+      fontSize: 85 / 1080 * window.innerHeight,
       fontFamily: 'Escapists',
       fontColor: '#212121',
       width: 645 / 1920 * window.innerWidth,
@@ -60,8 +60,7 @@
       backgroundImage.src = "images/Pages/settings.png";
       backgroundImage.onload = function() {
         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-      }
-
+      } 
       setTimeout(function() {
         input.render();
       }, 400);
@@ -155,7 +154,7 @@
       var musicMutePic = new Image();
       musicMutePic.src = "images/Buttons/music_muted.png"
       console.log("drawing");
-      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      draw();
       if (mute === "yes") {
         ctx.drawImage(mutePic, canvas.width * 588 / 1920,
           639 / 1080 * canvas.height,
@@ -204,13 +203,23 @@
       // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
     }
 
-    function checkButtons(evt) {
+    function touches(evt) {
       var x = evt.changedTouches[0].pageX;
       var y = evt.changedTouches[0].pageY;
+      checkButtons(x, y);
+    }
+
+    function clicks(evt) {
+      var x = evt.clientX;
+      var y = evt.clientY;
+      checkButtons(x, y);
+    }
+
+    function checkButtons(x, y) {
       for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
         if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-          b.callback(b.param);
+          b.callback();
         }
       }
     }
@@ -218,8 +227,26 @@
     function init() {
       draw();
       setButtons();
-      window.addEventListener('touchstart', checkButtons);
+      window.addEventListener('touchstart', touches);
+      window.addEventListener('click', clicks);
     }
+
+    // function checkButtons(evt) {
+    //   var x = evt.changedTouches[0].pageX;
+    //   var y = evt.changedTouches[0].pageY;
+    //   for (var i = 0; i < buttons.length; i++) {
+    //     var b = buttons[i];
+    //     if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+    //       b.callback(b.param);
+    //     }
+    //   }
+    // }
+
+    // function init() {
+    //   draw();
+    //   setButtons();
+    //   window.addEventListener('touchstart', checkButtons);
+    // }
   </script>
 </body>
 

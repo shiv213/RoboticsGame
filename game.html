@@ -6,44 +6,42 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-<body onload="init()" id="script">
+<body onload="startGame()" id="script">
 	<canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
 	<canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
-	<img id="source" src="images/bkgnd.jpg" style="opacity: 0.0;">
+	<img id="source" src="images/Pages/bkgnd.jpg" style="opacity: 0.0;">
 	<script>
-        // example.js file
-        // Wait for device API libraries to load
-        //
+		// example.js file
+		// Wait for device API libraries to load
+		// device APIs are available
 
-        // device APIs are available
-        //
-        function onDeviceReady() {
-            document.addEventListener("pause", onPause, false);
-            document.addEventListener("resume", onResume, false);
-            document.addEventListener("menubutton", onMenuKeyDown, false);
-            // Add similar listeners for other events
-        }
+		function onDeviceReady() {
+			document.addEventListener("pause", onPause, false);
+			document.addEventListener("resume", onResume, false);
+			document.addEventListener("menubutton", onMenuKeyDown, false);
+			// Add similar listeners for other events
+		}
 
-        function onPause() {
-            pause();
-            // Handle the pause event
-        }
+		function onPause() {
+			pause();
+			// Handle the pause event
+		}
 
-        function onResume() {
-            // Handle the resume event
-        }
+		function onResume() {
+			// Handle the resume event
+		}
 
-        function onMenuKeyDown() {
-            pause();
-            // Handle the menubutton event
-        }
+		function onMenuKeyDown() {
+			pause();
+			// Handle the menubutton event
+		}
 
-        // Add similar event handlers for other events
+		// Add similar event handlers for other events
 		// console.log('Orientation is ' + screen.orientation.type);
 		var loadImageProcessing = false;
 
 		function init() {
-            document.addEventListener("deviceready", onDeviceReady, false);
+			document.addEventListener("deviceready", onDeviceReady, false);
 			mainMenu();
 		}
 
@@ -58,28 +56,90 @@
 		var gamePlay = true;
 		var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
 
+		// function clickEventListener(evt) {
+		// 	if (pauseAction === true) {
+		// 		checkPauseButtons(evt.clientX, evt.clientY);
+		// 	} else if (gameoverAction === true) {
+		// 		checkGameoverButtons(evt.clientX, evt.clientY);
+		// 	}
+		// }
 
-		function gameTouchStartEventListener(evt) {
+		function spaceDownEventListener(evt) {
+			if (evt.keyCode == 32) {
+				if (levitateAction === false) {
+					if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.08)) {
+						accelerate(-0.6);
+						myGamePiece.type = "playerBooster";
+					}
+					myGamePiece.type = "playerBooster";
+					click = true;
+				} else {
+					accelerate(-0.6);
+					myGamePiece.type = "playerBooster";
+					click = true;
+				}
+			}
+		}
+
+		function spaceUpEventListener(evt) {
+			if (evt.keyCode == 32) {
+				accelerate(0.3);
+				myGamePiece.type = "player";
+				click = false;
+			}
+		}
+
+		// window.addEventListener('touchstart', gameTouchStart);
+		// window.addEventListener('touchend', gameTouchEnd);
+		// window.addEventListener('mousedown', getClickDown);
+		// window.addEventListener('mouseup', getClickUp);
+
+		function gameTouchStart(evt) {
+			var touches = evt.changedTouches;
+			var x = touches[0].pageX;
+			var y = touches[0].pageY;
+			touchStart(x, y);
+		}
+
+		function gameTouchEnd(evt) {
+			var touches2 = evt.changedTouches;
+			var x = touches2[0].pageX;
+			var y = touches2[0].pageY;
+			touchEnd(x, y);
+		}
+
+		function getClickDown(evt) {
+			var x = evt.clientX;
+			var y = evt.clientY;
+			touchStart(x, y);
+		}
+
+		function getClickUp(evt) {
+			var x = evt.clientX;
+			var y = evt.clientY;
+			touchEnd(x, y);
+		}
+
+		function touchStart(x, y) {
 			if (pauseAction === true) {
-				checkPauseButtons(evt);
+				checkPauseButtons(x, y);
 			} else if (gameoverAction === true) {
-				checkGameoverButtons(evt);
+				checkGameoverButtons(x, y);
 			} else {
-				var touches = evt.changedTouches;
-				touching[0] = touches[0].pageX;
-				touching[1] = touches[0].pageY;
+				touching[0] = x;
+				touching[1] = y;
 				touching[2] = 0;
 				touching[3] = 0;
 				if (checkFirstTouch()) {
 					if (levitateAction === false) {
 						if (myGamePiece.y == (myGameArea.canvas.height - myGameArea.canvas.height * 0.08)) {
-							accelerate(-0.2);
+							accelerate(-0.6);
 							myGamePiece.type = "playerBooster";
 						}
 						myGamePiece.type = "playerBooster";
 						click = true;
 					} else {
-						accelerate(-0.2);
+						accelerate(-0.6);
 						myGamePiece.type = "playerBooster";
 						click = true;
 					}
@@ -87,17 +147,16 @@
 			}
 		}
 
-		function gameTouchEndEventListener(evt) {
+		function touchEnd(x, y) {
 			if (pauseAction === true) {
 				return;
 			} else if (gameoverAction === true) {
 				return;
 			}
-			var touches2 = evt.changedTouches;
-			touching[2] = touches2[0].pageX;
-			touching[3] = touches2[0].pageY;
+			touching[2] = x;
+			touching[3] = y;
 			if (checkSecondTouch()) {
-				accelerate(0.1);
+				accelerate(0.3);
 				myGamePiece.type = "player";
 				click = false;
 			}
@@ -106,68 +165,110 @@
 			touching[1] = 0;
 		}
 
-		function checkPauseButtons(evt) {
-			var x = evt.changedTouches[0].pageX;
-			var y = evt.changedTouches[0].pageY;
+		function checkPauseButtons(x, y) {
+			// var x = evt.changedTouches[0].pageX;
+			// var y = evt.changedTouches[0].pageY;
 			// xu, xb, yu, yb
+			//myGameArea.canvas.width * 0.3, myGameArea.canvas.height * 0.08, myGameArea.canvas.width * 0.4, myGameArea.canvas.height * 0.84
 
 			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
-			if (x > 0.28 * myGameArea.canvas.width + 40 / 353 * myGameArea.canvas.width * 0.44 &&
-				x < 0.28 * myGameArea.canvas.width + 312 / 353 * myGameArea.canvas.width * 0.44 &&
-				y > 0.22 * myGameArea.canvas.height + 87 / 260 * myGameArea.canvas.height * 0.56 &&
-				y < 0.22 * myGameArea.canvas.height + 133 / 260 * myGameArea.canvas.height * 0.56) {
+			if (x > 0.3 * myGameArea.canvas.width + 41 / 353 * myGameArea.canvas.width * 0.4 &&
+				x < 0.3 * myGameArea.canvas.width + 312 / 353 * myGameArea.canvas.width * 0.4 &&
+				y > 0.08 * myGameArea.canvas.height + 104 / 452 * myGameArea.canvas.height * 0.84 &&
+				y < 0.08 * myGameArea.canvas.height + 171 / 452 * myGameArea.canvas.height * 0.84) {
 				// continueGame();
 				resumeGame();
-			} else if (x > 0.28 * myGameArea.canvas.width + 90 / 353 * myGameArea.canvas.width * 0.44 &&
-				x < 0.28 * myGameArea.canvas.width + 264 / 353 * myGameArea.canvas.width * 0.44 &&
-				y > 0.22 * myGameArea.canvas.height + 173 / 260 * myGameArea.canvas.height * 0.56 &&
-				y < 0.22 * myGameArea.canvas.height + 240 / 260 * myGameArea.canvas.height * 0.56) {
+				console.log(click);
+			} else if (x > 0.3 * myGameArea.canvas.width + 63 / 353 * myGameArea.canvas.width * 0.4 &&
+				x < 0.3 * myGameArea.canvas.width + 292 / 353 * myGameArea.canvas.width * 0.4 &&
+				y > 0.08 * myGameArea.canvas.height + 190 / 452 * myGameArea.canvas.height * 0.84 &&
+				y < 0.08 * myGameArea.canvas.height + 256 / 452 * myGameArea.canvas.height * 0.84) {
+				// retry game
+				setTimeout(location.reload(), 500);
+			} else if (x > 0.3 * myGameArea.canvas.width + 91 / 353 * myGameArea.canvas.width * 0.4 &&
+				x < 0.3 * myGameArea.canvas.width + 264 / 353 * myGameArea.canvas.width * 0.4 &&
+				y > 0.08 * myGameArea.canvas.height + 276 / 452 * myGameArea.canvas.height * 0.84 &&
+				y < 0.08 * myGameArea.canvas.height + 342 / 452 * myGameArea.canvas.height * 0.84) {
 				// quit game
 				var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
 				navFor_snd.play();
-				setTimeout(location.reload(), 500);
+				window.location = "menu.html";
+
+				//Mute and Music mute below
+			} else if (x > 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4 &&
+				x < 0.3 * myGameArea.canvas.width + 165 / 353 * myGameArea.canvas.width * 0.4 &&
+				y > 0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84 &&
+				y < 0.08 * myGameArea.canvas.height + 430 / 452 * myGameArea.canvas.height * 0.84) {
+				// mute
+				// console.log("mute pressed");
+				if (mute === "no") {
+					mute = "yes";
+					// music.play();
+					changeMuteState();
+				} else {
+					mute = "no";
+					changeMuteState();
+				}
+				updatePauseButtons();
+			} else if (x > 0.3 * myGameArea.canvas.width + 188 / 353 * myGameArea.canvas.width * 0.4 &&
+				x < 0.3 * myGameArea.canvas.width + 248 / 353 * myGameArea.canvas.width * 0.4 &&
+				y > 0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84 &&
+				y < 0.08 * myGameArea.canvas.height + 430 / 452 * myGameArea.canvas.height * 0.84) {
+				// musicMute
+				if (musicMute === "no") {
+					musicMute = "yes";
+					changeMusicMuteState();
+				} else {
+					musicMute = "no";
+					changeMusicMuteState();
+				}
+				updatePauseButtons();
 			}
 		}
 
-		function checkGameoverButtons(evt) {
-			var x = evt.changedTouches[0].pageX;
-			var y = evt.changedTouches[0].pageY;
+		function checkGameoverButtons(x, y) {
+			// var x = evt.changedTouches[0].pageX;
+			// var y = evt.changedTouches[0].pageY;
 			// xu, xb, yu, yb
-
-			// 0.1 * canvasWidth + 39 / 1842 * canvasWidth * 0.8
-
-
 			//ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
-			if (x > 0.28 * myGameArea.canvas.width + 35 / 353 * myGameArea.canvas.width * 0.44 &&
+			if (x > 0.28 * myGameArea.canvas.width + 34 / 353 * myGameArea.canvas.width * 0.44 &&
 				x < 0.28 * myGameArea.canvas.width + 321 / 353 * myGameArea.canvas.width * 0.44 &&
-				y > 0.22 * myGameArea.canvas.height + 174 / 260 * myGameArea.canvas.height * 0.56 &&
-				y < 0.22 * myGameArea.canvas.height + 227 / 260 * myGameArea.canvas.height * 0.56) {
-				// quit game
+				y > 0.22 * myGameArea.canvas.height + 181 / 315 * myGameArea.canvas.height * 0.56 &&
+				y < 0.22 * myGameArea.canvas.height + 235 / 315 * myGameArea.canvas.height * 0.56) {
+				// retry
 				var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
 				navFor_snd.play();
 				setTimeout(location.reload(), 500);
+			} else if (x > 0.28 * myGameArea.canvas.width + 34 / 353 * myGameArea.canvas.width * 0.44 &&
+				x < 0.28 * myGameArea.canvas.width + 321 / 353 * myGameArea.canvas.width * 0.44 &&
+				y > 0.22 * myGameArea.canvas.height + 243 / 315 * myGameArea.canvas.height * 0.56 &&
+				y < 0.22 * myGameArea.canvas.height + 297 / 315 * myGameArea.canvas.height * 0.56) {
+				// // quit game
+				// var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+				// navFor_snd.play();
+				window.location = "menu.html";
 			}
 		}
 
 		function checkFirstTouch() {
-			if (touching[0] >= myGameArea.canvas.width * 0.66 &&
-				touching[0] <= myGameArea.canvas.width * 0.71 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			if (touching[0] > myGameArea.canvas.width * 0.65 &&
+				touching[0] <= myGameArea.canvas.width * 0.73 &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07) {
 				return false;
-			} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
-				touching[0] <= myGameArea.canvas.width * 0.79 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[0] > myGameArea.canvas.width * 0.73 &&
+				touching[0] <= myGameArea.canvas.width * 0.81 &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07) {
 				return false;
-			} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
-				touching[0] <= myGameArea.canvas.width * 0.87 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[0] > myGameArea.canvas.width * 0.81 &&
+				touching[0] <= myGameArea.canvas.width * 0.89 &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07) {
 				return false;
-			} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
-				touching[0] <= myGameArea.canvas.width * 0.95 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[0] > myGameArea.canvas.width * 0.89 &&
+				touching[0] <= myGameArea.canvas.width &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07) {
 				return false;
 			}
@@ -175,24 +276,24 @@
 		}
 
 		function checkSecondTouch() {
-			if (touching[2] >= myGameArea.canvas.width * 0.66 &&
-				touching[2] <= myGameArea.canvas.width * 0.71 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+			if (touching[2] > myGameArea.canvas.width * 0.65 &&
+				touching[2] <= myGameArea.canvas.width * 0.73 &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				return false;
-			} else if (touching[2] >= myGameArea.canvas.width * 0.74 &&
-				touching[2] <= myGameArea.canvas.width * 0.79 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[2] > myGameArea.canvas.width * 0.73 &&
+				touching[2] <= myGameArea.canvas.width * 0.81 &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				return false;
-			} else if (touching[2] >= myGameArea.canvas.width * 0.82 &&
-				touching[2] <= myGameArea.canvas.width * 0.87 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[2] > myGameArea.canvas.width * 0.81 &&
+				touching[2] <= myGameArea.canvas.width * 0.89 &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				return false;
-			} else if (touching[2] >= myGameArea.canvas.width * 0.9 &&
-				touching[2] <= myGameArea.canvas.width * 0.95 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[2] > myGameArea.canvas.width * 0.89 &&
+				touching[2] <= myGameArea.canvas.width &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				return false;
 			}
@@ -200,40 +301,40 @@
 		}
 
 		function checkTouchLocation() {
-			if (touching[0] >= myGameArea.canvas.width * 0.66 &&
-				touching[0] <= myGameArea.canvas.width * 0.71 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			if (touching[0] > myGameArea.canvas.width * 0.65 &&
+				touching[0] <= myGameArea.canvas.width * 0.73 &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07 &&
-				touching[2] >= myGameArea.canvas.width * 0.66 &&
-				touching[2] <= myGameArea.canvas.width * 0.71 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[2] > myGameArea.canvas.width * 0.65 &&
+				touching[2] <= myGameArea.canvas.width * 0.73 &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				force();
-			} else if (touching[0] >= myGameArea.canvas.width * 0.74 &&
-				touching[0] <= myGameArea.canvas.width * 0.79 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[0] > myGameArea.canvas.width * 0.73 &&
+				touching[0] <= myGameArea.canvas.width * 0.81 &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07 &&
-				touching[2] >= myGameArea.canvas.width * 0.74 &&
-				touching[2] <= myGameArea.canvas.width * 0.79 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[2] > myGameArea.canvas.width * 0.73 &&
+				touching[2] <= myGameArea.canvas.width * 0.81 &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				levitate();
-			} else if (touching[0] >= myGameArea.canvas.width * 0.82 &&
-				touching[0] <= myGameArea.canvas.width * 0.87 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[0] > myGameArea.canvas.width * 0.81 &&
+				touching[0] <= myGameArea.canvas.width * 0.89 &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07 &&
-				touching[2] >= myGameArea.canvas.width * 0.82 &&
-				touching[2] <= myGameArea.canvas.width * 0.87 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[2] > myGameArea.canvas.width * 0.81 &&
+				touching[2] <= myGameArea.canvas.width * 0.89 &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				boost();
-			} else if (touching[0] >= myGameArea.canvas.width * 0.9 &&
-				touching[0] <= myGameArea.canvas.width * 0.95 &&
-				touching[1] >= myGameArea.canvas.width * 0.02 &&
+			} else if (touching[0] > myGameArea.canvas.width * 0.89 &&
+				touching[0] <= myGameArea.canvas.width &&
+				touching[1] >= 0 &&
 				touching[1] <= myGameArea.canvas.width * 0.07 &&
-				touching[2] >= myGameArea.canvas.width * 0.9 &&
-				touching[2] <= myGameArea.canvas.width * 0.95 &&
-				touching[3] >= myGameArea.canvas.width * 0.02 &&
+				touching[2] > myGameArea.canvas.width * 0.89 &&
+				touching[2] <= myGameArea.canvas.width &&
+				touching[3] >= 0 &&
 				touching[3] <= myGameArea.canvas.width * 0.07) {
 				pause();
 			}
@@ -275,250 +376,35 @@
 
 		function changeMuteState() {
 			if (mute === "yes") {
-				// TODO add mute
 				localStorage.setItem('muteState', "yes");
-                localStorage.setItem('musicMuteState', "yes");
 			} else if (mute === "no") {
-				// TODO add mute
 				localStorage.setItem('muteState', "no");
 			}
 		}
 
 		function changeMusicMuteState() {
 			if (musicMute === "yes") {
-				// TODO add mute
 				localStorage.setItem('musicMuteState', "yes");
 			} else if (musicMute === "no") {
-				// TODO add mute
 				localStorage.setItem('musicMuteState', "no");
 			}
 		}
 
-		function mainMenuTouchEventListener(evt) {
-			if (started != 1) {
-				var x = evt.changedTouches[0].pageX;
-				var y = evt.changedTouches[0].pageY;
-				var canvasWidth = myGameArea.canvas.width;
-				var canvasHeight = myGameArea.canvas.height;
-				// button coords [x1, y1, x2, y2]
-				var playButtonCoords = [240 / 1920 * canvasWidth,
-					460 / 1080 * canvasHeight,
-					850 / 1920 * canvasWidth,
-					710 / 1080 * canvasHeight
-				];
-				if (x > playButtonCoords[0] && x < playButtonCoords[2] &&
-					y > playButtonCoords[1] && y < playButtonCoords[3]) {
-					window.removeEventListener('touchstart', mainMenuTouchEventListener);
-					started = 1;
-					startGame();
-				}
-
-				var storeButtonCoords = [910 / 1920 * canvasWidth,
-					460 / 1080 * canvasHeight,
-					1680 / 1920 * canvasWidth,
-					710 / 1080 * canvasHeight
-				];
-				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
-					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					if (mute === "no") {
-						var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-						navFor_snd.play();
-					}
-					navFor_snd.onended = function() {
-						window.location = "store.html";
-					};
-				}
-
-				var storeButtonCoords = [584 / 1920 * canvasWidth,
-					750 / 1080 * canvasHeight,
-					1274 / 1920 * canvasWidth,
-					960 / 1080 * canvasHeight
-				];
-				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
-					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					if (mute === "no") {
-						var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-						navFor_snd.play();
-					}
-					navFor_snd.onended = function() {
-						window.location = "about.html";
-					};
-				}
-
-				var storeButtonCoords = [1712 / 1920 * canvasWidth,
-					854 / 1080 * canvasHeight,
-					1888 / 1920 * canvasWidth,
-					1068 / 1080 * canvasHeight
-				];
-				if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
-					y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-					if (mute === "no") {
-						var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-						navFor_snd.play();
-					}
-					navFor_snd.onended = function() {
-						window.location = "help.html";
-					};
-				}
-
-				var muteButtonCoords = [37 / 1920 * canvasWidth,
-					838 / 1080 * canvasHeight,
-					213 / 1920 * canvasWidth,
-					1051 / 1080 * canvasHeight
-				];
-				if (x > muteButtonCoords[0] && x < muteButtonCoords[2] &&
-					y > muteButtonCoords[1] && y < muteButtonCoords[3]) {
-					// console.log("mute pressed");
-					if (mute === "no") {
-						mute = "yes";
-						// music.play();
-						music.pause();
-						changeMuteState();
-					} else {
-						mute = "no";
-						music.loop = true;
-						music.play();
-						changeMuteState();
-					}
-				}
-
-				var musicMuteButtonCoords = [250 / 1920 * canvasWidth,
-					838 / 1080 * canvasHeight,
-					426 / 1920 * canvasWidth,
-					1051 / 1080 * canvasHeight
-				];
-				if (x > musicMuteButtonCoords[0] && x < musicMuteButtonCoords[2] &&
-					y > musicMuteButtonCoords[1] && y < musicMuteButtonCoords[3]) {
-					if (musicMute === "no") {
-						musicMute = "yes";
-						music.pause();
-						changeMusicMuteState();
-					} else {
-						musicMute = "no";
-						if (mute === "no") {
-							music.loop = true;
-							music.play();
-						}
-						changeMusicMuteState();
-					}
-				}
-			}
-		}
-
-		function mainMenu() {
-			if (mute === "no" && musicMute === "no") {
-				music.loop = true;
-				music.play();
-			} else {
-				// music.play();
-				music.pause();
-			}
-			// loadImage();
-			loadPowerupImages();
-
-			if (started != 1) {
-				window.addEventListener('touchstart', mainMenuTouchEventListener);
-			}
-			myMainMenu.start();
-		}
-
-		var myMainMenu = {
-			canvas: document.getElementById("c"),
-			start: function() {
-				this.canvas.width = window.innerWidth;
-				this.canvas.height = window.innerHeight;
-				this.context = this.canvas.getContext("2d");
-				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-				// startGame();
-				var canvas = document.getElementById("c");
-				var context = canvas.getContext("2d");
-
-				var width = canvas.getAttribute('width');
-				var height = canvas.getAttribute('height');
-
-				var backgroundY = height * -1;
-				var backgroundY2 = height * -3;
-				var speed = 3;
-				var bgImage = new Image();
-				bgImage.src = "images/bbackground.png";
-				var buttonX = [192, 110, 149, 160];
-				var buttonY = [100, 140, 180, 220];
-				var buttonWidth = [96, 260, 182, 160];
-				var buttonHeight = [40, 40, 40, 40];
-				var menuUnmutedPic = new Image();
-				menuUnmutedPic.src = "images/menu_unmuted.png";
-				var menuMutedPic = new Image();
-				menuMutedPic.src = "images/menu_muted.png";
-
-				var musicMutedPic = new Image();
-				musicMutedPic.src = "images/music_muted.png";
-				var musicUnmutedPic = new Image();
-				musicUnmutedPic.src = "images/music_unmuted.png";
-
-				var frames = 30;
-				var timerId = 0;
-				timerId = setInterval(update, 1000 / frames);
-
-				function update() {
-					if (started == 0) {
-						clear();
-						move();
-						draw();
-					}
-				}
-
-				function clear() {
-					context.clearRect(0, 0, width, height);
-				}
-
-				function move() {
-					backgroundY += speed;
-					backgroundY2 += speed;
-					if (backgroundY >= height) {
-						backgroundY = height * -2;
-					}
-					if (backgroundY2 >= height) {
-						backgroundY2 = height * -2;
-					}
-				}
-
-				function draw() {
-					context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
-					context.drawImage(bgImage, 0, backgroundY, width, height * 2);
-					if (musicMute === "no") {
-						context.drawImage(musicUnmutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
-					} else {
-						context.drawImage(musicMutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
-					}
-
-					if (mute === "no") {
-						context.drawImage(menuUnmutedPic, 0, 0, width, height);
-					} else {
-                        context.drawImage(musicMutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
-                        context.drawImage(menuMutedPic, 0, 0, width, height);
-					}
-				}
-			},
-			clear: function() {
-				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			}
+		function loadFonts() {
+			var canvas = document.getElementById("c");
+			var ctx = canvas.getContext("2d");
+			ctx.font = 1 + 'px "Escapists"';
+			ctx.fillStyle = "#ffffff";
+			ctx.fillText("#SunnyisaH03", canvas.width * 2, canvas.height * 3);
+			ctx.font = 1 + 'px "PressStart2P"';
+			ctx.fillStyle = "#ffffff";
+			ctx.fillText("#WatergameConfirmed", canvas.width * 2, canvas.height * 2);
+			ctx.fillStyle = "black";
 		}
 
 		function startGame() {
-			window.addEventListener('touchstart', gameTouchStartEventListener);
-			window.addEventListener('touchend', gameTouchEndEventListener);
-
-			myGamePiece = new component(myGameArea.canvas.height * 0.08, myGameArea.canvas.height * 0.08, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
-			myGamePiece.gravity = 0.05;
-
-			myScore = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 20, "text");
-			myBest = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 40, "text");
-			myCoinsNum = new component("15px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, 60, "text");
-
-			forceNum = new component("20px", "Escapists", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
-			levitateNum = new component("20px", "Escapists", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
-			boostNum = new component("20px", "Escapists", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
 			myGameArea.start();
+			accelerate(-0.6);
 		}
 
 		var myGameArea = {
@@ -542,6 +428,28 @@
 				this.force = false;
 				this.boost = false;
 				this.levitate = false;
+				started = 1
+				loadPowerupImages();
+				loadFonts();
+
+				//TODO
+				window.addEventListener('touchstart', gameTouchStart);
+				window.addEventListener('touchend', gameTouchEnd);
+				window.addEventListener('mousedown', getClickDown);
+				window.addEventListener('mouseup', getClickUp);
+				window.addEventListener('keydown', spaceDownEventListener);
+				window.addEventListener('keyup', spaceUpEventListener);
+
+				myGamePiece = new component(myGameArea.canvas.height * 0.08, myGameArea.canvas.height * 0.08, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
+				myGamePiece.gravity = 0.3;
+
+				myScore = new component(myGameArea.canvas.width * 0.02 + "px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, myGameArea.canvas.width * 0.03, "text");
+				myBest = new component(myGameArea.canvas.width * 0.02 + "px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, myGameArea.canvas.width * 0.06, "text");
+				myCoinsNum = new component(myGameArea.canvas.width * 0.02 + "px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, myGameArea.canvas.width * 0.09, "text");
+
+				forceNum = new component(myGameArea.canvas.width * 0.028 + "px", "Escapists", "yellow", myGameArea.canvas.width * 0.64, myGameArea.canvas.width * 0.03, "text");
+				levitateNum = new component(myGameArea.canvas.width * 0.028 + "px", "Escapists", "yellow", myGameArea.canvas.width * 0.72, myGameArea.canvas.width * 0.03, "text");
+				boostNum = new component(myGameArea.canvas.width * 0.028 + "px", "Escapists", "yellow", myGameArea.canvas.width * 0.80, myGameArea.canvas.width * 0.03, "text");
 				backgrounding();
 				updateGameArea();
 			},
@@ -557,39 +465,59 @@
 			backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", 0, 0, "background"));
 			backgrounds.push(new component(myGameArea.canvas.width, myGameArea.canvas.height, "green", x, 0, "background"));
 		}
+
 		var img = new Image(); //img.onload = go;
-		img.src = "images/obstaclenew.png";
+		img.src = "images/Pages/obstaclenew.png";
 		var playerBoosterPic = new Image();
-		playerBoosterPic.src = "images/robotWithBooster.png"
+		playerBoosterPic.src = "images/Robots/Robot1/robotWithBooster.png"
 		var playerBoosterTransparentPic = new Image();
-		playerBoosterTransparentPic.src = "images/robotWithBoosterTransparent.png";
+		playerBoosterTransparentPic.src = "images/Robots/Robot1/robotWithBoosterTransparent.png";
+		var playerBoosterPic2 = new Image();
+		playerBoosterPic2.src = "images/Robots/Robot1/robotWithBooster2.png"
+		var playerBoosterTransparentPic2 = new Image();
+		playerBoosterTransparentPic2.src = "images/Robots/Robot1/robotWithBoosterTransparent2.png";
 		var playerTransparentPic = new Image();
-		playerTransparentPic.src = "images/robotTransparent.png"
+		playerTransparentPic.src = "images/Robots/Robot1/robotTransparent.png"
 		var playerPic = new Image();
-		playerPic.src = "images/robot.png";
+		playerPic.src = "images/Robots/Robot1/robot.png";
+
+		var playerBoosterPicRed = new Image();
+		playerBoosterPicRed.src = "images/Robots/Robot1/robot1WithBoosterRed.png"
+		var playerBoosterTransparentPicRed = new Image();
+		playerBoosterTransparentPicRed.src = "images/Robots/Robot1/robot1WithBoosterTransparentRed.png";
+		var playerBoosterPic2Red = new Image();
+		playerBoosterPic2Red.src = "images/Robots/Robot1/robot1WithBoosterRed2.png"
+		var playerBoosterTransparentPic2Red = new Image();
+		playerBoosterTransparentPic2Red.src = "images/Robots/Robot1/robot1WithBoosterTransparentRed2.png";
+		var playerTransparentPicRed = new Image();
+		playerTransparentPicRed.src = "images/Robots/Robot1/robot1TransparentRed.png"
+		var playerPicRed = new Image();
+		playerPic.srcRed = "images/Robots/Robot1/robot1Red.png";
+
 		var autoPic = new Image();
-		autoPic.src = "images/a.png";
+		autoPic.src = "images/Buttons/a.png";
 		var powercube = new Image();
-		powercube.src = "images/pc.png";
+		powercube.src = "images/Buttons/pc.png";
 		var pauseMenuPic = new Image();
-		pauseMenuPic.src = "images/pauseMenu.png";
+		pauseMenuPic.src = "images/Pages/pauseMenu.png";
 		var gameoverPic = new Image();
-		gameoverPic.src = "images/gamover.png";
+		gameoverPic.src = "images/Pages/gamover.png";
+		var blueMuteMutedPic = new Image();
+		blueMuteMutedPic.src = "images/Buttons/blueMuteMuted.png";
+		var blueMusicMuteMutedPic = new Image();
+		blueMusicMuteMutedPic.src = "images/Buttons/blueMusicMuteMuted.png";
+		var blueMuteUnmutedPic = new Image();
+		blueMuteUnmutedPic.src = "images/Buttons/blueMuteUnmuted.png";
+		var blueMusicMuteUnmutedPic = new Image();
+		blueMusicMuteUnmutedPic.src = "images/Buttons/blueMusicMuteUnmuted.png";
 
 		function checkAuto() {
 			myGamePiece.type = "playerTransparent";
-			// if (this.gravitySpeed > 0 && click == true) {
-			// 	this.gravity = (0.4 - this.gravitySpeed);
-			// 	this.type = "playerBooster";
-			// } else if (this.gravitySpeed > 0 && click == false) {
-			// 	this.gravity = 0.05;
-			// 	this.type = "player";
-			// } else
 			if (click === true) {
 				myGamePiece.type = "playerTransparentBooster";
 			}
 
-			if (myGameArea.frameNo - myGameArea.autoSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.autoSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+			if (myGameArea.frameNo - myGameArea.autoSection >= 400 && Math.round(((myGameArea.frameNo - myGameArea.autoSection) - 500) * -1 / (200 / 24)) % 2 == 0) {
 				if (myGamePiece.type == "playerTransparent") {
 					myGamePiece.type = "player";
 				} else if (myGamePiece.type == "playerTransparentBooster") {
@@ -678,7 +606,13 @@
 					ctx.fillStyle = color;
 					ctx.fillText(this.text, this.x, this.y);
 				} else if (this.type == "playerBooster") {
-					ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
+					//TODO
+					if (Math.round((myGameArea.frameNo + 20) / 2) % 2 == 0) {
+						ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
+					} else {
+						ctx.drawImage(playerBoosterPic2, this.x, this.y, this.width, this.height);
+					}
+
 				} else if (this.type == "playerTransparent") {
 					ctx.drawImage(playerTransparentPic, this.x, this.y, this.width, this.height);
 				} else if (this.type == "playerTransparentBooster") {
@@ -690,25 +624,25 @@
 				}
 				drawPowerups();
 			}
-
+			// TODO player update
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
 				this.x += this.speedX;
 				this.y += this.speedY + this.gravitySpeed;
 				this.otherGravitySpeed = this.gravitySpeed;
+				this.hitBottom();
+				this.hitCelling();
 				if (levitateAction === false) {
 					this.endingAccel();
 					this.changeGravity();
 				}
-				this.hitBottom();
-				this.hitCelling();
 			}
 			this.changeGravity = function() {
 				if (this.gravitySpeed > 0 && click == true) {
-					this.gravity = (0.4 - this.gravitySpeed);
+					this.gravity = (0.7 - this.gravitySpeed);
 					this.type = "playerBooster";
-				} else if (this.gravitySpeed > 0 && click == false) {
-					this.gravity = 0.05;
+				} else if (this.gravitySpeed >= 0 && click == false) {
+					this.gravity = 0.2;
 					this.type = "player";
 				} else if (click === true) {
 					this.type = "playerBooster";
@@ -717,11 +651,10 @@
 				}
 			}
 			this.endingAccel = function() {
-				if (myGamePiece.y < myGameArea.canvas.height * 0.63 && this.gravitySpeed <= 0) {
-					this.gravity = 0.1;
+				if (myGamePiece.y < myGameArea.canvas.height * 0.47 && this.gravitySpeed <= 0) {
+					this.gravity = 0.6;
 				}
 			}
-
 
 			this.hitBottom = function() {
 				var rockbottom = myGameArea.canvas.height - this.height;
@@ -843,8 +776,15 @@
 			return false;
 		}
 
+		function playStartSound() {
+			var play_snd = new Audio("sounds/charge-1.wav"); // buffers automatically when created
+			play_snd.play();
+		}
+
 		function updateGameArea() {
-			// TODO add mute code here
+			if (myGameArea.frameNo == 1 && mute == "no") {
+				playStartSound();
+			}
 			var x, width, height, gap, minHeight, maxHeight, minGap, maxGap;
 			for (i = 0; i < myObstacles.length; i += 1) {
 				if (myGamePiece.crashWith(myObstacles[i]) && autoRunning == false) {
@@ -887,10 +827,22 @@
 			speed = updateSpeed();
 			if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
 				myGameArea.section++;
+				var playerBoosterPic = new Image();
+				playerBoosterPic.src = "images/Robots/Robot1/robotWithBooster.png"
+				var playerBoosterTransparentPic = new Image();
+				playerBoosterTransparentPic.src = "images/Robots/Robot1/robotWithBoosterTransparent.png";
+				var playerBoosterPic2 = new Image();
+				playerBoosterPic2.src = "images/Robots/Robot1/robotWithBooster2.png"
+				var playerBoosterTransparentPic2 = new Image();
+				playerBoosterTransparentPic2.src = "images/Robots/Robot1/robotWithBoosterTransparent2.png";
+				var playerTransparentPic = new Image();
+				playerTransparentPic.src = "images/Robots/Robot1/robotTransparent.png"
+				var playerPic = new Image();
+				playerPic.src = "images/Robots/Robot1/robot.png";
 				x = myGameArea.canvas.width;
 				var zones = Math.floor((Math.random() * 3));
 				var randomness = (Math.random() * 0.3) + 0.7;
-				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.1) + myGameArea.canvas.height * 0.3);
+				height = Math.floor(Math.random() * (myGameArea.canvas.height * 0.05) + myGameArea.canvas.height * 0.28);
 				width = myGameArea.canvas.height * 0.05;
 				var turnInRads = makeToRad(Math.floor(Math.random() * 361));
 				myObstacles.push(new component(width, height, "green", x, zones * (myGameArea.canvas.height * 0.33), "Obstacles", turnInRads, randomness));
@@ -922,11 +874,10 @@
 						otherZone = 0;
 					}
 				}
-				var cy = Math.floor((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
-				var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.115);
+				var cy = Math.floor(((chosenZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.1) + Math.random() * myGameArea.canvas.height * 0.06);
+				var co = Math.floor((otherZone * (myGameArea.canvas.height * 0.33)) + myGameArea.canvas.height * 0.1);
 
 				myCoins.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "blue", x, cy, "coin"));
-				// TODO this line random 5 to 35
 				var chance = Math.floor(Math.random() * 35) + 1;
 				if (chance == 2) {
 					myAuto.push(new component(myGameArea.canvas.height * 0.05, myGameArea.canvas.height * 0.05, "rgb(188, 121, 255)", x, co, "autoCoinY"));
@@ -954,14 +905,14 @@
 				backgrounds[i].x += -(speed / 2);
 				backgrounds[i].update();
 			}
-			if (myGameArea.frameNo == 1 || everyinterval(Math.round(200 / 3))) {
+			if (myGameArea.frameNo == 1 || everyinterval(Math.round(200 / 6))) {
 				score += 1;
 				if (forceAction === true) {
 					score += 4;
 				}
 			}
 
-			if (autoRunning === true && ((myGameArea.frameNo - myGameArea.autoSection) == 1000)) {
+			if (autoRunning === true && ((myGameArea.frameNo - myGameArea.autoSection) == 500)) {
 				if (mute === "no") {
 					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
 					backwards_snd.play();
@@ -972,9 +923,9 @@
 				//  + (((myGameArea.section - myGameArea.autoSection) - 10) * -1)
 			}
 
-			myScore.text = "DISTANCE:" + score + "M";
+			myScore.text = "DISTANCE:" + score + "m";
 			myScore.update();
-			myBest.text = "BEST:" + highScore + "M";
+			myBest.text = "BEST:" + highScore + "m";
 			myBest.update();
 			myCoinsNum.text = "PC:" + coinScore;
 			myCoinsNum.update();
@@ -1015,12 +966,12 @@
 		var buttonBackgroundRedImg = new Image();
 
 		function loadPowerupImages() {
-			forceImg.src = "images/force.png";
-			levitateImg.src = "images/levitate.png";
-			boostImg.src = "images/boost.png";
-			pauseImg.src = "images/pause.png";
-			buttonBackgroundImg.src = "images/buttonBackground.png";
-			buttonBackgroundRedImg.src = "images/buttonBackgroundRed.png";
+			forceImg.src = "images/Buttons/Powerups/force.png";
+			levitateImg.src = "images/Buttons/Powerups/levitate.png";
+			boostImg.src = "images/Buttons/Powerups/boost.png";
+			pauseImg.src = "images/Buttons/pause.png";
+			buttonBackgroundImg.src = "images/Buttons/Backgrounds/buttonBackground.png";
+			buttonBackgroundRedImg.src = "images/Buttons/Backgrounds/buttonBackgroundRed.png";
 		}
 
 		function drawPowerups() {
@@ -1029,7 +980,7 @@
 			if (forceAction === true) {
 				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+			if (forceAction === true && myGameArea.frameNo - myGameArea.forceSection >= 400 && Math.round(((myGameArea.frameNo - myGameArea.forceSection) - 500) * -1 / (200 / 24)) % 2 == 0) {
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
 			ctx.drawImage(forceImg, myGameArea.canvas.width * 0.66, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
@@ -1037,7 +988,7 @@
 			if (levitateAction === true) {
 				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+			if (levitateAction === true && myGameArea.frameNo - myGameArea.levitateSection >= 400 && Math.round(((myGameArea.frameNo - myGameArea.levitateSection) - 500) * -1 / (200 / 24)) % 2 == 0) {
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
 			ctx.drawImage(levitateImg, myGameArea.canvas.width * 0.74, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
@@ -1045,7 +996,7 @@
 			if (boostAction === true) {
 				ctx.drawImage(buttonBackgroundRedImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
-			if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 800 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 1000) * -1 / (200 / 12)) % 2 == 0) {
+			if (boostAction === true && myGameArea.frameNo - myGameArea.boostSection >= 400 && Math.round(((myGameArea.frameNo - myGameArea.boostSection) - 500) * -1 / (200 / 24)) % 2 == 0) {
 				ctx.drawImage(buttonBackgroundImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
 			}
 			ctx.drawImage(boostImg, myGameArea.canvas.width * 0.82, myGameArea.canvas.width * 0.02, myGameArea.canvas.width * 0.05, myGameArea.canvas.width * 0.05);
@@ -1101,13 +1052,14 @@
 		}
 
 		function resumeGame() {
-			if (mute === "no") {
+			if (mute === "no" && musicMute === "no") {
 				music.play();
 			}
 			clearInterval(myGameArea.interval);
-			myGameArea.interval = setInterval(updateGameArea, 15);
+			myGameArea.interval = setInterval(updateGameArea, 100 / 3);
 			pauseAction = false;
 		}
+
 
 		function updatePause() {
 			ctx = myGameArea.context;
@@ -1115,7 +1067,51 @@
 			ctx.globalAlpha = 0.4;
 			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 			ctx.globalAlpha = 1;
-			ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+			ctx.drawImage(pauseMenuPic, myGameArea.canvas.width * 0.3, myGameArea.canvas.height * 0.08, myGameArea.canvas.width * 0.4, myGameArea.canvas.height * 0.84);
+			if (mute === "yes") {
+				ctx.drawImage(blueMuteMutedPic, 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4,
+					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
+					60 / 353 * myGameArea.canvas.width * 0.4,
+					70 / 452 * myGameArea.canvas.height * 0.84);
+				// ctx.drawImage(musicMutedPic, myGameArea.canvas.width * 0.3 + 7 /  * myGameArea.canvas.width, (838 / 1080) * myGameArea.canvas.height, (176 / 1920) * myGameArea.canvas.width, 213 / 1080 * myGameArea.canvas.height);
+				// x > 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4 &&
+				// 	x < 0.3 * myGameArea.canvas.width + 165 / 353 * myGameArea.canvas.width * 0.4 &&
+				// 	y > 0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84 &&
+				// 	y < 0.08 * myGameArea.canvas.height + 430 / 452 * myGameArea.canvas.height * 0.84
+			}
+			if (musicMute === "yes") {
+				ctx.drawImage(blueMusicMuteMutedPic, 0.3 * myGameArea.canvas.width + 188 / 353 * myGameArea.canvas.width * 0.4,
+					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
+					60 / 353 * myGameArea.canvas.width * 0.4,
+					70 / 452 * myGameArea.canvas.height * 0.84);
+			}
+		}
+
+		function updatePauseButtons() {
+			ctx = myGameArea.context;
+			console.log("drawing");
+			if (mute === "yes") {
+				ctx.drawImage(blueMuteMutedPic, 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4,
+					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
+					60 / 353 * myGameArea.canvas.width * 0.4,
+					70 / 452 * myGameArea.canvas.height * 0.84);
+			} else {
+				ctx.drawImage(blueMuteUnmutedPic, 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4,
+					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
+					60 / 353 * myGameArea.canvas.width * 0.4,
+					70 / 452 * myGameArea.canvas.height * 0.84);
+			}
+			if (musicMute === "yes") {
+				ctx.drawImage(blueMusicMuteMutedPic, 0.3 * myGameArea.canvas.width + 188 / 353 * myGameArea.canvas.width * 0.4,
+					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
+					60 / 353 * myGameArea.canvas.width * 0.4,
+					70 / 452 * myGameArea.canvas.height * 0.84);
+			} else {
+				ctx.drawImage(blueMusicMuteUnmutedPic, 0.3 * myGameArea.canvas.width + 188 / 353 * myGameArea.canvas.width * 0.4,
+					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
+					60 / 353 * myGameArea.canvas.width * 0.4,
+					70 / 452 * myGameArea.canvas.height * 0.84);
+			}
 		}
 
 		function GameOverFunction() {
@@ -1131,27 +1127,26 @@
 			ctx.globalAlpha = 0.4;
 			ctx.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 			ctx.globalAlpha = 1;
-			ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.22, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.56);
+			ctx.drawImage(gameoverPic, myGameArea.canvas.width * 0.28, myGameArea.canvas.height * 0.16, myGameArea.canvas.width * 0.44, myGameArea.canvas.height * 0.68);
 			ctx.font = 20 / 260 * myGameArea.canvas.height * 0.99 + 'px "Escapists"';
 			ctx.fillStyle = "#ffffff";
-			// TODO change font here
-			ctx.fillText("          " + score + " M", 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 105 / 260 * myGameArea.canvas.height * 0.56);
-			ctx.fillText("          " + highScore + " M", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 137 / 260 * myGameArea.canvas.height * 0.56);
-			ctx.fillText("          " + coinScore + " PC", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 170 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("          " + score + " m", 0.28 * myGameArea.canvas.width + 169 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 75 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("          " + highScore + " m", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 109 / 260 * myGameArea.canvas.height * 0.56);
+			ctx.fillText("          " + coinScore + " PC", 0.28 * myGameArea.canvas.width + 150 / 353 * myGameArea.canvas.width * 0.44, 0.22 * myGameArea.canvas.height + 142 / 260 * myGameArea.canvas.height * 0.56);
 		}
 
 		function accelerate(n) {
 			if (!myGameArea.interval) {
-				myGameArea.interval = setInterval(updateGameArea, 15);
+				myGameArea.interval = setInterval(updateGameArea, 100 / 3);
 			}
 
 			if (myGamePiece !== undefined && pauseAction === false && gameoverAction === false) {
-				myGamePiece.gravity = n;
+				myGamePiece.gravity = n * (myGameArea.canvas.width / 500);
 			}
 		}
 
 		function endForceAction() {
-			if ((myGameArea.frameNo - myGameArea.forceSection) == 1000) {
+			if ((myGameArea.frameNo - myGameArea.forceSection) === 500) {
 				if (mute === "no") {
 					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
 					backwards_snd.play();
@@ -1161,7 +1156,7 @@
 		}
 
 		function endLevitateAction() {
-			if ((myGameArea.frameNo - myGameArea.levitateSection) == 1000) {
+			if ((myGameArea.frameNo - myGameArea.levitateSection) === 500) {
 				if (mute === "no") {
 					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
 					backwards_snd.play();
@@ -1171,7 +1166,7 @@
 		}
 
 		function endBoostAction() {
-			if ((myGameArea.frameNo - myGameArea.boostSection) == 1000) {
+			if ((myGameArea.frameNo - myGameArea.boostSection) === 500) {
 				if (mute === "no") {
 					var backwards_snd = new Audio("sounds/forceBackwards.wav"); // buffers automatically when created
 					backwards_snd.play();
@@ -1307,7 +1302,9 @@
 		}
 
 		function updateSpeed() {
-			return (0.05 * score) + 1;
+			var newspeed = ((0.1 * score) + 2) * (myGameArea.canvas.width / 720);
+			if (newspeed < 1) newspeed = 1;
+			return newspeed;
 		}
 
 		function autoRun() {
@@ -1317,28 +1314,6 @@
 		function endAutoRun() {
 			autoRunning = false;
 		}
-
-		// document.getElementById("script").onmousedown = function() {
-		// 	mouseDown()
-		// };
-		// document.getElementById("script").onmouseup = function() {
-		// 	mouseUp()
-		// };
-		//
-		// document.getElementById("script").touchstart = function() {
-		// 	mouseDown()
-		// };
-		// document.getElementById("script").touchend = function() {
-		// 	mouseUp()
-		// };
-
-		// function mouseDown() {
-		// 	accelerate(0.2);
-		// }
-		//
-		// function mouseUp() {
-		// 	accelerate(0.1);
-		// }
 	</script>
 	<br>
 </body>

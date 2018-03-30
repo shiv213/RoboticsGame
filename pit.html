@@ -34,9 +34,34 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      backgroundImage.src = "images/Pages/help.png";
+      console.log("loading store background");
+      backgroundImage.src = "images/Pages/pit.png";
       backgroundImage.onload = function() {
         draw();
+      }
+    }
+
+    function goToCosmetics() {
+      // if (mute === "no") {
+      //   var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+      //   navFor_snd.play();
+      //   navFor_snd.onended = function() {
+      //     window.location = "cosmetics.html";
+      //   };
+      // } else {
+      //   window.location = "cosmetics.html";
+      // }
+    }
+
+    function goToPowerup() {
+      if (mute === "no") {
+        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+        navFor_snd.play();
+        navFor_snd.onended = function() {
+          window.location = "powerups.html";
+        };
+      } else {
+        window.location = "powerups.html";
       }
     }
 
@@ -65,6 +90,8 @@
     function setButtons() {
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
+      addButton(0 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, 960 / 1920 * canvasWidth, 1080 / 1080 * canvasHeight, goToPowerup);
+      addButton(960 / 1920 * canvasWidth, 0 / 1080 * canvasHeight, 1920 / 1920 * canvasWidth, 1080 / 1080 * canvasHeight, goToCosmetics);
       addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
     }
 

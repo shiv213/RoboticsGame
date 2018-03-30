@@ -32,7 +32,7 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      backgroundImage.src = "images/donate.png";
+      backgroundImage.src = "images/Pages/donate.png";
       backgroundImage.onload = function() {
         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
       }
@@ -74,10 +74,12 @@
       if (mute === "no") {
         var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
         navBack_snd.play();
-      }
-      navBack_snd.onended = function() {
+        navBack_snd.onended = function() {
+          window.location = "about.html";
+        };
+      } else {
         window.location = "about.html";
-      };
+      }
     }
 
     function addButton(x1, y1, x2, y2, callback, param) {
@@ -103,21 +105,32 @@
       addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw);
     }
 
-    function checkButtons(evt) {
+    function touches(evt) {
       var x = evt.changedTouches[0].pageX;
       var y = evt.changedTouches[0].pageY;
+      checkButtons(x, y);
+    }
+
+    function clicks(evt) {
+      var x = evt.clientX;
+      var y = evt.clientY;
+      checkButtons(x, y);
+    }
+
+    function checkButtons(x, y) {
       for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
         if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-          b.callback(b.param);
+          b.callback();
         }
       }
     }
 
     function init() {
-      draw();
+      loadBackgroundImage();
       setButtons();
-      window.addEventListener('touchstart', checkButtons);
+      window.addEventListener('touchstart', touches);
+      window.addEventListener('click', clicks);
     }
   </script>
 </body>

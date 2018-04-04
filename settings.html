@@ -2,232 +2,236 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body onload="init()" id="script">
-    <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
-    <!-- <canvas id="textbox" width="644" height="73"></canvas> -->
-    <script src="js/CanvasInput.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-    <script src="https://unpkg.com/lodash"></script>
-    <script src="js/leaderboard.js"></script>
-    <script>
+  <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+  <!-- <canvas id="textbox" width="644" height="73"></canvas> -->
+  <script src="js/CanvasInput.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+  <script src="https://unpkg.com/lodash"></script>
+  <script src="js/leaderboard.js"></script>
+  <script>
     var mute = localStorage.getItem('muteState') || "no";
     var musicMute = localStorage.getItem('musicMuteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
     if (mute === "yes") {
-        music.pause();
+      music.pause();
     } else if (mute === "no" && musicMute === "no") {
-        music.loop = true;
-        music.play();
+      music.loop = true;
+      music.play();
     }
 
     var inputType = 1;
     var input = new CanvasInput({
-        canvas: document.getElementById('c'),
-        x: 702 / 1920 * window.innerWidth,
-        y: 305 / 1080 * window.innerHeight,
-        fontSize: 94 / 1080 * window.innerHeight,
-        fontFamily: 'Escapists',
-        fontColor: '#212121',
-        width: 645 / 1920 * window.innerWidth,
-        height: 70 / 1080 * window.innerHeight,
-        padding: 0,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 2,
-        boxShadow: '1px 1px 0px #fff',
-        innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-        placeHolder: localStorage.getItem('name')
+      canvas: document.getElementById('c'),
+      x: 800 / 1920 * window.innerWidth,
+      y: 320 / 1080 * window.innerHeight,
+      fontSize: 30,
+      fontFamily: 'Escapists',
+      fontColor: '#212121',
+      width: 230,
+      height: 30,
+      padding: 0,
+      borderWidth: 1,
+      borderColor: 'black',
+      borderRadius: 2,
+      boxShadow: '1px 1px 0px #fff',
+      innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+      placeHolder: localStorage.getItem('name')
     });
     var maxNameLength = 15;
 
     var backgroundImage = new Image();
     var ctx;
     var buttons = [];
-    var pic = "images/Pages/settings.png";
 
     function draw(type) {
-        var canvas = document.getElementById("c");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        // var mutePic = new Image();
-        // mutePic.src = "images/Buttons/muted.png"
-        // var musicMutePic = new Image();
-        // playerBoosterPic.src = "images/Buttons/music_muted.png"
-        ctx = canvas.getContext("2d");
-        backgroundImage.src = pic;
-        backgroundImage.onload = function() {
-            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-        }
-        setTimeout(function() {
-            input.render();
-        }, 400);
+      var canvas = document.getElementById("c");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      // var mutePic = new Image();
+      // mutePic.src = "images/Buttons/muted.png"
+      // var musicMutePic = new Image();
+      // playerBoosterPic.src = "images/Buttons/music_muted.png"
+      ctx = canvas.getContext("2d");
+      backgroundImage.src = "images/Pages/settings.png";
+      backgroundImage.onload = function() {
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      }
+
+      setTimeout(function() {
+        input.render();
+      }, 400);
     }
 
     if (inputType == 0) {
-        input.blur();
-        name = input.value();
-        input._x = -200000000;
-        input.destroy();
+      input.blur();
+      name = input.value();
+      input._x = -200000000;
+      input.destroy();
     }
 
     function setName() {
-        console.log("set name clicked")
-        if (input.value().length <= maxNameLength && input.value().length != 0) { //LIMIT Name length
-            console.log("acceptable name")
-            localStorage.setItem('name', input.value());
-            writeScore(localStorage.getItem('highScore') || 0, localStorage.getItem('name'));
-            if (localStorage.getItem('highScore') === null) {
-                localStorage.setItem('highScore', 0);
-            }
-            location.reload(200000);
-            // input._x = -200000000;
-        } else {
-            // input.blur();
-            location.reload();
-            input.destroy();
+      console.log("set name clicked")
+      if (input.value().length <= maxNameLength && input.value().length != 0) { //LIMIT Name length
+        console.log("acceptable name")
+        localStorage.setItem('name', input.value());
+        writeScore(localStorage.getItem('highScore') || 0, localStorage.getItem('name'));
+        if (localStorage.getItem('highScore') === null) {
+          localStorage.setItem('highScore', 0);
         }
+        location.reload(200000);
+        // input._x = -200000000;
+      } else {
+        // input.blur();
+        location.reload();
+        input.destroy();
+      }
     };
 
 
     function muteMute() {
-        if (mute === "no") {
-            mute = "yes";
-            // music.play();
-            music.pause();
-            changeMuteState();
-        } else {
-            mute = "no";
-            music.loop = true;
-            music.play();
-            changeMuteState();
-        }
-        updatePauseButtons();
+      if (mute === "no") {
+        mute = "yes";
+        // music.play();
+        music.pause();
+        changeMuteState();
+      } else {
+        mute = "no";
+        music.loop = true;
+        music.play();
+        changeMuteState();
+      }
+      updatePauseButtons();
     }
 
 
     function musicMute() {
-        if (musicMute === "no") {
-            musicMute = "yes";
-            music.pause();
-            changeMusicMuteState();
-        } else {
-            musicMute = "no";
-            if (mute === "no") {
-                music.loop = true;
-                music.play();
-            }
-            changeMusicMuteState();
+      if (musicMute === "no") {
+        musicMute = "yes";
+        music.pause();
+        changeMusicMuteState();
+      } else {
+        musicMute = "no";
+        if (mute === "no") {
+          music.loop = true;
+          music.play();
         }
-        updatePauseButtons();
+        changeMusicMuteState();
+      }
+      updatePauseButtons();
     }
 
     function changeMuteState() {
-        if (mute === "yes") {
-            pic = "images/Pages/settings_muteMute.png"
-            localStorage.setItem('muteState', "yes");
-        } else if (mute === "no") {
-            pic = "images/Pages/settings.png"
-            localStorage.setItem('muteState', "no");
-        }
-        draw();
+      if (mute === "yes") {
+        // TODO add mute
+        localStorage.setItem('muteState', "yes");
+      } else if (mute === "no") {
+        // TODO add mute
+        localStorage.setItem('muteState', "no");
+      }
     }
 
     function changeMusicMuteState() {
-        if (musicMute === "yes") {
-            pic = "images/Pages/settings_musicMute.png"
-            localStorage.setItem('musicMuteState', "yes");
-        } else if (musicMute === "no") {
-            pic = "images/Pages/settings.png"
-            localStorage.setItem('musicMuteState', "no");
-        }
-        draw();
+      if (musicMute === "yes") {
+        // TODO add mute
+        localStorage.setItem('musicMuteState', "yes");
+      } else if (musicMute === "no") {
+        // TODO add mute
+        localStorage.setItem('musicMuteState', "no");
+      }
     }
 
-
+    function updatePauseButtons() {
+      var canvas = document.getElementById("c");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx = canvas.getContext("2d");
+      var mutePic = new Image();
+      mutePic.src = "images/Buttons/muted.png"
+      var musicMutePic = new Image();
+      musicMutePic.src = "images/Buttons/music_muted.png"
+      console.log("drawing");
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      if (mute === "yes") {
+        ctx.drawImage(mutePic, canvas.width * 588 / 1920,
+          639 / 1080 * canvas.height,
+          canvas.width * 254 / 1920,
+          canvas.height * 307 / 1080);
+      }
+      if (musicMute === "yes") {
+        ctx.drawImage(musicMutePic, canvas.width * 1071 / 1920,
+          639 / 1080 * canvas.height,
+          canvas.width * 256 / 1920,
+          canvas.height * 307 / 1080);
+      }
+    }
 
     function backToAbout() {
-        if (mute === "no") {
-            var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
-            navBack_snd.play();
-            navBack_snd.onended = function() {
-                window.location = "menu.html";
-            }
-        } else {
-            window.location = "menu.html";
-        };
+      if (mute === "no") {
+        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        navBack_snd.play();
+        navBack_snd.onended = function() {
+          window.location = "menu.html";
+        }
+      } else {
+        window.location = "menu.html";
+      };
     }
 
     function addButton(x1, y1, x2, y2, callback, param) {
-        buttons.push({
-            x1: x1,
-            y1: y1,
-            x2: x2,
-            y2: y2,
-            callback: callback,
-            param: param
-        });
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback,
+        param: param
+      });
     }
 
     function setButtons() {
-        var canvasWidth = window.innerWidth;
-        var canvasHeight = window.innerHeight;
-        addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToAbout);
-        addButton(694 / 1920 * canvasWidth, 591 / 1080 * canvasHeight, 874 / 1920 * canvasWidth, 808 / 1080 * canvasHeight, muteMute);
-        addButton(1042 / 1920 * canvasWidth, 588 / 1080 * canvasHeight, 1326 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, musicMute);
-        addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToAbout);
+      addButton(586 / 1920 * canvasWidth, 638 / 1080 * canvasHeight, 843 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, muteMute);
+      addButton(1070 / 1920 * canvasWidth, 638 / 1080 * canvasHeight, 1326 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, musicMute);
+      addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
 
-        // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
+      // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
     }
 
     function touches(evt) {
-        var x = evt.changedTouches[0].pageX;
-        var y = evt.changedTouches[0].pageY;
-        checkButtons(x, y);
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      checkButtons(x, y);
     }
 
     function clicks(evt) {
-        var x = evt.clientX;
-        var y = evt.clientY;
-        checkButtons(x, y);
+      var x = evt.clientX;
+      var y = evt.clientY;
+      checkButtons(x, y);
     }
 
     function checkButtons(x, y) {
-        for (var i = 0; i < buttons.length; i++) {
-            var b = buttons[i];
-            if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-                b.callback();
-            }
+      for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+          b.callback();
         }
+      }
     }
 
     function init() {
-        draw();
-        setButtons();
-        window.addEventListener('touchstart', touches);
-        window.addEventListener('click', clicks);
+      draw();
+      setButtons();
+      window.addEventListener('touchstart', touches);
+      window.addEventListener('click', clicks);
     }
-
-    // function checkButtons(evt) {
-    //   var x = evt.changedTouches[0].pageX;
-    //   var y = evt.changedTouches[0].pageY;
-    //   for (var i = 0; i < buttons.length; i++) {
-    //     var b = buttons[i];
-    //     if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-    //       b.callback(b.param);
-    //     }
-    //   }
-    // }
-
-    // function init() {
-    //   draw();
-    //   setButtons();
-    //   window.addEventListener('touchstart', checkButtons);
-    // }
-    </script>
+  </script>
 </body>
 
 </html>

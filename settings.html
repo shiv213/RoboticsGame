@@ -73,6 +73,9 @@
             xImage.onload = function() {
                 ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
             }
+        } else if (type === "reload") {
+            location.reload(100);
+
         } else {
             backgroundImage.src = pic;
             backgroundImage.onload = function() {
@@ -215,53 +218,53 @@
         addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
 
         // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
-        addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw);
-    }
+        addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw, "reload");
+        }
 
-    function touches(evt) {
-        var x = evt.changedTouches[0].pageX;
-        var y = evt.changedTouches[0].pageY;
-        checkButtons(x, y);
-    }
+        function touches(evt) {
+            var x = evt.changedTouches[0].pageX;
+            var y = evt.changedTouches[0].pageY;
+            checkButtons(x, y);
+        }
 
-    function clicks(evt) {
-        var x = evt.clientX;
-        var y = evt.clientY;
-        checkButtons(x, y);
-    }
+        function clicks(evt) {
+            var x = evt.clientX;
+            var y = evt.clientY;
+            checkButtons(x, y);
+        }
 
-    function checkButtons(x, y) {
-        for (var i = 0; i < buttons.length; i++) {
-            var b = buttons[i];
-            if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-                b.callback();
+        function checkButtons(x, y) {
+            for (var i = 0; i < buttons.length; i++) {
+                var b = buttons[i];
+                if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+                    b.callback();
+                }
             }
         }
-    }
 
-    function init() {
-        draw();
-        setButtons();
-        window.addEventListener('touchstart', touches);
-        window.addEventListener('click', clicks);
-    }
+        function init() {
+            draw();
+            setButtons();
+            window.addEventListener('touchstart', touches);
+            window.addEventListener('click', clicks);
+        }
 
-    // function checkButtons(evt) {
-    //   var x = evt.changedTouches[0].pageX;
-    //   var y = evt.changedTouches[0].pageY;
-    //   for (var i = 0; i < buttons.length; i++) {
-    //     var b = buttons[i];
-    //     if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-    //       b.callback(b.param);
-    //     }
-    //   }
-    // }
+        // function checkButtons(evt) {
+        //   var x = evt.changedTouches[0].pageX;
+        //   var y = evt.changedTouches[0].pageY;
+        //   for (var i = 0; i < buttons.length; i++) {
+        //     var b = buttons[i];
+        //     if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+        //       b.callback(b.param);
+        //     }
+        //   }
+        // }
 
-    // function init() {
-    //   draw();
-    //   setButtons();
-    //   window.addEventListener('touchstart', checkButtons);
-    // }
+        // function init() {
+        //   draw();
+        //   setButtons();
+        //   window.addEventListener('touchstart', checkButtons);
+        // }
     </script>
 </body>
 

@@ -42,15 +42,15 @@
     }
 
     function goToCosmetics() {
-      // if (mute === "no") {
-      //   var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-      //   navFor_snd.play();
-      //   navFor_snd.onended = function() {
-      //     window.location = "cosmetics.html";
-      //   };
-      // } else {
-      //   window.location = "cosmetics.html";
-      // }
+      if (mute === "no") {
+        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+        navFor_snd.play();
+        navFor_snd.onended = function() {
+          window.location = "cosmetics.html";
+        };
+      } else {
+        window.location = "cosmetics.html";
+      }
     }
 
     function goToPowerup() {

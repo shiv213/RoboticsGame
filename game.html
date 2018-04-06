@@ -37,7 +37,7 @@
 		}
 
 		// Add similar event handlers for other events
-		// console.log('Orientation is ' + screen.orientation.type);
+		// // console.log('Orientation is ' + screen.orientation.type);
 		var loadImageProcessing = false;
 
 		function init() {
@@ -178,7 +178,7 @@
 				y < 0.08 * myGameArea.canvas.height + 171 / 452 * myGameArea.canvas.height * 0.84) {
 				// continueGame();
 				resumeGame();
-				console.log(click);
+				// console.log(click);
 			} else if (x > 0.3 * myGameArea.canvas.width + 63 / 353 * myGameArea.canvas.width * 0.4 &&
 				x < 0.3 * myGameArea.canvas.width + 292 / 353 * myGameArea.canvas.width * 0.4 &&
 				y > 0.08 * myGameArea.canvas.height + 190 / 452 * myGameArea.canvas.height * 0.84 &&
@@ -200,7 +200,7 @@
 				y > 0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84 &&
 				y < 0.08 * myGameArea.canvas.height + 430 / 452 * myGameArea.canvas.height * 0.84) {
 				// mute
-				// console.log("mute pressed");
+				// // console.log("mute pressed");
 				if (mute === "no") {
 					mute = "yes";
 					// music.play();
@@ -955,7 +955,7 @@
 
 			var robocolor = playerType.substring(0, playerType.length - 1);
 			var robonumber = playerType[playerType.length - 1];
-			console.log(robocolor, " : ", robonumber);
+			// console.log(robocolor, " : ", robonumber);
 			var path = "images/Robots/Robot" + robonumber + "/";
 			playerPic.src = path + robonumber + "Robot" + robocolor + ".png";
 
@@ -1094,7 +1094,7 @@
 
 		function updatePauseButtons() {
 			ctx = myGameArea.context;
-			console.log("drawing");
+			// console.log("drawing");
 			if (mute === "yes") {
 				ctx.drawImage(blueMuteMutedPic, 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4,
 					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,

@@ -81,39 +81,30 @@
         ctx.fillText("3", 150 / 1920 * ctx.canvas.width, 655 / 1080 * ctx.canvas.height);
         ctx.fillText(highScores[2].name, 545 / 1920 * ctx.canvas.width, 655 / 1080 * ctx.canvas.height);
         ctx.fillText(highScores[2].score, 1370 / 1920 * ctx.canvas.width, 655 / 1080 * ctx.canvas.height);
-        // Player + 1
-        if (localStorage.getItem('highScore') == highScores[3].score) {
+
+        if ((parseInt(localStorage.getItem('highScore')) < highScores[3].score)) {
+            var higherRank = parseInt(rank - 1);
+            
+            // Player + 1 rank
             ctx.fillStyle = "#FFFFFF";
             ctx.fillText(rank, 150 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
-            ctx.fillText(localStorage.getItem('name'), 545 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
-            ctx.fillText(localStorage.getItem('highScore'), 1370 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
-
-            // Player
-            ctx.fillStyle = "#CA222D";
-            ctx.fillText(rank, 150 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
-            ctx.fillText(localStorage.getItem('name'), 545 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
-            ctx.fillText(localStorage.getItem('highScore') || 0, 1370 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
-        } else if (!localStorage.getItem('highScore') == highScores[0].score) {
-
-            ctx.fillStyle = "#CA222D";
-            ctx.fillText(rank, 150 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
-            ctx.fillText(localStorage.getItem('name'), 545 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
-            ctx.fillText(localStorage.getItem('highScore'), 1370 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
-        } else if (!localStorage.getItem('highScore') == highScores[1].score || !localStorage.getItem('highScore') === highScores[2].score) {
-            var higherRank = parseInt(rank - 2);
-            console.log(higherRank);
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillText(rank - 1, 150 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
             ctx.fillText(highScores[higherRank].name, 545 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
             ctx.fillText(highScores[higherRank].score, 1370 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
 
             // Player
             ctx.fillStyle = "#CA222D";
-            ctx.fillText(rank, 150 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+            ctx.fillText(rank + 1, 150 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
             ctx.fillText(localStorage.getItem('name'), 545 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
             ctx.fillText(localStorage.getItem('highScore') || 0, 1370 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
-        }
+        } else if ((parseInt(localStorage.getItem('highScore')) > highScores[3].score)) {
+            ctx.fillText("4", 150 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
+            ctx.fillText(highScores[3].name, 545 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
+            ctx.fillText(highScores[3].score, 1370 / 1920 * ctx.canvas.width, 830 / 1080 * ctx.canvas.height);
 
+            ctx.fillText("5", 150 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+            ctx.fillText(highScores[4].name, 545 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+            ctx.fillText(highScores[4].score, 1370 / 1920 * ctx.canvas.width, 950 / 1080 * ctx.canvas.height);
+        }
     }
 
     function backToMainMenu() {
@@ -151,22 +142,32 @@
         // addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw);
     }
 
-    function checkButtons(evt) {
+    function touches(evt) {
         var x = evt.changedTouches[0].pageX;
         var y = evt.changedTouches[0].pageY;
+        checkButtons(x, y);
+    }
+
+    function clicks(evt) {
+        var x = evt.clientX;
+        var y = evt.clientY;
+        checkButtons(x, y);
+    }
+
+    function checkButtons(x, y) {
         for (var i = 0; i < buttons.length; i++) {
             var b = buttons[i];
             if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-                b.callback(b.param);
+                b.callback();
             }
         }
     }
 
     function init() {
         draw();
-        // getScores().then(drawScores);
         setButtons();
-        window.addEventListener('touchstart', checkButtons);
+        window.addEventListener('touchstart', touches);
+        window.addEventListener('click', clicks);
     }
     </script>
 </body>

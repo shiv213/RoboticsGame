@@ -1,0 +1,737 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"highS",
+				"highScores[3].score"
+			],
+			[
+				"high",
+				"highScore\t(settings.html)"
+			],
+			[
+				"now",
+				"nowEpoch"
+			],
+			[
+				"get",
+				"getScores"
+			],
+			[
+				"loca",
+				"localStorage"
+			],
+			[
+				"new",
+				"newPostKey"
+			],
+			[
+				"getRa",
+				"getRandomInt"
+			],
+			[
+				"background",
+				"backgroundImage"
+			],
+			[
+				"push",
+				"pushKey"
+			],
+			[
+				"max",
+				"maxNameLength"
+			],
+			[
+				"fil",
+				"filterWords2"
+			],
+			[
+				"test",
+				"testResult"
+			],
+			[
+				"consol",
+				"console.log(\"mute\t(game.html)"
+			],
+			[
+				"badwor",
+				"bad-words"
+			],
+			[
+				"music",
+				"music_muted.png\t(game.html)"
+			],
+			[
+				"set",
+				"setItem"
+			],
+			[
+				"menu",
+				"menuPic"
+			],
+			[
+				"fill",
+				"fillStyle"
+			],
+			[
+				"score",
+				"scoreList"
+			],
+			[
+				"getHigh",
+				"getHighScore().score"
+			],
+			[
+				"draw",
+				"drawScores"
+			],
+			[
+				"final",
+				"finalxs"
+			],
+			[
+				"start",
+				"startGame"
+			],
+			[
+				"star",
+				"startGame"
+			],
+			[
+				"coin",
+				"coinScore"
+			],
+			[
+				"open",
+				"openlibraryAPI"
+			],
+			[
+				"op",
+				"openlibraryAPI"
+			],
+			[
+				"search",
+				"search_form"
+			],
+			[
+				"inn",
+				"innerHeight"
+			],
+			[
+				"inner",
+				"innerWidth"
+			],
+			[
+				"fi",
+				"firebaseUser"
+			],
+			[
+				"a",
+				"addEventListener"
+			],
+			[
+				"bt",
+				"btnSignup"
+			],
+			[
+				"btnL",
+				"btnLogout"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "leaderboard.html",
+			"settings":
+			{
+				"buffer_size": 7858,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "menu.html",
+			"settings":
+			{
+				"buffer_size": 14008,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "settings.html",
+			"settings":
+			{
+				"buffer_size": 7370,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "about.html",
+			"settings":
+			{
+				"buffer_size": 3322,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 89.0,
+		"last_filter": "pack",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"package control: ",
+				"Package Control: Disable Package"
+			],
+			[
+				"package control: install package",
+				"Package Control: Install Package"
+			],
+			[
+				"package control: instaa",
+				"Package Control: Install Package"
+			],
+			[
+				"package control",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"jslint",
+				"JSLint"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"p",
+				"Package Control: List Packages"
+			],
+			[
+				"packa",
+				"Package Control: Remove Package"
+			]
+		],
+		"width": 532.0
+	},
+	"console":
+	{
+		"height": 206.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/xampp/htdocs/for vip/RoboticsGame"
+	],
+	"file_history":
+	[
+		"/C/xampp/htdocs/for vip/RoboticsGame/settings.html",
+		"/C/xampp/htdocs/for vip/RoboticsGame/leaderboard.html",
+		"/C/xampp/htdocs/for vip/RoboticsGame/menu.html",
+		"/C/xampp/htdocs/for vip/RoboticsGame/pit.html",
+		"/C/xampp/htdocs/berkanclaimsthings/RoboticsGame/game.html",
+		"/C/xampp/htdocs/berkanclaimsthings/RoboticsGame/js/leaderboard.js",
+		"/C/xampp/htdocs/berkanclaimsthings/RoboticsGame/leaderboard.html",
+		"/C/xampp/htdocs/for vip/RoboticsGame/game.html",
+		"/C/xampp/htdocs/berkanclaimsthings/RoboticsGame/settings.html",
+		"/C/xampp/htdocs/www/about.html",
+		"/C/xampp/htdocs/www/help.html",
+		"/C/xampp/htdocs/www/store.html",
+		"/C/xampp/htdocs/www/donate.html",
+		"/C/xampp/htdocs/www/js/leaderboard.js",
+		"/C/xampp/htdocs/www/leaderboard.html",
+		"/C/xampp/htdocs/www/game.html",
+		"/C/xampp/htdocs/www/settings.html",
+		"/C/xampp/htdocs/www - Copy/settings.html",
+		"/C/xampp/htdocs/git/libraryapp/css/style.css",
+		"/C/xampp/htdocs/git/libraryapp/main.html",
+		"/C/xampp/htdocs/git/libraryapp/js/result.js",
+		"/C/xampp/htdocs/git/libraryapp/checkout.html",
+		"/C/xampp/htdocs/git/libraryapp/js/checkout.js",
+		"/C/xampp/htdocs/www/js/badwords.js",
+		"/C/Users/NNR Global Logistics/AppData/Roaming/Sublime Text 3/Packages/User/SublimeServer.sublime-settings",
+		"/C/Users/NNR Global Logistics/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/C/xampp/htdocs/libraryapp/main.html",
+		"/C/xampp/htdocs/libraryapp/css/pure-css-flip-card/index.html",
+		"/C/xampp/htdocs/libraryapp/css/style.css",
+		"/C/Users/NNR Global Logistics/Documents/Techno Titans/App/Cordova/TitanPowerUp/titanpowerup/www/game.html",
+		"/C/Users/NNR Global Logistics/Documents/Techno Titans/App/Cordova/TitanPowerUp/titanpowerup/www/js/leaderboard.js",
+		"/C/xampp/htdocs/RoboticsGame/index.html",
+		"/C/xampp/htdocs/old/RoboticsGame/index.html",
+		"/C/xampp/htdocs/libraryapp/map.html",
+		"/C/xampp/htdocs/libraryapp/checkout.html",
+		"/C/xampp/htdocs/libraryapp/about.html",
+		"/C/xampp/htdocs/libraryapp/js/result.js",
+		"/C/xampp/htdocs/libraryapp/js/InstantSearch.js",
+		"/C/xampp/htdocs/RoboticsGame/shit.js",
+		"/C/xampp/htdocs/RoboticsGameold/index.html",
+		"/C/xampp/htdocs/libraryapp/result.html",
+		"/C/xampp/htdocs/libraryapp/js/app.js",
+		"/C/xampp/htdocs/libraryapp/catalog.html",
+		"/C/xampp/htdocs/libraryapp/js/jquery-ui.js",
+		"/C/xampp/htdocs/libraryapp/site/result.html",
+		"/C/xampp/htdocs/libraryapp/site/js/app.js",
+		"/C/xampp/htdocs/libraryapp/site/testsearch.html",
+		"/C/Users/NNR Global Logistics/Desktop/AP Gov Semester One Vocab",
+		"/C/xampp/htdocs/RoboticsGame/main.html",
+		"/C/xampp/htdocs/RoboticsGame/style.css",
+		"/C/xampp/htdocs/spacehipster/js/MainMenu.js",
+		"/C/xampp/htdocs/spacehipster/index.html",
+		"/C/xampp/htdocs/infinite-scroll/index.html",
+		"/C/xampp/htdocs/infinite-scroll/js/Preload.js",
+		"/C/xampp/htdocs/infinite-scroll/js/Boot.js",
+		"/C/xampp/htdocs/infinite-scroll/js/main.js",
+		"/C/xampp/htdocs/infinite-scroll/js/MainMenu.js",
+		"/C/xampp/htdocs/libraryapp/site/css/style.css",
+		"/C/xampp/htdocs/libraryapp/site/main.html",
+		"/C/Users/NNR Global Logistics/Desktop/test/index.html",
+		"/C/Users/NNR Global Logistics/Desktop/test/app.js",
+		"/C/xampp/htdocs/libraryapp/site/terms-of-use.html",
+		"/C/xampp/htdocs/libraryapp/site/user_firebase.js",
+		"/C/xampp/htdocs/libraryapp/site/bus-single.html",
+		"/C/xampp/htdocs/libraryapp/site/about.html",
+		"/C/xampp/htdocs/libraryapp/site/bus.html",
+		"/C/xampp/htdocs/libraryapp/index.html",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/providers/firebase/firebase.ts",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/login/login.html",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/www/manifest.json",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/www/index.html",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/app/app.module.ts",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/home/home.html",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/home/home.ts",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/manifest.json",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/providers/firebase/firebase-service.ts",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/devdacticFirebase/src/providers/firebase-service.ts",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/catalog/catalog_edit.html",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/catalog/catalog_edit.ts",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/catalog/catalog_edit.scss",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/index.html",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/README.md",
+		"/C/Users/NNR Global Logistics/Documents/LibraryApp/libraryapp/src/pages/catalog/catalog.html",
+		"/C/Users/NNR Global Logistics/Desktop/libraryapp/libraryapp/www/manifest.json",
+		"/C/Users/NNR Global Logistics/Desktop/libraryapp/libraryapp/www/index.html",
+		"/C/Users/NNR Global Logistics/Desktop/libraryapp/libraryapp/src/pages/home/home.html",
+		"/C/Users/NNR Global Logistics/Desktop/libraryapp/libraryapp/www/build/main.js"
+	],
+	"find":
+	{
+		"height": 52.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"name",
+			"istop",
+			"isone",
+			"Donate",
+			"mute",
+			"TODO",
+			"draw",
+			"type",
+			"random",
+			"init",
+			"draw",
+			"width",
+			"draw",
+			"    writeScore(localStorage.getItem('highScore') || 0, localStorage.getItem('name'));\n",
+			"write",
+			"highscore",
+			"name",
+			"namew",
+			"getHigh",
+			"colo",
+			"color",
+			"inputType",
+			"input",
+			"donate",
+			"};\n",
+			"Player",
+			"you",
+			"until",
+			".button",
+			"reserve",
+			"button",
+			"2",
+			"shiv",
+			"console",
+			"getHigh",
+			"shi",
+			"shiv",
+			"4",
+			"}",
+			"4",
+			"require",
+			"musicMutedPic",
+			"music",
+			".drawImage",
+			".draw",
+			"\"true\"",
+			"true",
+			"mute",
+			"mute\n",
+			"mute",
+			"name",
+			"local",
+			"high",
+			"local",
+			"name",
+			"font",
+			"input_name",
+			"inputname",
+			"callback",
+			"navFor_snd",
+			"navBack_snd",
+			"nav_For",
+			"draw",
+			"background",
+			"bgimage",
+			"draw",
+			"evt",
+			"mute",
+			"musicmuted",
+			"musicunmuted",
+			"unmuted",
+			"name",
+			"high",
+			"getScores",
+			"draw",
+			"myGameArea",
+			"myGameArea.context",
+			"gameover",
+			"nav",
+			"backToMainMenu",
+			"nav",
+			"navFor_snd",
+			"nav",
+			"            console.log((1697 - 182));\n",
+			"));\n",
+			"gameover",
+			"nav",
+			"touch",
+			"check",
+			"about",
+			"help",
+			"navFor_snd",
+			"nav",
+			"snd",
+			"crash",
+			"obstacle",
+			"innerHeight",
+			"= ",
+			"touch",
+			"clear",
+			"backgroundX",
+			"backgroundY",
+			"Images",
+			"300",
+			"ship",
+			"update",
+			"2d",
+			"/isbn/",
+			"\t",
+			"StartGame",
+			"search",
+			"crashWith",
+			"updateGameArea",
+			"update",
+			"crash",
+			"crashWith",
+			"crash",
+			"coin",
+			"getElementById",
+			"mouseDown",
+			">\n",
+			"}\n",
+			"high",
+			"score",
+			"timedrefresh",
+			"delta",
+			"score",
+			"canvas"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"backgroundY",
+			"backgroundX",
+			"    "
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "leaderboard.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7858,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4841,
+								4841
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"markdonw_live_preview_last_run": 1522693897.35,
+							"nodePath": "node",
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2237.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "menu.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14008,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1058,
+								1058
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"markdonw_live_preview_last_run": 1522700359.1,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 300.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "settings.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7370,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2902,
+								2902
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"markdonw_live_preview_last_run": 1522700908.71,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2400.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "about.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3322,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2860,
+								2860
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": false,
+							"markdonw_live_preview_last_run": 1522693904.53,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1875.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 35.0
+	},
+	"input":
+	{
+		"height": 57.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 160.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "/C/xampp/htdocs/www/sublime_proj.sublime-project",
+	"replace":
+	{
+		"height": 65.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 275.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

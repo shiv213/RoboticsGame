@@ -23,17 +23,18 @@
       music.loop = true;
       music.play();
     }
-
+    var json_obj = JSON.parse(Get("https://raw.githubusercontent.com/web-mech/badwords/master/lib/lang.json"));
+    var words = json_obj.words;
     var inputType = 1;
     var input = new CanvasInput({
       canvas: document.getElementById('c'),
-      x: 800 / 1920 * window.innerWidth,
-      y: 320 / 1080 * window.innerHeight,
-      fontSize: 30,
+      x: 700.5 / 1920 * window.innerWidth,
+      y: 300.5 / 1080 * window.innerHeight,
+      fontSize: 94 / 1080 * window.innerHeight,
       fontFamily: 'Escapists',
       fontColor: '#212121',
-      width: 230,
-      height: 30,
+      width: 645.5 / 1920 * window.innerWidth,
+      height: 77 / 1080 * window.innerHeight,
       padding: 0,
       borderWidth: 1,
       borderColor: 'black',
@@ -45,8 +46,11 @@
     var maxNameLength = 15;
 
     var backgroundImage = new Image();
+    var profanity = new Image();
+    var xImage = new Image();
     var ctx;
     var buttons = [];
+    var pic = "images/Pages/settings.png";
 
     function draw(type) {
       var canvas = document.getElementById("c");
@@ -57,14 +61,28 @@
       // var musicMutePic = new Image();
       // playerBoosterPic.src = "images/Buttons/music_muted.png"
       ctx = canvas.getContext("2d");
-      backgroundImage.src = "images/Pages/settings.png";
-      backgroundImage.onload = function() {
-        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-      }
 
-      setTimeout(function() {
-        input.render();
-      }, 400);
+      if (type === "profanity") {
+        profanity.src = "images/profanity.png";
+        profanity.onload = function() {
+          ctx.drawImage(profanity, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
+        }
+        xImage.src = "images/x.png";
+        xImage.onload = function() {
+          ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
+        }
+      } else if (type === "reload") {
+        location.reload(100);
+
+      } else {
+        backgroundImage.src = pic;
+        backgroundImage.onload = function() {
+          ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        }
+        setTimeout(function() {
+          input.render();
+        }, 400);
+      }
     }
 
     if (inputType == 0) {
@@ -74,21 +92,38 @@
       input.destroy();
     }
 
+    function Get(yourUrl) {
+      var Httpreq = new XMLHttpRequest(); // a new request
+      Httpreq.open("GET", yourUrl, false);
+      Httpreq.send(null);
+      return Httpreq.responseText;
+    }
+
+    // function getWordlist() {
+    //     var json_obj = JSON.parse(Get("https://raw.githubusercontent.com/web-mech/badwords/master/lib/lang.json"));
+    //     return json_obj.words;
+    // }
+
     function setName() {
       console.log("set name clicked")
-      if (input.value().length <= maxNameLength && input.value().length != 0) { //LIMIT Name length
+      // var json_obj = JSON.parse(Get("https://raw.githubusercontent.com/web-mech/badwords/master/lib/lang.json"));
+      // var words = json_obj.words;
+      if (input.value().length <= maxNameLength && input.value().length != 0 && !(words.some(words => (input.value()).includes(words)))) { //LIMIT Name length
         console.log("acceptable name")
         localStorage.setItem('name', input.value());
         writeScore(localStorage.getItem('highScore') || 0, localStorage.getItem('name'));
         if (localStorage.getItem('highScore') === null) {
           localStorage.setItem('highScore', 0);
         }
-        location.reload(200000);
+
+        location.reload();
         // input._x = -200000000;
       } else {
+        console.log("bad name");
+        draw("profanity");
         // input.blur();
-        location.reload();
-        input.destroy();
+        // location.reload(100);
+        // input.destroy();
       }
     };
 
@@ -109,7 +144,7 @@
     }
 
 
-    function musicMute() {
+    function musicMuteFunc() {
       if (musicMute === "no") {
         musicMute = "yes";
         music.pause();
@@ -127,48 +162,27 @@
 
     function changeMuteState() {
       if (mute === "yes") {
-        // TODO add mute
+        pic = "images/Pages/settings_muteMute.png"
         localStorage.setItem('muteState', "yes");
       } else if (mute === "no") {
-        // TODO add mute
+        pic = "images/Pages/settings.png"
         localStorage.setItem('muteState', "no");
       }
+      draw();
     }
 
     function changeMusicMuteState() {
       if (musicMute === "yes") {
-        // TODO add mute
+        pic = "images/Pages/settings_musicMute.png"
         localStorage.setItem('musicMuteState', "yes");
       } else if (musicMute === "no") {
-        // TODO add mute
+        pic = "images/Pages/settings.png"
         localStorage.setItem('musicMuteState', "no");
       }
+      draw();
     }
 
-    function updatePauseButtons() {
-      var canvas = document.getElementById("c");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      ctx = canvas.getContext("2d");
-      var mutePic = new Image();
-      mutePic.src = "images/Buttons/muted.png"
-      var musicMutePic = new Image();
-      musicMutePic.src = "images/Buttons/music_muted.png"
-      console.log("drawing");
-      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-      if (mute === "yes") {
-        ctx.drawImage(mutePic, canvas.width * 588 / 1920,
-          639 / 1080 * canvas.height,
-          canvas.width * 254 / 1920,
-          canvas.height * 307 / 1080);
-      }
-      if (musicMute === "yes") {
-        ctx.drawImage(musicMutePic, canvas.width * 1071 / 1920,
-          639 / 1080 * canvas.height,
-          canvas.width * 256 / 1920,
-          canvas.height * 307 / 1080);
-      }
-    }
+
 
     function backToAbout() {
       if (mute === "no") {
@@ -197,11 +211,12 @@
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
       addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToAbout);
-      addButton(586 / 1920 * canvasWidth, 638 / 1080 * canvasHeight, 843 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, muteMute);
-      addButton(1070 / 1920 * canvasWidth, 638 / 1080 * canvasHeight, 1326 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, musicMute);
+      addButton(694 / 1920 * canvasWidth, 591 / 1080 * canvasHeight, 874 / 1920 * canvasWidth, 808 / 1080 * canvasHeight, muteMute);
+      addButton(1042 / 1920 * canvasWidth, 588 / 1080 * canvasHeight, 1326 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, musicMuteFunc);
       addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
 
       // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
+      addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw, "reload");
     }
 
     function touches(evt) {
@@ -220,6 +235,7 @@
       for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
         if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+          console.log("match "+i);
           b.callback();
         }
       }
@@ -231,6 +247,23 @@
       window.addEventListener('touchstart', touches);
       window.addEventListener('click', clicks);
     }
+
+    // function checkButtons(evt) {
+    //   var x = evt.changedTouches[0].pageX;
+    //   var y = evt.changedTouches[0].pageY;
+    //   for (var i = 0; i < buttons.length; i++) {
+    //     var b = buttons[i];
+    //     if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+    //       b.callback(b.param);
+    //     }
+    //   }
+    // }
+
+    // function init() {
+    //   draw();
+    //   setButtons();
+    //   window.addEventListener('touchstart', checkButtons);
+    // }
   </script>
 </body>
 

@@ -21,12 +21,41 @@
 
     // document.body.requestFullscreen();
     var coinScore = localStorage.getItem('coins') || 0;
-    var forcePowerups = localStorage.getItem('forcepowerup') || 0;
-    var levitatePowerups = localStorage.getItem('levitatepowerup') || 0;
-    var boostPowerups = localStorage.getItem('boostpowerup') || 0;
+
+    var playerType = localStorage.getItem('player') || 'Blue1';
+    //boughtPlayers are variables stored as a JSON from and 0-4 is for players 1-5 and if its true then its bought else its not
+    var playersBought = JSON.parse(localStorage.getItem('playersBought') || JSON.stringify([true, false, false, false, false]));
+
+    // var names = [];
+    // names[0] = prompt("New member name?");
+    // localStorage.setItem("names", JSON.stringify(names));
+    //
+    // var storedNames = JSON.parse(localStorage.getItem("names"));
 
 
     var backgroundImage = new Image();
+
+    var buttonGray = new Image();
+    var buttonRed = new Image();
+    var buttonRed2 = new Image();
+    var buttonBlue = new Image();
+    var buttonBorder = new Image();
+
+    var Robot1Gray = new Image();
+    var Robot1Blue = new Image();
+    var Robot1Red = new Image();
+    var Robot2Gray = new Image();
+    var Robot2Blue = new Image();
+    var Robot2Red = new Image();
+    var Robot3Gray = new Image();
+    var Robot3Blue = new Image();
+    var Robot3Red = new Image();
+    var Robot4Gray = new Image();
+    var Robot4Blue = new Image();
+    var Robot4Red = new Image();
+    var villian = new Image();
+    var questionMark = new Image();
+
     var ctx;
     var buttons = [];
 
@@ -34,86 +63,345 @@
     var priceLevitate = 30;
     var priceBoost = 25;
 
-    function draw() {
+    function draw(type, x, y, width, height) {
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
-      ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
-      // TODO change font here
-      ctx.font = 85 / 1080 * canvasHeight + 'px "PressStart2P';
-      ctx.fillStyle = "#009bd4";
-      ctx.fillText("" + coinScore, 1140 / 1920 * canvasWidth, 480 / 1080 * canvasHeight);
-      ctx.fillText("" + forcePowerups, 800 / 1920 * canvasWidth, 630 / 1080 * canvasHeight);
-      ctx.fillText("" + levitatePowerups, 860 / 1920 * canvasWidth, 738 / 1080 * canvasHeight);
-      ctx.fillText("" + boostPowerups, 800 / 1920 * canvasWidth, 850 / 1080 * canvasHeight);
+
+      ctx.font = 40 / 1080 * canvasHeight + 'px PressStart2P';
+      ctx.fillStyle = "#ffffff";
+
+      if (type === "background") {
+        ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+      } else if (type === "coins") {
+        ctx.font = 85 / 1080 * canvasHeight + 'px PressStart2P';
+        ctx.fillStyle = "#009bd4";
+        ctx.fillText("" + coinScore, 1065 / 1920 * canvasWidth, 388 / 1080 * canvasHeight);
+      } else if (type === "loadFont") {
+        ctx.font = 85 / 1080 * canvasHeight + 'px PressStart2P';
+        ctx.fillStyle = "#009bd4";
+        ctx.fillText("Titan", 2 * canvasWidth, 2 * canvasHeight);
+      } else if (type === "text") {
+        ctx.fillText(width, x, y);
+      } else {
+        ctx.drawImage(type, x, y, width, height);
+      }
     }
 
-    function loadBackgroundImage() {
+    function loadText() {
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+
+      if (playersBought[1] === false) {
+        draw("text", 1080 / 1920 * canvasWidth, 690 / 1080 * canvasHeight, "100");
+        draw("text", 1080 / 1920 * canvasWidth, 740 / 1080 * canvasHeight, "PC");
+      }
+
+      if (playersBought[2] === false) {
+        draw("text", 1380 / 1920 * canvasWidth, 690 / 1080 * canvasHeight, "300");
+        draw("text", 1380 / 1920 * canvasWidth, 740 / 1080 * canvasHeight, "PC");
+      }
+
+      if (playersBought[3] === false) {
+        draw("text", 930 / 1920 * canvasWidth, 870 / 1080 * canvasHeight, "700");
+        draw("text", 930 / 1920 * canvasWidth, 920 / 1080 * canvasHeight, "PC");
+      }
+
+      if (playersBought[4] === false) {
+        draw("text", 1230 / 1920 * canvasWidth, 870 / 1080 * canvasHeight, "?");
+        draw("text", 1230 / 1920 * canvasWidth, 920 / 1080 * canvasHeight, "PC");
+        //its actually 1683
+      }
+    }
+
+    function loadBackground() {
       var canvas = document.getElementById("c");
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      console.log("loading store background");
-      backgroundImage.src = "images/Pages/store.png?801724";
+      draw("loadFont");
+      backgroundImage.src = "images/Pages/cosmetics.png";
       backgroundImage.onload = function() {
-        draw();
+        draw("background");
+        loadImages();
+        loadText();
       }
     }
 
-    function buyForce() {
-      if (coinScore >= priceForce) {
-        if (mute === "no") {
-          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
-          cash_snd.play();
-        }
-        forcePowerups++;
-        coinScore -= priceForce;
-        localStorage.setItem('coins', coinScore);
-        localStorage.setItem('forcepowerup', forcePowerups);
-        draw();
-      }
-    }
+    function loadImages() {
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
+      draw("coins");
 
-    function buyLevitate() {
-      if (coinScore >= priceLevitate) {
-        if (mute === "no") {
-          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
-          cash_snd.play();
-        }
-        levitatePowerups++;
-        coinScore -= priceLevitate;
-        localStorage.setItem('coins', coinScore);
-        localStorage.setItem('levitatepowerup', levitatePowerups);
-        draw();
-      }
-    }
+      buttonGray.src = "images/Buttons/Backgrounds/buttonBackground.png";
+      buttonGray.onload = function() {
+        // draw("buttonGray", 770 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        // draw("buttonGray", 1070 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
 
-    function buyBoost() {
-      if (coinScore >= priceBoost) {
-        if (mute === "no") {
-          var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
-          cash_snd.play();
+        draw(buttonGray, 620 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        draw(buttonGray, 920 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        draw(buttonGray, 1220 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        draw(buttonGray, 770 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        draw(buttonGray, 1070 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        // draw("buttonGray", 1200 / 1920 * canvas.width, 440 / 1080 * canvas.height, 150 / 1920 * canvas.width, 150 / 1920 * canvas.width);
+        // draw("buttonGray", 1100 / 1920 * canvas.width, 440 / 1080 * canvas.height, 150 / 1920 * canvas.width, 150 / 1920 * canvas.width);
+      }
+
+      buttonRed.src = "images/Buttons/Backgrounds/buttonBackgroundRed.png";
+      buttonRed.onload = function() {
+        draw(buttonRed, 1070 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+
+        if (playerType === "Blue1" || playerType === "Red1") {
+          draw(buttonRed, 620 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        } else if (playerType === "Blue2" || playerType === "Red2") {
+          draw(buttonRed, 920 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        } else if (playerType === "Blue3" || playerType === "Red3") {
+          draw(buttonRed, 1220 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        } else if (playerType === "Blue4" || playerType === "Red4") {
+          draw(buttonRed, 770 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        } else if (playerType === "Blue5") {
+          draw(buttonRed, 1070 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
         }
-        boostPowerups++;
-        coinScore -= priceBoost;
-        localStorage.setItem('coins', coinScore);
-        localStorage.setItem('boostpowerup', boostPowerups);
-        draw();
+      }
+
+      buttonRed2.src = "images/Buttons/Backgrounds/buttonBackgroundRed2.png";
+      buttonRed2.onload = function(){
+        draw(buttonRed2, 1070 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+      }
+
+      buttonBlue.src = "images/Buttons/Backgrounds/buttonBackgroundBlue.png";
+      buttonBlue.onload = function() {
+        draw(buttonBlue, 770 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+      }
+
+      buttonBorder.src = "images/Buttons/Backgrounds/buttonBorder.png";
+      buttonBorder.onload = function() {
+        if (playerType === "Blue1" || playerType === "Blue2" || playerType === "Blue3" || playerType === "Blue4") {
+          draw(buttonBorder, 770 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        } else if (playerType === "Red1" || playerType === "Red2" || playerType === "Red3" || playerType === "Red4") {
+          draw(buttonBorder, 1070 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      // buttonBorder
+
+      Robot2Gray.src = "images/Robots/Robot2/2RobotGray.png";
+      Robot2Gray.onload = function() {
+        if (playersBought[1] === false) {
+          draw(Robot2Gray, 920 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot3Gray.src = "images/Robots/Robot3/3RobotGray.png";
+      Robot3Gray.onload = function() {
+        if (playersBought[2] === false) {
+          draw(Robot3Gray, 1220 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot4Gray.src = "images/Robots/Robot4/4RobotGray.png";
+      Robot4Gray.onload = function() {
+        if (playersBought[3] === false) {
+          draw(Robot4Gray, 770 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      questionMark.src = "images/Robots/Robot5/questionMark.png";
+      questionMark.onload = function() {
+        if (playersBought[4] === false) {
+          draw(questionMark, 1070 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot1Blue.src = "images/Robots/Robot1/1RobotBlue.png";
+      Robot1Blue.onload = function() {
+        if (playersBought[0] === true && playerType !== "Red1") {
+          draw(Robot1Blue, 620 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot1Red.src = "images/Robots/Robot1/1RobotRed.png";
+      Robot1Red.onload = function() {
+        if (playersBought[0] === true && playerType === "Red1") {
+          draw(Robot1Red, 620 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot2Blue.src = "images/Robots/Robot2/2RobotBlue.png";
+      Robot2Blue.onload = function() {
+        if (playersBought[1] === true && playerType !== "Red2") {
+          draw(Robot2Blue, 920 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot2Red.src = "images/Robots/Robot2/2RobotRed.png";
+      Robot2Red.onload = function() {
+        if (playersBought[1] === true && playerType === "Red2") {
+          draw(Robot2Red, 920 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot3Blue.src = "images/Robots/Robot3/3RobotBlue.png";
+      Robot3Blue.onload = function() {
+        if (playersBought[2] === true && playerType !== "Red3") {
+          draw(Robot3Blue, 1220 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot3Red.src = "images/Robots/Robot3/3RobotRed.png";
+      Robot3Red.onload = function() {
+        if (playersBought[2] === true && playerType === "Red3") {
+          draw(Robot3Red, 1220 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot4Blue.src = "images/Robots/Robot4/4RobotBlue.png";
+      Robot4Blue.onload = function() {
+        if (playersBought[3] === true && playerType !== "Red4") {
+          draw(Robot4Blue, 770 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      Robot4Red.src = "images/Robots/Robot4/4RobotRed.png";
+      Robot4Red.onload = function() {
+        if (playersBought[3] === true && playerType === "Red4") {
+          draw(Robot4Red, 770 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
+      }
+
+      villian.src = "images/Robots/Robot5/5RobotBlue.png";
+      villian.onload = function() {
+        if (playersBought[4] === true) {
+          draw(villian, 1070 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight);
+        }
       }
     }
 
     function backToMainMenu() {
       if (mute === "no") {
-        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        var navBack_snd = new Audio("sounds/navigateBack.wav");
         navBack_snd.play();
         navBack_snd.onended = function() {
-          window.location = "menu.html";
+          window.location = "pit.html";
         };
       } else {
-        window.location = "menu.html";
+        window.location = "pit.html";
       }
     }
 
+    function blueAlliance() {
+      if (playerType === "Red1") {
+        playerType = "Blue1";
+      } else if (playerType === "Red2") {
+        playerType = "Blue2";
+      } else if (playerType === "Red3") {
+        playerType = "Blue3";
+      } else if (playerType === "Red4") {
+        playerType = "Blue4";
+      }
+      localStorage.setItem('player', playerType);
+      loadBackground();
+    }
+
+    function redAlliance() {
+      if (playerType === "Blue1") {
+        playerType = "Red1";
+      } else if (playerType === "Blue2") {
+        playerType = "Red2";
+      } else if (playerType === "Blue3") {
+        playerType = "Red3";
+      } else if (playerType === "Blue4") {
+        playerType = "Red4";
+      }
+
+      localStorage.setItem('player', playerType);
+      loadBackground();
+    }
+
+    function Robot1Btn() {
+      playerType = "Blue1";
+      localStorage.setItem('player', playerType);
+      loadBackground();
+    }
+
+    function Robot2Btn() {
+      if (playersBought[1] === false) {
+        if (coinScore >= 100) {
+          if (mute === "no") {
+            var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+            cash_snd.play();
+          }
+          coinScore -= 100;
+          localStorage.setItem('coins', coinScore);
+          playersBought[1] = true;
+          localStorage.setItem('playersBought', JSON.stringify(playersBought));
+        }
+      } else {
+        playerType = "Blue2";
+      }
+      localStorage.setItem('player', playerType);
+      loadBackground();
+
+    }
+
+    function Robot3Btn() {
+      if (playersBought[2] === false) {
+        if (coinScore >= 300) {
+          if (mute === "no") {
+            var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+            cash_snd.play();
+          }
+          coinScore -= 300;
+          localStorage.setItem('coins', coinScore);
+          playersBought[2] = true;
+          localStorage.setItem('playersBought', JSON.stringify(playersBought));
+        }
+      } else {
+        playerType = "Blue3";
+      }
+      localStorage.setItem('player', playerType);
+      loadBackground();
+    }
+
+    function Robot4Btn() {
+      if (playersBought[3] === false) {
+        if (coinScore >= 700) {
+          if (mute === "no") {
+            var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+            cash_snd.play();
+          }
+          coinScore -= 700;
+          localStorage.setItem('coins', coinScore);
+          playersBought[3] = true;
+          localStorage.setItem('playersBought', JSON.stringify(playersBought));
+        }
+      } else {
+        playerType = "Blue4";
+      }
+      localStorage.setItem('player', playerType);
+      loadBackground();
+    }
+
+    function Robot5Btn() {
+      if (playersBought[4] === false) {
+        if (coinScore >= 1683) {
+          if (mute === "no") {
+            var cash_snd = new Audio("sounds/cashingOut.wav"); // buffers automatically when created
+            cash_snd.play();
+          }
+          coinScore -= 1683;
+          localStorage.setItem('coins', coinScore);
+          playersBought[4] = true;
+          localStorage.setItem('playersBought', JSON.stringify(playersBought));
+        }
+      } else {
+        playerType = "Blue5";
+      }
+      localStorage.setItem('player', playerType);
+      loadBackground();
+    }
+
     function addButton(x1, y1, x2, y2, callback) {
+      //Changed to x, y, width, height, callback
       buttons.push({
         x1: x1,
         y1: y1,
@@ -126,10 +414,26 @@
     function setButtons() {
       var canvasWidth = window.innerWidth;
       var canvasHeight = window.innerHeight;
-      addButton(1469 / 1920 * canvasWidth, 539 / 1080 * canvasHeight, 1682 / 1920 * canvasWidth, 619 / 1080 * canvasHeight, buyForce);
-      addButton(1469 / 1920 * canvasWidth, 649 / 1080 * canvasHeight, 1682 / 1920 * canvasWidth, 729 / 1080 * canvasHeight, buyLevitate);
-      addButton(1469 / 1920 * canvasWidth, 760 / 1080 * canvasHeight, 1682 / 1920 * canvasWidth, 840 / 1080 * canvasHeight, buyBoost);
-      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToMainMenu);
+
+      addButton(770 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, blueAlliance)
+      addButton(1070 / 1920 * canvasWidth, 440 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, redAlliance)
+
+      addButton(620 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, Robot1Btn);
+      addButton(920 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, Robot2Btn);
+      addButton(1220 / 1920 * canvasWidth, 620 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, Robot3Btn);
+      addButton(770 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, Robot4Btn);
+      addButton(1070 / 1920 * canvasWidth, 800 / 1080 * canvasHeight, 150 / 1920 * canvasWidth, 150 / 1080 * canvasHeight, Robot5Btn);
+
+      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 281 / 1920 * canvasWidth, 83 / 1080 * canvasHeight, backToMainMenu);
+    }
+
+    function checkButtons(x, y) {
+      for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+        if (x > b.x1 && x < b.x1 + b.x2 && y > b.y1 && y < b.y1 + b.y2) {
+          b.callback();
+        }
+      }
     }
 
     function touches(evt) {
@@ -144,20 +448,11 @@
       checkButtons(x, y);
     }
 
-    function checkButtons(x, y) {
-      for (var i = 0; i < buttons.length; i++) {
-        var b = buttons[i];
-        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-          b.callback();
-        }
-      }
-    }
-
     function init() {
-      loadBackgroundImage();
+      loadBackground();
       setButtons();
       window.addEventListener('touchstart', touches);
-      window.addEventListener('click', clicks);
+//      window.addEventListener('click', clicks);
     }
   </script>
 </body>

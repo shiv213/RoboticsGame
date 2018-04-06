@@ -52,7 +52,7 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      console.log("loading store background");
+      // console.log("loading store background");
       backgroundImage.src = "images/Pages/store.png";
       backgroundImage.onload = function() {
         draw();
@@ -138,11 +138,11 @@
       checkButtons(x, y);
     }
 
-    function clicks(evt) {
-      var x = evt.clientX;
-      var y = evt.clientY;
-      checkButtons(x, y);
-    }
+//    function clicks(evt) {
+      //var x = evt.clientX;
+      //var y = evt.clientY;
+      //checkButtons(x, y);
+    //}
 
     function checkButtons(x, y) {
       for (var i = 0; i < buttons.length; i++) {
@@ -157,7 +157,7 @@
       loadBackgroundImage();
       setButtons();
       window.addEventListener('touchstart', touches);
-      window.addEventListener('click', clicks);
+//      window.addEventListener('click', clicks);
       draw();
     }
   </script>

@@ -34,7 +34,7 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx = canvas.getContext("2d");
-      console.log("loading store background");
+      // console.log("loading store background");
       backgroundImage.src = "images/Pages/pit.png";
       backgroundImage.onload = function() {
         draw();
@@ -42,15 +42,15 @@
     }
 
     function goToCosmetics() {
-      // if (mute === "no") {
-      //   var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-      //   navFor_snd.play();
-      //   navFor_snd.onended = function() {
-      //     window.location = "cosmetics.html";
-      //   };
-      // } else {
-      //   window.location = "cosmetics.html";
-      // }
+      if (mute === "no") {
+        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+        navFor_snd.play();
+        navFor_snd.onended = function() {
+          window.location = "cosmetics.html";
+        };
+      } else {
+        window.location = "cosmetics.html";
+      }
     }
 
     function goToPowerup() {
@@ -120,7 +120,7 @@
       loadBackgroundImage();
       setButtons();
       window.addEventListener('touchstart', touches);
-      window.addEventListener('click', clicks);
+//      window.addEventListener('click', clicks);
     }
   </script>
 </body>

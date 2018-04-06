@@ -2,21 +2,21 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body onload="init()" id="script">
-  <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
-  <script>
+    <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+    <script>
     var mute = localStorage.getItem('muteState') || "no";
     var musicMute = localStorage.getItem('musicMuteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
     if (mute === "yes") {
-      music.pause();
+        music.pause();
     } else if (mute === "no" && musicMute === "no") {
-      music.loop = true;
-      music.play();
+        music.loop = true;
+        music.play();
     }
 
     var backgroundImage = new Image();
@@ -24,91 +24,104 @@
     var buttons = [];
 
     function draw() {
-      var canvasWidth = window.innerWidth;
-      var canvasHeight = window.innerHeight;
-      ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+        var canvasWidth = window.innerWidth;
+        var canvasHeight = window.innerHeight;
+        ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
     }
 
     function loadBackgroundImage() {
-      var canvas = document.getElementById("c");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      ctx = canvas.getContext("2d");
-      backgroundImage.src = "images/Pages/about.png";
-      backgroundImage.onload = function() {
-        draw();
-      }
+        var canvas = document.getElementById("c");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx = canvas.getContext("2d");
+        backgroundImage.src = "images/Pages/about.png";
+        backgroundImage.onload = function() {
+            draw();
+        }
     }
 
     function goToDonate() {
-      if (mute === "no") {
-        var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-        navFor_snd.play();
-        navFor_snd.onended = function() {
-          window.location = "https://www.technotitans.org/donate.html";
-        };
-      } else {
-        window.location = "https://www.technotitans.org/donate.html";
-      }
+        if (mute === "no") {
+            var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+            navFor_snd.play();
+            navFor_snd.onended = function() {
+                window.location = "https://www.technotitans.org/donate.html";
+            };
+        } else {
+            window.location = "https://www.technotitans.org/donate.html";
+        }
+    }
+
+    function goToFirst() {
+        if (mute === "no") {
+            var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+            navFor_snd.play();
+            navFor_snd.onended = function() {
+                window.location = "https://www.firstinspires.org/robotics/frc";
+            };
+        } else {
+            window.location = "https://www.firstinspires.org/robotics/frc";
+        }
     }
 
     function backToMainMenu() {
-      if (mute === "no") {
-        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
-        navBack_snd.play();
-        navBack_snd.onended = function() {
-          window.location = "menu.html";
-        };
-      } else {
-        window.location = "menu.html";
-      }
+        if (mute === "no") {
+            var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+            navBack_snd.play();
+            navBack_snd.onended = function() {
+                window.location = "menu.html";
+            };
+        } else {
+            window.location = "menu.html";
+        }
     }
 
     function addButton(x1, y1, x2, y2, callback) {
-      buttons.push({
-        x1: x1,
-        y1: y1,
-        x2: x2,
-        y2: y2,
-        callback: callback
-      });
+        buttons.push({
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2,
+            callback: callback
+        });
     }
 
     function setButtons() {
-      var canvasWidth = window.innerWidth;
-      var canvasHeight = window.innerHeight;
-      addButton(44 / 1920 * canvasWidth, 72 / 1080 * canvasHeight, 408 / 1920 * canvasWidth, 182 / 1080 * canvasHeight, backToMainMenu);
-      addButton(525 / 1920 * canvasWidth, 815 / 1080 * canvasHeight, 1396 / 1920 * canvasWidth, 970 / 1080 * canvasHeight, goToDonate);
+        var canvasWidth = window.innerWidth;
+        var canvasHeight = window.innerHeight;
+        addButton(44 / 1920 * canvasWidth, 72 / 1080 * canvasHeight, 408 / 1920 * canvasWidth, 182 / 1080 * canvasHeight, backToMainMenu);
+        addButton(60 / 1920 * canvasWidth, 805 / 1080 * canvasHeight, 758 / 1920 * canvasWidth, 943 / 1080 * canvasHeight, goToDonate);
+        addButton(790 / 1920 * canvasWidth, 360 / 1080 * canvasHeight, 1281 / 1920 * canvasWidth, 400 / 1080 * canvasHeight, goToFirst);
     }
 
     function touches(evt) {
-      var x = evt.changedTouches[0].pageX;
-      var y = evt.changedTouches[0].pageY;
-      checkButtons(x, y);
+        var x = evt.changedTouches[0].pageX;
+        var y = evt.changedTouches[0].pageY;
+        checkButtons(x, y);
     }
 
     function clicks(evt) {
-      var x = evt.clientX;
-      var y = evt.clientY;
-      checkButtons(x, y);
+        var x = evt.clientX;
+        var y = evt.clientY;
+        checkButtons(x, y);
     }
 
     function checkButtons(x, y) {
-      for (var i = 0; i < buttons.length; i++) {
-        var b = buttons[i];
-        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-          b.callback();
+        for (var i = 0; i < buttons.length; i++) {
+            var b = buttons[i];
+            if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+                b.callback();
+            }
         }
-      }
     }
 
     function init() {
-      loadBackgroundImage();
-      setButtons();
-      window.addEventListener('touchstart', touches);
-      window.addEventListener('click', clicks);
+        loadBackgroundImage();
+        setButtons();
+        window.addEventListener('touchstart', touches);
+  //      window.addEventListener('click', clicks);
     }
-  </script>
+    </script>
 </body>
 
 </html>

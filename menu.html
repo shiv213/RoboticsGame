@@ -2,8 +2,8 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body onload="init()" id="script">
@@ -19,24 +19,24 @@
     // device APIs are available
 
     function onDeviceReady() {
-        document.addEventListener("pause", onPause, false);
-        document.addEventListener("resume", onResume, false);
-        document.addEventListener("menubutton", onMenuKeyDown, false);
-        // Add similar listeners for other events
+      document.addEventListener("pause", onPause, false);
+      document.addEventListener("resume", onResume, false);
+      document.addEventListener("menubutton", onMenuKeyDown, false);
+      // Add similar listeners for other events
     }
 
     function onPause() {
-        pause();
-        // Handle the pause event
+      pause();
+      // Handle the pause event
     }
 
     function onResume() {
-        // Handle the resume event
+      // Handle the resume event
     }
 
     function onMenuKeyDown() {
-        pause();
-        // Handle the menubutton event
+      pause();
+      // Handle the menubutton event
     }
 
     var nowEpoch = Date.now();
@@ -47,12 +47,12 @@
     writeScore(localStorage.getItem('highScore') || localStorage.setItem('highScore', 0), localStorage.getItem('name'));
 
     // Add similar event handlers for other events
-    // console.log('Orientation is ' + screen.orientation.type);
+    // // console.log('Orientation is ' + screen.orientation.type);
     var loadImageProcessing = false;
 
     function init() {
-        document.addEventListener("deviceready", onDeviceReady, false);
-        mainMenu();
+      document.addEventListener("deviceready", onDeviceReady, false);
+      mainMenu();
     }
 
     var click = false;
@@ -61,14 +61,14 @@
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
 
     document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
+      e.preventDefault();
     }, false);
 
     var autoRunning = false;
     var autoFrame = 0;
     var myGamePiece = {
-        x: 0,
-        y: 0
+      x: 0,
+      y: 0
     };
     var myScore;
 
@@ -88,300 +88,300 @@
     var musicMute = localStorage.getItem('musicMuteState') || "no";
 
     function changeMuteState() {
-        if (mute === "yes") {
-            localStorage.setItem('muteState', "yes");
-        } else if (mute === "no") {
-            localStorage.setItem('muteState', "no");
-        }
+      if (mute === "yes") {
+        localStorage.setItem('muteState', "yes");
+      } else if (mute === "no") {
+        localStorage.setItem('muteState', "no");
+      }
     }
 
     function changeMusicMuteState() {
-        if (musicMute === "yes") {
-            localStorage.setItem('musicMuteState', "yes");
-        } else if (musicMute === "no") {
-            localStorage.setItem('musicMuteState', "no");
-        }
+      if (musicMute === "yes") {
+        localStorage.setItem('musicMuteState', "yes");
+      } else if (musicMute === "no") {
+        localStorage.setItem('musicMuteState', "no");
+      }
     }
 
     function mainMenuTouchListener(evt) {
-        if (started != 1) {
-            var x = evt.changedTouches[0].pageX;
-            var y = evt.changedTouches[0].pageY;
-            mainMenuEvents(x, y);
-        }
+      if (started != 1) {
+        var x = evt.changedTouches[0].pageX;
+        var y = evt.changedTouches[0].pageY;
+        mainMenuEvents(x,y);
+      }
     }
 
     function mainMenuClickListener(evt) {
-        if (started != 1) {
-            var x = evt.clientX;
-            var y = evt.clientY;
-            mainMenuEvents(x, y);
-        }
+      if (started != 1) {
+        var x = evt.clientX;
+        var y = evt.clientY;
+        mainMenuEvents(x,y);
+      }
     }
 
     function mainMenuEvents(x, y) {
-        if (started != 1) {
-            // var canvasWidth = canvas.getAttribute('width');
-            // var canvasHeight = canvas.getAttribute('height');
-            var canvasWidth = myMainMenu.canvas.getAttribute('width');
-            var canvasHeight = myMainMenu.canvas.getAttribute('height');
-            // button coords [x1, y1, x2, y2]
-            var playButtonCoords = [261 / 1920 * canvasWidth,
-                443 / 1080 * canvasHeight,
-                888 / 1920 * canvasWidth,
-                696 / 1080 * canvasHeight
-            ];
-            if (x > playButtonCoords[0] && x < playButtonCoords[2] &&
-                y > playButtonCoords[1] && y < playButtonCoords[3]) {
-                // window.removeEventListener('touchstart', mainMenuTouchEventListener);
-                window.location = "game.html";
-                // started = 1;
-                // startGame();
-            }
-
-            var pitButtonCoords = [1023 / 1920 * canvasWidth,
-                443 / 1080 * canvasHeight,
-                1645 / 1920 * canvasWidth,
-                696 / 1080 * canvasHeight
-            ];
-            if (x > pitButtonCoords[0] && x < pitButtonCoords[2] &&
-                y > pitButtonCoords[1] && y < pitButtonCoords[3]) {
-                if (mute === "no") {
-                    var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-                    navFor_snd.play();
-                    navFor_snd.onended = function() {
-                        window.location = "pit.html";
-                    };
-                } else {
-                    window.location = "pit.html"
-                }
-            }
-
-            var storeButtonCoords = [584 / 1920 * canvasWidth,
-                750 / 1080 * canvasHeight,
-                1274 / 1920 * canvasWidth,
-                960 / 1080 * canvasHeight
-            ];
-            if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
-                y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-                if (mute === "no") {
-                    var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-                    navFor_snd.play();
-                    navFor_snd.onended = function() {
-                        window.location = "about.html";
-                    };
-                } else {
-                    window.location = "about.html";
-                }
-            }
-
-            var storeButtonCoords = [1712 / 1920 * canvasWidth,
-                854 / 1080 * canvasHeight,
-                1888 / 1920 * canvasWidth,
-                1068 / 1080 * canvasHeight
-            ];
-            if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
-                y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
-                if (mute === "no") {
-                    var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-                    navFor_snd.play();
-                    navFor_snd.onended = function() {
-                        window.location = "help.html";
-                    };
-                } else {
-                    window.location = "help.html";
-                }
-            }
-
-            var muteButtonCoords = [37 / 1920 * canvasWidth,
-                838 / 1080 * canvasHeight,
-                213 / 1920 * canvasWidth,
-                1051 / 1080 * canvasHeight
-            ];
-            if (x > muteButtonCoords[0] && x < muteButtonCoords[2] &&
-                y > muteButtonCoords[1] && y < muteButtonCoords[3]) {
-                if (mute === "no") {
-                    var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-                    navFor_snd.play();
-                    navFor_snd.onended = function() {
-                        window.location = "settings.html";
-                    };
-                } else {
-                    window.location = "settings.html";
-                }
-                // console.log("mute pressed");
-                // if (mute === "no") {
-                //   mute = "yes";
-                //   // music.play();
-                //   music.pause();
-                //   changeMuteState();
-                // } else {
-                //   mute = "no";
-                //   if (musicMute === "no") {
-                //     music.loop = true;
-                //     music.play();
-                //   }
-                //   changeMuteState();
-                // }
-            }
-
-            var musicMuteButtonCoords = [1524 / 1920 * canvasWidth,
-                838 / 1080 * canvasHeight,
-                1700 / 1920 * canvasWidth,
-                1051 / 1080 * canvasHeight
-            ];
-            if (x > musicMuteButtonCoords[0] && x < musicMuteButtonCoords[2] &&
-                y > musicMuteButtonCoords[1] && y < musicMuteButtonCoords[3]) {
-                if (mute === "no") {
-                    var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
-                    navFor_snd.play();
-                    navFor_snd.onended = function() {
-                        window.location = "leaderboard.html";
-                    };
-                } else {
-                    window.location = "leaderboard.html";
-                }
-                // if (musicMute === "no") {
-                //   musicMute = "yes";
-                //   music.pause();
-                //   changeMusicMuteState();
-                // } else {
-                //   musicMute = "no";
-                //   if (mute === "no") {
-                //     music.loop = true;
-                //     music.play();
-                //   }
-                //   changeMusicMuteState();
-                // }
-            }
+      if (started != 1) {
+        // var canvasWidth = canvas.getAttribute('width');
+        // var canvasHeight = canvas.getAttribute('height');
+        var canvasWidth = myMainMenu.canvas.getAttribute('width');
+        var canvasHeight = myMainMenu.canvas.getAttribute('height');
+        // button coords [x1, y1, x2, y2]
+        var playButtonCoords = [261 / 1920 * canvasWidth,
+          443 / 1080 * canvasHeight,
+          888 / 1920 * canvasWidth,
+          696 / 1080 * canvasHeight
+        ];
+        if (x > playButtonCoords[0] && x < playButtonCoords[2] &&
+          y > playButtonCoords[1] && y < playButtonCoords[3]) {
+          // window.removeEventListener('touchstart', mainMenuTouchEventListener);
+          window.location = "game.html";
+          // started = 1;
+          // startGame();
         }
+
+        var pitButtonCoords = [1023 / 1920 * canvasWidth,
+          443 / 1080 * canvasHeight,
+          1645 / 1920 * canvasWidth,
+          696 / 1080 * canvasHeight
+        ];
+        if (x > pitButtonCoords[0] && x < pitButtonCoords[2] &&
+          y > pitButtonCoords[1] && y < pitButtonCoords[3]) {
+          if (mute === "no") {
+            var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+            navFor_snd.play();
+            navFor_snd.onended = function() {
+              window.location = "pit.html";
+            };
+          } else {
+            window.location = "pit.html"
+          }
+        }
+
+        var storeButtonCoords = [584 / 1920 * canvasWidth,
+          750 / 1080 * canvasHeight,
+          1274 / 1920 * canvasWidth,
+          960 / 1080 * canvasHeight
+        ];
+        if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
+          y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
+          if (mute === "no") {
+            var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+            navFor_snd.play();
+            navFor_snd.onended = function() {
+              window.location = "about.html";
+            };
+          } else {
+            window.location = "about.html";
+          }
+        }
+
+        var storeButtonCoords = [1712 / 1920 * canvasWidth,
+          854 / 1080 * canvasHeight,
+          1888 / 1920 * canvasWidth,
+          1068 / 1080 * canvasHeight
+        ];
+        if (x > storeButtonCoords[0] && x < storeButtonCoords[2] &&
+          y > storeButtonCoords[1] && y < storeButtonCoords[3]) {
+          if (mute === "no") {
+            var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+            navFor_snd.play();
+            navFor_snd.onended = function() {
+              window.location = "help.html";
+            };
+          } else {
+            window.location = "help.html";
+          }
+        }
+
+        var muteButtonCoords = [37 / 1920 * canvasWidth,
+          838 / 1080 * canvasHeight,
+          213 / 1920 * canvasWidth,
+          1051 / 1080 * canvasHeight
+        ];
+        if (x > muteButtonCoords[0] && x < muteButtonCoords[2] &&
+          y > muteButtonCoords[1] && y < muteButtonCoords[3]) {
+            if (mute === "no") {
+              var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+              navFor_snd.play();
+              navFor_snd.onended = function() {
+                window.location = "settings.html";
+              };
+            } else {
+              window.location = "settings.html";
+            }
+          // // console.log("mute pressed");
+          // if (mute === "no") {
+          //   mute = "yes";
+          //   // music.play();
+          //   music.pause();
+          //   changeMuteState();
+          // } else {
+          //   mute = "no";
+          //   if (musicMute === "no") {
+          //     music.loop = true;
+          //     music.play();
+          //   }
+          //   changeMuteState();
+          // }
+        }
+
+        var musicMuteButtonCoords = [1524 / 1920 * canvasWidth,
+          838 / 1080 * canvasHeight,
+          1700 / 1920 * canvasWidth,
+          1051 / 1080 * canvasHeight
+        ];
+        if (x > musicMuteButtonCoords[0] && x < musicMuteButtonCoords[2] &&
+          y > musicMuteButtonCoords[1] && y < musicMuteButtonCoords[3]) {
+            if (mute === "no") {
+              var navFor_snd = new Audio("sounds/navigateForwards.wav"); // buffers automatically when created
+              navFor_snd.play();
+              navFor_snd.onended = function() {
+                window.location = "leaderboard.html";
+              };
+            } else {
+              window.location = "leaderboard.html";
+            }
+          // if (musicMute === "no") {
+          //   musicMute = "yes";
+          //   music.pause();
+          //   changeMusicMuteState();
+          // } else {
+          //   musicMute = "no";
+          //   if (mute === "no") {
+          //     music.loop = true;
+          //     music.play();
+          //   }
+          //   changeMusicMuteState();
+          // }
+        }
+      }
     }
 
     function mainMenu() {
-        if (mute === "no" && musicMute === "no") {
-            music.loop = true;
-            music.play();
-        } else {
-            music.pause();
-        }
-        if (started != 1) {
-            window.addEventListener('touchstart', mainMenuTouchListener);
-            window.addEventListener('click', mainMenuClickListener);
-        }
-        myMainMenu.start();
+      if (mute === "no" && musicMute === "no") {
+        music.loop = true;
+        music.play();
+      } else {
+        music.pause();
+      }
+      if (started != 1) {
+        window.addEventListener('touchstart', mainMenuTouchListener);
+//        window.addEventListener('click', mainMenuClickListener);
+      }
+      myMainMenu.start();
     }
 
     var myMainMenu = {
-        canvas: document.getElementById("c"),
-        start: function() {
-            // loadFonts();
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
-            this.context = this.canvas.getContext("2d");
-            document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-            // startGame();
-            var canvas = document.getElementById("c");
-            var context = canvas.getContext("2d");
+      canvas: document.getElementById("c"),
+      start: function() {
+        // loadFonts();
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        // startGame();
+        var canvas = document.getElementById("c");
+        var context = canvas.getContext("2d");
 
-            var width = canvas.getAttribute('width');
-            var height = canvas.getAttribute('height');
+        var width = canvas.getAttribute('width');
+        var height = canvas.getAttribute('height');
 
-            var backgroundY = height * -1;
-            var backgroundY2 = height * -3;
-            var speed = 3;
-            var bgImage = new Image();
-            bgImage.src = "images/Pages/bbackground.png";
-            var buttonX = [192, 110, 149, 160];
-            var buttonY = [100, 140, 180, 220];
-            var buttonWidth = [96, 260, 182, 160];
-            var buttonHeight = [40, 40, 40, 40];
-            var menuPic = new Image();
-            menuPic.src = "images/Pages/menu.png";
+        var backgroundY = height * -1;
+        var backgroundY2 = height * -3;
+        var speed = 3;
+        var bgImage = new Image();
+        bgImage.src = "images/Pages/bbackground.png";
+        var buttonX = [192, 110, 149, 160];
+        var buttonY = [100, 140, 180, 220];
+        var buttonWidth = [96, 260, 182, 160];
+        var buttonHeight = [40, 40, 40, 40];
+        var menuPic = new Image();
+        menuPic.src = "images/Pages/menu.png";
 
-            // var menuUnmutedPic = new Image();
-            // menuUnmutedPic.src = "images/Pages/menu_unmuted.png";
-            // var menuMutedPic = new Image();
-            // menuMutedPic.src = "images/Pages/menu_muted.png";
-            //
-            // var musicMutedPic = new Image();
-            // musicMutedPic.src = "images/Pages/music_muted.png";
-            // var musicUnmutedPic = new Image();
-            // musicUnmutedPic.src = "images/Pages/music_unmuted.png";
+        // var menuUnmutedPic = new Image();
+        // menuUnmutedPic.src = "images/Pages/menu_unmuted.png";
+        // var menuMutedPic = new Image();
+        // menuMutedPic.src = "images/Pages/menu_muted.png";
+        //
+        // var musicMutedPic = new Image();
+        // musicMutedPic.src = "images/Pages/music_muted.png";
+        // var musicUnmutedPic = new Image();
+        // musicUnmutedPic.src = "images/Pages/music_unmuted.png";
 
-            var frames = 30;
-            var timerId = 0;
-            timerId = setInterval(update, 1000 / frames);
+        var frames = 30;
+        var timerId = 0;
+        timerId = setInterval(update, 1000 / frames);
 
-            function update() {
-                if (started == 0) {
-                    clear();
-                    move();
-                    draw();
-                }
-            }
-
-            function clear() {
-                context.clearRect(0, 0, width, height);
-            }
-
-            function move() {
-                backgroundY += speed;
-                backgroundY2 += speed;
-                if (backgroundY >= height) {
-                    backgroundY = height * -2;
-                }
-                if (backgroundY2 >= height) {
-                    backgroundY2 = height * -2;
-                }
-            }
-
-            function draw() {
-                context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
-                context.drawImage(bgImage, 0, backgroundY, width, height * 2);
-                // if (musicMute === "no") {
-                //   context.drawImage(musicUnmutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
-                // } else {
-                //   context.drawImage(musicMutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
-                // }
-                //
-                // if (mute === "no") {
-                //   context.drawImage(menuUnmutedPic, 0, 0, width, height);
-                // } else {
-                //   context.drawImage(menuMutedPic, 0, 0, width, height);
-                // }
-                context.drawImage(menuPic, 0, 0, width, height);
-            }
-        },
-        clear: function() {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        function update() {
+          if (started == 0) {
+            clear();
+            move();
+            draw();
+          }
         }
+
+        function clear() {
+          context.clearRect(0, 0, width, height);
+        }
+
+        function move() {
+          backgroundY += speed;
+          backgroundY2 += speed;
+          if (backgroundY >= height) {
+            backgroundY = height * -2;
+          }
+          if (backgroundY2 >= height) {
+            backgroundY2 = height * -2;
+          }
+        }
+
+        function draw() {
+          context.drawImage(bgImage, 0, backgroundY2, width, height * 2);
+          context.drawImage(bgImage, 0, backgroundY, width, height * 2);
+          // if (musicMute === "no") {
+          //   context.drawImage(musicUnmutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
+          // } else {
+          //   context.drawImage(musicMutedPic, 250 / 1920 * width, 838 / 1080 * height, (176 / 1920) * width, 213 / 1080 * height);
+          // }
+          //
+          // if (mute === "no") {
+          //   context.drawImage(menuUnmutedPic, 0, 0, width, height);
+          // } else {
+          //   context.drawImage(menuMutedPic, 0, 0, width, height);
+          // }
+          context.drawImage(menuPic, 0, 0, width, height);
+        }
+      },
+      clear: function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
     }
 
     //Delete from here down
 
     // document.getElementById("script").onmousedown = function() {
-    //  mouseDown()
+    // 	mouseDown()
     // };
     // document.getElementById("script").onmouseup = function() {
-    //  mouseUp()
+    // 	mouseUp()
     // };
     //
     // // document.getElementById("script").touchstart = function() {
-    // //   mouseDown()
+    // // 	mouseDown()
     // // };
     // // document.getElementById("script").touchend = function() {
-    // //   mouseUp()
+    // // 	mouseUp()
     // // };
     //
     // function mouseDown() {
-    //  accelerate(0.2);
+    // 	accelerate(0.2);
     // }
     //
     // function mouseUp() {
-    //  accelerate(0.1);
+    // 	accelerate(0.1);
     // }
-    </script>
-    <br>
+  </script>
+  <br>
 </body>
 
 </html>

@@ -37,7 +37,7 @@
 		}
 
 		// Add similar event handlers for other events
-		// console.log('Orientation is ' + screen.orientation.type);
+		// // console.log('Orientation is ' + screen.orientation.type);
 		var loadImageProcessing = false;
 
 		function init() {
@@ -178,7 +178,7 @@
 				y < 0.08 * myGameArea.canvas.height + 171 / 452 * myGameArea.canvas.height * 0.84) {
 				// continueGame();
 				resumeGame();
-				console.log(click);
+				// console.log(click);
 			} else if (x > 0.3 * myGameArea.canvas.width + 63 / 353 * myGameArea.canvas.width * 0.4 &&
 				x < 0.3 * myGameArea.canvas.width + 292 / 353 * myGameArea.canvas.width * 0.4 &&
 				y > 0.08 * myGameArea.canvas.height + 190 / 452 * myGameArea.canvas.height * 0.84 &&
@@ -200,7 +200,7 @@
 				y > 0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84 &&
 				y < 0.08 * myGameArea.canvas.height + 430 / 452 * myGameArea.canvas.height * 0.84) {
 				// mute
-				// console.log("mute pressed");
+				// // console.log("mute pressed");
 				if (mute === "no") {
 					mute = "yes";
 					// music.play();
@@ -430,9 +430,8 @@
 				this.levitate = false;
 				started = 1
 				loadPowerupImages();
+				loadPlayerImages();
 				loadFonts();
-
-				//TODO
 				window.addEventListener('touchstart', gameTouchStart);
 				window.addEventListener('touchend', gameTouchEnd);
 				window.addEventListener('mousedown', getClickDown);
@@ -469,30 +468,23 @@
 		var img = new Image(); //img.onload = go;
 		img.src = "images/Pages/obstaclenew.png";
 		var playerBoosterPic = new Image();
-		playerBoosterPic.src = "images/Robots/Robot1/robotWithBooster.png"
 		var playerBoosterTransparentPic = new Image();
-		playerBoosterTransparentPic.src = "images/Robots/Robot1/robotWithBoosterTransparent.png";
 		var playerBoosterPic2 = new Image();
-		playerBoosterPic2.src = "images/Robots/Robot1/robotWithBooster2.png"
 		var playerBoosterTransparentPic2 = new Image();
-		playerBoosterTransparentPic2.src = "images/Robots/Robot1/robotWithBoosterTransparent2.png";
 		var playerTransparentPic = new Image();
-		playerTransparentPic.src = "images/Robots/Robot1/robotTransparent.png"
+
 		var playerPic = new Image();
-		playerPic.src = "images/Robots/Robot1/robot.png";
+		var booster = [];
+		for (var i = 0; i < 3; i++) {
+			booster[i] = new Image();
+		}
 
 		var playerBoosterPicRed = new Image();
-		playerBoosterPicRed.src = "images/Robots/Robot1/robot1WithBoosterRed.png"
 		var playerBoosterTransparentPicRed = new Image();
-		playerBoosterTransparentPicRed.src = "images/Robots/Robot1/robot1WithBoosterTransparentRed.png";
 		var playerBoosterPic2Red = new Image();
-		playerBoosterPic2Red.src = "images/Robots/Robot1/robot1WithBoosterRed2.png"
 		var playerBoosterTransparentPic2Red = new Image();
-		playerBoosterTransparentPic2Red.src = "images/Robots/Robot1/robot1WithBoosterTransparentRed2.png";
 		var playerTransparentPicRed = new Image();
-		playerTransparentPicRed.src = "images/Robots/Robot1/robot1TransparentRed.png"
 		var playerPicRed = new Image();
-		playerPic.srcRed = "images/Robots/Robot1/robot1Red.png";
 
 		var autoPic = new Image();
 		autoPic.src = "images/Buttons/a.png";
@@ -606,17 +598,21 @@
 					ctx.fillStyle = color;
 					ctx.fillText(this.text, this.x, this.y);
 				} else if (this.type == "playerBooster") {
-					//TODO
-					if (Math.round((myGameArea.frameNo + 20) / 2) % 2 == 0) {
-						ctx.drawImage(playerBoosterPic, this.x, this.y, this.width, this.height);
-					} else {
-						ctx.drawImage(playerBoosterPic2, this.x, this.y, this.width, this.height);
-					}
-
+					var rate = Math.round((myGameArea.frameNo + 20) / 3) % 3;
+					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
+					ctx.drawImage(booster[rate], this.x, this.y + this.height, this.width - 7 / 1920 * myGameArea.canvas.width, 25 / 1080 * myGameArea.canvas.height);
 				} else if (this.type == "playerTransparent") {
-					ctx.drawImage(playerTransparentPic, this.x, this.y, this.width, this.height);
+					var alphaBefore = ctx.globalAlpha;
+					ctx.globalAlpha = 0.6;
+					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
+					ctx.globalAlpha = alphaBefore;
 				} else if (this.type == "playerTransparentBooster") {
-					ctx.drawImage(playerBoosterTransparentPic, this.x, this.y, this.width, this.height);
+					var alphaBefore = ctx.globalAlpha;
+					ctx.globalAlpha = 0.6;
+					var rate = Math.round((myGameArea.frameNo + 20) / 3) % 3;
+					ctx.drawImage(playerPic, this.x, this.y, this.width, this.height);
+					ctx.drawImage(booster[rate], this.x, this.y + this.height, this.width - 7 / 1920 * myGameArea.canvas.width, 25 / 1080 * myGameArea.canvas.height);
+					ctx.globalAlpha = alphaBefore;
 				} else if (this.type == "player") {
 					// ctx.fillStyle = color;
 					// ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -624,7 +620,7 @@
 				}
 				drawPowerups();
 			}
-			// TODO player update
+
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
 				this.x += this.speedX;
@@ -827,18 +823,7 @@
 			speed = updateSpeed();
 			if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
 				myGameArea.section++;
-				var playerBoosterPic = new Image();
-				playerBoosterPic.src = "images/Robots/Robot1/robotWithBooster.png"
-				var playerBoosterTransparentPic = new Image();
-				playerBoosterTransparentPic.src = "images/Robots/Robot1/robotWithBoosterTransparent.png";
-				var playerBoosterPic2 = new Image();
-				playerBoosterPic2.src = "images/Robots/Robot1/robotWithBooster2.png"
-				var playerBoosterTransparentPic2 = new Image();
-				playerBoosterTransparentPic2.src = "images/Robots/Robot1/robotWithBoosterTransparent2.png";
-				var playerTransparentPic = new Image();
-				playerTransparentPic.src = "images/Robots/Robot1/robotTransparent.png"
-				var playerPic = new Image();
-				playerPic.src = "images/Robots/Robot1/robot.png";
+
 				x = myGameArea.canvas.width;
 				var zones = Math.floor((Math.random() * 3));
 				var randomness = (Math.random() * 0.3) + 0.7;
@@ -965,13 +950,33 @@
 		var buttonBackgroundImg = new Image();
 		var buttonBackgroundRedImg = new Image();
 
+		function loadPlayerImages() {
+			var playerType = localStorage.getItem('player') || 'Blue1';
+
+			var robocolor = playerType.substring(0, playerType.length - 1);
+			var robonumber = playerType[playerType.length - 1];
+			// console.log(robocolor, " : ", robonumber);
+			var path = "images/Robots/Robot" + robonumber + "/";
+			playerPic.src = path + robonumber + "Robot" + robocolor + ".png";
+
+			booster[0].src = "images/Robots/Boosters/1.png";
+			booster[1].src = "images/Robots/Boosters/2.png";
+			booster[2].src = "images/Robots/Boosters/3.png";
+
+			// playerBoosterPic.src = path+"robotWithBooster.png"
+			// playerBoosterTransparentPic.src = "images/Robots/Robot1/robotWithBoosterTransparent.png";
+			// playerBoosterPic2.src = "images/Robots/Robot1/robotWithBooster2.png";
+			// playerBoosterTransparentPic2.src = "images/Robots/Robot1/robotWithBoosterTransparent2.png";
+			// playerTransparentPic.src = "images/Robots/Robot1/robotTransparent.png";
+		}
+
 		function loadPowerupImages() {
 			forceImg.src = "images/Buttons/Powerups/force.png";
 			levitateImg.src = "images/Buttons/Powerups/levitate.png";
 			boostImg.src = "images/Buttons/Powerups/boost.png";
 			pauseImg.src = "images/Buttons/pause.png";
 			buttonBackgroundImg.src = "images/Buttons/Backgrounds/buttonBackground.png";
-			buttonBackgroundRedImg.src = "images/Buttons/Backgrounds/buttonBackgroundRed.png";
+			buttonBackgroundRedImg.src = "images/Buttons/Backgrounds/buttonBackgroundRed2.png";
 		}
 
 		function drawPowerups() {
@@ -1089,7 +1094,7 @@
 
 		function updatePauseButtons() {
 			ctx = myGameArea.context;
-			console.log("drawing");
+			// console.log("drawing");
 			if (mute === "yes") {
 				ctx.drawImage(blueMuteMutedPic, 0.3 * myGameArea.canvas.width + 105 / 353 * myGameArea.canvas.width * 0.4,
 					0.08 * myGameArea.canvas.height + 360 / 452 * myGameArea.canvas.height * 0.84,
@@ -1302,7 +1307,7 @@
 		}
 
 		function updateSpeed() {
-			var newspeed = ((0.1 * score) + 2) * (myGameArea.canvas.width / 720);
+			var newspeed = ((0.07 * score) + 3.5) * (myGameArea.canvas.width / 720);
 			if (newspeed < 1) newspeed = 1;
 			return newspeed;
 		}

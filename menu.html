@@ -7,10 +7,13 @@
 </head>
 
 <body onload="init()" id="script">
-  <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
-  <canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
-  <img id="source" src="images/Pages/bkgnd.jpg" style="opacity: 0.0;">
-  <script>
+    <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+    <canvas id='cb' style='position: absolute; left: 0px; top: 0px; z-index: 1;'></canvas>
+    <img id="source" src="images/Pages/bkgnd.jpg" style="opacity: 0.0;">
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+    <script src="https://unpkg.com/lodash"></script>
+    <script src="js/leaderboard.js"></script>
+    <script>
     // example.js file
     // Wait for device API libraries to load
     // device APIs are available
@@ -35,6 +38,13 @@
       pause();
       // Handle the menubutton event
     }
+
+    var nowEpoch = Date.now();
+    var random_name = "Player" + nowEpoch + Math.round(12 + (Math.random() * ((598 - 12) + 1)));
+    if (localStorage.getItem('name') == undefined) {
+        localStorage.setItem('name', random_name);
+    };
+    writeScore(localStorage.getItem('highScore') || localStorage.setItem('highScore', 0), localStorage.getItem('name'));
 
     // Add similar event handlers for other events
     // console.log('Orientation is ' + screen.orientation.type);

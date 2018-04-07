@@ -26,12 +26,15 @@ if (localStorage.getItem("storKey") === null) {
 
 
 function writeScore(score, nick) {
+  console.log("writeScore ",score," ",nick);
     // A post entry.
     var postData = {
         score: score,
         name: nick
     };
-
+    console.log("refchild");
+var t5 = myRef.child(key);
+console.log(t5);
     return myRef.child(key).set(postData);
 }
 
@@ -47,5 +50,7 @@ function getScores() {
     });
 }
 
-getScores(); // initial data
-console.log(getScores());
+ // initial data
+getScores()
+.then(()=>{
+});

@@ -24,7 +24,7 @@
         music.play();
     }
     var request = new XMLHttpRequest();
-    request.open("GET", "../RoboticsGame/lang.json", false);
+    request.open("GET", "../lang.json", false);
     request.send(null)
     var json_obj = JSON.parse(request.responseText);
     // var json_obj = JSON.parse("lang.json");

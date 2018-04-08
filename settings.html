@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+                        <!DOCTYPE html>
 <html>
 
 <head>
@@ -474,7 +474,7 @@
         "wop*",
         "yed",
         "zabourah"
-      ];
+    ];
     var mute = localStorage.getItem('muteState') || "no";
     var musicMute = localStorage.getItem('musicMuteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
@@ -513,6 +513,12 @@
     var backgroundImage = new Image();
     var profanity = new Image();
     var xImage = new Image();
+
+    var mutedPic = new Image();
+    var unmutedPic = new Image();
+    var musicMutedPic = new Image();
+    var musicUnmutedPic = new Image();
+
     var ctx;
     var buttons = [];
     var pic = "images/Pages/settings.png";
@@ -527,7 +533,16 @@
         // playerBoosterPic.src = "images/Buttons/music_muted.png"
         ctx = canvas.getContext("2d");
 
+        // console.log("here");
+        // backgroundImage.src = pic;
+        //     backgroundImage.onload = function() {
+        //         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        //     }
+
         if (type === "profanity") {
+            input.blur();
+            input.render();
+            input.destroy();
             profanity.src = "images/Other/profanity.png";
             profanity.onload = function() {
                 ctx.drawImage(profanity, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
@@ -536,9 +551,20 @@
             xImage.onload = function() {
                 ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
             }
-        } else if (type === "reload") {
-            location.reload(100);
-
+            // mute [588, 639, 842, 946]
+            // music mute [1071, 639, 1327, 946]
+        } else if (type === "muted") {
+            ctx.drawImage(mutedPic, 588 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+            console.log("here");
+        } else if (type === "unmuted") {
+            ctx.drawImage(unmutedPic, 588 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+            console.log("here");
+        } else if (type === "musicMuted") {
+            ctx.drawImage(musicMutedPic, 1071 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+            console.log("here");
+        } else if (type === "musicUnmuted") {
+            ctx.drawImage(musicUnmutedPic, 1071 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+            console.log("here");
         } else {
             backgroundImage.src = pic;
             backgroundImage.onload = function() {
@@ -550,12 +576,12 @@
         }
     }
 
-    if (inputType == 0) {
-        input.blur();
-        name = input.value();
-        input._x = -200000000;
-        input.destroy();
-    }
+    // if (inputType == 0) {
+    //     input.blur();
+    //     name = input.value();
+    //     input._x = -200000000;
+    //     input.destroy();
+    // }
 
     // function Get(yourUrl) {
     //     var Httpreq = new XMLHttpRequest(); // a new request
@@ -592,61 +618,91 @@
         }
     };
 
+    // var mutedPic = new Image();
+    // var unmutedPic = new Image();
+    // var <music></music>MutedPic = new Image();
+    // var musicUnmutedPic = new Image();
 
     function muteMute() {
         if (mute === "no") {
             mute = "yes";
             // music.play();
             music.pause();
-            changeMuteState();
+            // changeMuteState();
+
+            localStorage.setItem('muteState', mute);
+
+            mutedPic.src = "images/Buttons/muted.png";
+            mutedPic.onload = function() {
+                draw("muted");
+            }
         } else {
             mute = "no";
-            music.loop = true;
-            music.play();
-            changeMuteState();
+            if (musicMute === "no") {
+                music.loop = true;
+                music.play();
+            }
+            // changeMuteState();
+            localStorage.setItem('muteState', mute);
+
+            unmutedPic.src = "images/Buttons/unmuted.png";
+            unmutedPic.onload = function() {
+                draw("unmuted");
+            }
         }
     }
-
 
     function musicMuteFunc() {
         if (musicMute === "no") {
             musicMute = "yes";
             music.pause();
-            changeMusicMuteState();
+            // changeMusicMuteState();
+            localStorage.setItem('musicMuteState', musicMute);
+
+            musicMutedPic.src = "images/Buttons/music_muted.png";
+            musicMutedPic.onload = function() {
+                draw("musicMuted");
+            }
         } else {
             musicMute = "no";
             if (mute === "no") {
                 music.loop = true;
                 music.play();
             }
-            changeMusicMuteState();
+            // changeMusicMuteState();
+            localStorage.setItem('musicMuteState', musicMute);
+
+            musicUnmutedPic.src = "images/Buttons/music_unmuted.png";
+            musicUnmutedPic.onload = function() {
+                draw("musicUnmuted");
+            }
         }
-        updatePauseButtons();
+        // updatePauseButtons();
     }
 
-    function changeMuteState() {
-        if (mute === "yes") {
-            pic = "images/Pages/settings_muteMute.png"
-            localStorage.setItem('muteState', "yes");
-        } else if (mute === "no") {
-            pic = "images/Pages/settings.png"
-            localStorage.setItem('muteState', "no");
-        }
-        draw();
+    // function changeMuteState() {
+    //     if (mute === "yes") {
+    //         pic = "images/Pages/settings_muteMute.png"
+    //         localStorage.setItem('muteState', "yes");
+    //     } else if (mute === "no") {
+    //         pic = "images/Pages/settings.png"
+    //         localStorage.setItem('muteState', "no");
+    //     }
+    //     draw();
+    // }
+
+    // function changeMusicMuteState() {
+    //     if (musicMute === "yes") {
+    //         pic = "images/Pages/settings_musicMute.png"
+    //     } else if (musicMute === "no") {
+    //         pic = "images/Pages/settings.png"
+    //     }
+    //     draw();
+    // }
+
+    function close() {
+        location.reload();
     }
-
-    function changeMusicMuteState() {
-        if (musicMute === "yes") {
-            pic = "images/Pages/settings_musicMute.png"
-            localStorage.setItem('musicMuteState', "yes");
-        } else if (musicMute === "no") {
-            pic = "images/Pages/settings.png"
-            localStorage.setItem('musicMuteState', "no");
-        }
-        draw();
-    }
-
-
 
     function backToAbout() {
         if (mute === "no") {
@@ -680,7 +736,7 @@
         addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
 
         // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
-        addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, draw, "reload");
+        addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, close);
     }
 
     function touches(evt) {
@@ -709,7 +765,7 @@
         draw();
         setButtons();
         window.addEventListener('touchstart', touches);
-        window.addEventListener('click', clicks);
+        // window.addEventListener('click', clicks);
     }
 
     // function checkButtons(evt) {

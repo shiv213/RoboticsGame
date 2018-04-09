@@ -1,512 +1,502 @@
-                        <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body onload="init()" id="script">
-    <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
-    <!-- <canvas id="textbox" width="644" height="73"></canvas> -->
-    <script src="js/CanvasInput.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-    <script src="https://unpkg.com/lodash"></script>
-    <script src="js/leaderboard.js"></script>
-    <script>
+  <canvas id='c' style='position: absolute; left: 0px; top: 0px; z-index: 2;'></canvas>
+  <!-- <canvas id="textbox" width="644" height="73"></canvas> -->
+  <script src="js/CanvasInput.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+  <script src="https://unpkg.com/lodash"></script>
+  <script src="js/leaderboard.js"></script>
+  <script>
     var restrictedwords = [
-        "ahole",
-        "anus",
-        "ash0le",
-        "ash0les",
-        "asholes",
-        "ass",
-        "Ass Monkey",
-        "Assface",
-        "assh0le",
-        "assh0lez",
-        "asshole",
-        "assholes",
-        "assholz",
-        "asswipe",
-        "azzhole",
-        "bassterds",
-        "bastard",
-        "bastards",
-        "bastardz",
-        "basterds",
-        "basterdz",
-        "Biatch",
-        "bitch",
-        "bitches",
-        "Blow Job",
-        "boffing",
-        "butthole",
-        "buttwipe",
-        "c0ck",
-        "c0cks",
-        "c0k",
-        "Carpet Muncher",
-        "cawk",
-        "cawks",
-        "Clit",
-        "cnts",
-        "cntz",
-        "cock",
-        "cockhead",
-        "cock-head",
-        "cocks",
-        "CockSucker",
-        "cock-sucker",
-        "crap",
-        "cum",
-        "cunt",
-        "cunts",
-        "cuntz",
-        "dick",
-        "dild0",
-        "dild0s",
-        "dildo",
-        "dildos",
-        "dilld0",
-        "dilld0s",
-        "dominatricks",
-        "dominatrics",
-        "dominatrix",
-        "dyke",
-        "enema",
-        "f u c k",
-        "f u c k e r",
-        "fag",
-        "fag1t",
-        "faget",
-        "fagg1t",
-        "faggit",
-        "faggot",
-        "fagit",
-        "fags",
-        "fagz",
-        "faig",
-        "faigs",
-        "fart",
-        "flipping the bird",
-        "fuck",
-        "fucker",
-        "fuckin",
-        "fucking",
-        "fucks",
-        "Fudge Packer",
-        "fuk",
-        "Fukah",
-        "Fuken",
-        "fuker",
-        "Fukin",
-        "Fukk",
-        "Fukkah",
-        "Fukken",
-        "Fukker",
-        "Fukkin",
-        "g00k",
-        "gay",
-        "gayboy",
-        "gaygirl",
-        "gays",
-        "gayz",
-        "God-damned",
-        "h00r",
-        "h0ar",
-        "h0re",
-        "hells",
-        "hoar",
-        "hoor",
-        "hoore",
-        "jackoff",
-        "jap",
-        "japs",
-        "jerk-off",
-        "jisim",
-        "jiss",
-        "jizm",
-        "jizz",
-        "knob",
-        "knobs",
-        "knobz",
-        "kunt",
-        "kunts",
-        "kuntz",
-        "Lesbian",
-        "Lezzian",
-        "Lipshits",
-        "Lipshitz",
-        "masochist",
-        "masokist",
-        "massterbait",
-        "masstrbait",
-        "masstrbate",
-        "masterbaiter",
-        "masterbate",
-        "masterbates",
-        "Motha Fucker",
-        "Motha Fuker",
-        "Motha Fukkah",
-        "Motha Fukker",
-        "Mother Fucker",
-        "Mother Fukah",
-        "Mother Fuker",
-        "Mother Fukkah",
-        "Mother Fukker",
-        "mother-fucker",
-        "Mutha Fucker",
-        "Mutha Fukah",
-        "Mutha Fuker",
-        "Mutha Fukkah",
-        "Mutha Fukker",
-        "n1gr",
-        "nastt",
-        "nigger;",
-        "nigur;",
-        "niiger;",
-        "niigr;",
-        "orafis",
-        "orgasim;",
-        "orgasm",
-        "orgasum",
-        "oriface",
-        "orifice",
-        "orifiss",
-        "packi",
-        "packie",
-        "packy",
-        "paki",
-        "pakie",
-        "paky",
-        "pecker",
-        "peeenus",
-        "peeenusss",
-        "peenus",
-        "peinus",
-        "pen1s",
-        "penas",
-        "penis",
-        "penis-breath",
-        "penus",
-        "penuus",
-        "Phuc",
-        "Phuck",
-        "Phuk",
-        "Phuker",
-        "Phukker",
-        "polac",
-        "polack",
-        "polak",
-        "Poonani",
-        "pr1c",
-        "pr1ck",
-        "pr1k",
-        "pusse",
-        "pussee",
-        "pussy",
-        "puuke",
-        "puuker",
-        "queer",
-        "queers",
-        "queerz",
-        "qweers",
-        "qweerz",
-        "qweir",
-        "recktum",
-        "rectum",
-        "retard",
-        "sadist",
-        "scank",
-        "schlong",
-        "screwing",
-        "semen",
-        "sex",
-        "sexy",
-        "Sh!t",
-        "sh1t",
-        "sh1ter",
-        "sh1ts",
-        "sh1tter",
-        "sh1tz",
-        "shit",
-        "shits",
-        "shitter",
-        "Shitty",
-        "Shity",
-        "shitz",
-        "Shyt",
-        "Shyte",
-        "Shytty",
-        "Shyty",
-        "skanck",
-        "skank",
-        "skankee",
-        "skankey",
-        "skanks",
-        "Skanky",
-        "slag",
-        "slut",
-        "sluts",
-        "Slutty",
-        "slutz",
-        "son-of-a-bitch",
-        "tit",
-        "turd",
-        "va1jina",
-        "vag1na",
-        "vagiina",
-        "vagina",
-        "vaj1na",
-        "vajina",
-        "vullva",
-        "vulva",
-        "w0p",
-        "wh00r",
-        "wh0re",
-        "whore",
-        "xrated",
-        "xxx",
-        "b!+ch",
-        "bitch",
-        "blowjob",
-        "clit",
-        "arschloch",
-        "fuck",
-        "shit",
-        "ass",
-        "asshole",
-        "b!tch",
-        "b17ch",
-        "b1tch",
-        "bastard",
-        "bi+ch",
-        "boiolas",
-        "buceta",
-        "c0ck",
-        "cawk",
-        "chink",
-        "cipa",
-        "clits",
-        "cock",
-        "cum",
-        "cunt",
-        "dildo",
-        "dirsa",
-        "ejakulate",
-        "fatass",
-        "fcuk",
-        "fuk",
-        "fux0r",
-        "hoer",
-        "hore",
-        "jism",
-        "kawk",
-        "l3itch",
-        "l3i+ch",
-        "lesbian",
-        "masturbate",
-        "masterbat*",
-        "masterbat3",
-        "motherfucker",
-        "s.o.b.",
-        "mofo",
-        "nazi",
-        "nigga",
-        "nigger",
-        "nutsack",
-        "phuck",
-        "pimpis",
-        "pusse",
-        "pussy",
-        "scrotum",
-        "sh!t",
-        "shemale",
-        "shi+",
-        "sh!+",
-        "slut",
-        "smut",
-        "teets",
-        "tits",
-        "boobs",
-        "b00bs",
-        "teez",
-        "testical",
-        "testicle",
-        "titt",
-        "w00se",
-        "jackoff",
-        "wank",
-        "whoar",
-        "whore",
-        "*damn",
-        "*dyke",
-        "*fuck*",
-        "*shit*",
-        "@$$",
-        "amcik",
-        "andskota",
-        "arse*",
-        "assrammer",
-        "ayir",
-        "bi7ch",
-        "bitch*",
-        "bollock*",
-        "breasts",
-        "butt-pirate",
-        "cabron",
-        "cazzo",
-        "chraa",
-        "chuj",
-        "Cock*",
-        "cunt*",
-        "d4mn",
-        "daygo",
-        "dego",
-        "dick*",
-        "dike*",
-        "dupa",
-        "dziwka",
-        "ejackulate",
-        "Ekrem*",
-        "Ekto",
-        "enculer",
-        "faen",
-        "fag*",
-        "fanculo",
-        "fanny",
-        "feces",
-        "feg",
-        "Felcher",
-        "ficken",
-        "fitt*",
-        "Flikker",
-        "foreskin",
-        "Fotze",
-        "Fu(*",
-        "fuk*",
-        "futkretzn",
-        "gay",
-        "gook",
-        "guiena",
-        "h0r",
-        "h4x0r",
-        "hell",
-        "helvete",
-        "hoer*",
-        "honkey",
-        "Huevon",
-        "hui",
-        "injun",
-        "jizz",
-        "kanker*",
-        "kike",
-        "klootzak",
-        "kraut",
-        "knulle",
-        "kuk",
-        "kuksuger",
-        "Kurac",
-        "kurwa",
-        "kusi*",
-        "kyrpa*",
-        "lesbo",
-        "mamhoon",
-        "masturbat*",
-        "merd*",
-        "mibun",
-        "monkleigh",
-        "mouliewop",
-        "muie",
-        "mulkku",
-        "muschi",
-        "nazis",
-        "nepesaurio",
-        "nigger*",
-        "orospu",
-        "paska*",
-        "perse",
-        "picka",
-        "pierdol*",
-        "pillu*",
-        "pimmel",
-        "piss*",
-        "pizda",
-        "poontsee",
-        "poop",
-        "porn",
-        "p0rn",
-        "pr0n",
-        "preteen",
-        "pula",
-        "pule",
-        "puta",
-        "puto",
-        "qahbeh",
-        "queef*",
-        "rautenberg",
-        "schaffer",
-        "scheiss*",
-        "schlampe",
-        "schmuck",
-        "screw",
-        "sh!t*",
-        "sharmuta",
-        "sharmute",
-        "shipal",
-        "shiz",
-        "skribz",
-        "skurwysyn",
-        "sphencter",
-        "spic",
-        "spierdalaj",
-        "splooge",
-        "suka",
-        "b00b*",
-        "testicle*",
-        "titt*",
-        "twat",
-        "vittu",
-        "wank*",
-        "wetback*",
-        "wichser",
-        "wop*",
-        "yed",
-        "zabourah"
+      "ahole",
+      "anus",
+      "ash0le",
+      "ash0les",
+      "asholes",
+      "ass",
+      "Ass Monkey",
+      "Assface",
+      "assh0le",
+      "assh0lez",
+      "asshole",
+      "assholes",
+      "assholz",
+      "asswipe",
+      "azzhole",
+      "bassterds",
+      "bastard",
+      "bastards",
+      "bastardz",
+      "basterds",
+      "basterdz",
+      "Biatch",
+      "bitch",
+      "bitches",
+      "Blow Job",
+      "boffing",
+      "butthole",
+      "buttwipe",
+      "c0ck",
+      "c0cks",
+      "c0k",
+      "Carpet Muncher",
+      "cawk",
+      "cawks",
+      "Clit",
+      "cnts",
+      "cntz",
+      "cock",
+      "cockhead",
+      "cock-head",
+      "cocks",
+      "CockSucker",
+      "cock-sucker",
+      "crap",
+      "cum",
+      "cunt",
+      "cunts",
+      "cuntz",
+      "dick",
+      "dild0",
+      "dild0s",
+      "dildo",
+      "dildos",
+      "dilld0",
+      "dilld0s",
+      "dominatricks",
+      "dominatrics",
+      "dominatrix",
+      "dyke",
+      "enema",
+      "f u c k",
+      "f u c k e r",
+      "fag",
+      "fag1t",
+      "faget",
+      "fagg1t",
+      "faggit",
+      "faggot",
+      "fagit",
+      "fags",
+      "fagz",
+      "faig",
+      "faigs",
+      "fart",
+      "flipping the bird",
+      "fuck",
+      "fucker",
+      "fuckin",
+      "fucking",
+      "fucks",
+      "Fudge Packer",
+      "fuk",
+      "Fukah",
+      "Fuken",
+      "fuker",
+      "Fukin",
+      "Fukk",
+      "Fukkah",
+      "Fukken",
+      "Fukker",
+      "Fukkin",
+      "g00k",
+      "gay",
+      "gayboy",
+      "gaygirl",
+      "gays",
+      "gayz",
+      "God-damned",
+      "h00r",
+      "h0ar",
+      "h0re",
+      "hells",
+      "hoar",
+      "hoor",
+      "hoore",
+      "jackoff",
+      "jap",
+      "japs",
+      "jerk-off",
+      "jisim",
+      "jiss",
+      "jizm",
+      "jizz",
+      "knob",
+      "knobs",
+      "knobz",
+      "kunt",
+      "kunts",
+      "kuntz",
+      "Lesbian",
+      "Lezzian",
+      "Lipshits",
+      "Lipshitz",
+      "masochist",
+      "masokist",
+      "massterbait",
+      "masstrbait",
+      "masstrbate",
+      "masterbaiter",
+      "masterbate",
+      "masterbates",
+      "Motha Fucker",
+      "Motha Fuker",
+      "Motha Fukkah",
+      "Motha Fukker",
+      "Mother Fucker",
+      "Mother Fukah",
+      "Mother Fuker",
+      "Mother Fukkah",
+      "Mother Fukker",
+      "mother-fucker",
+      "Mutha Fucker",
+      "Mutha Fukah",
+      "Mutha Fuker",
+      "Mutha Fukkah",
+      "Mutha Fukker",
+      "n1gr",
+      "nastt",
+      "nigger;",
+      "nigur;",
+      "niiger;",
+      "niigr;",
+      "orafis",
+      "orgasim;",
+      "orgasm",
+      "orgasum",
+      "oriface",
+      "orifice",
+      "orifiss",
+      "packi",
+      "packie",
+      "packy",
+      "paki",
+      "pakie",
+      "paky",
+      "pecker",
+      "peeenus",
+      "peeenusss",
+      "peenus",
+      "peinus",
+      "pen1s",
+      "penas",
+      "penis",
+      "penis-breath",
+      "penus",
+      "penuus",
+      "Phuc",
+      "Phuck",
+      "Phuk",
+      "Phuker",
+      "Phukker",
+      "polac",
+      "polack",
+      "polak",
+      "Poonani",
+      "pr1c",
+      "pr1ck",
+      "pr1k",
+      "pusse",
+      "pussee",
+      "pussy",
+      "puuke",
+      "puuker",
+      "queer",
+      "queers",
+      "queerz",
+      "qweers",
+      "qweerz",
+      "qweir",
+      "recktum",
+      "rectum",
+      "retard",
+      "sadist",
+      "scank",
+      "schlong",
+      "screwing",
+      "semen",
+      "sex",
+      "sexy",
+      "Sh!t",
+      "sh1t",
+      "sh1ter",
+      "sh1ts",
+      "sh1tter",
+      "sh1tz",
+      "shit",
+      "shits",
+      "shitter",
+      "Shitty",
+      "Shity",
+      "shitz",
+      "Shyt",
+      "Shyte",
+      "Shytty",
+      "Shyty",
+      "skanck",
+      "skank",
+      "skankee",
+      "skankey",
+      "skanks",
+      "Skanky",
+      "slag",
+      "slut",
+      "sluts",
+      "Slutty",
+      "slutz",
+      "son-of-a-bitch",
+      "tit",
+      "turd",
+      "va1jina",
+      "vag1na",
+      "vagiina",
+      "vagina",
+      "vaj1na",
+      "vajina",
+      "vullva",
+      "vulva",
+      "w0p",
+      "wh00r",
+      "wh0re",
+      "whore",
+      "xrated",
+      "xxx",
+      "b!+ch",
+      "bitch",
+      "blowjob",
+      "clit",
+      "arschloch",
+      "fuck",
+      "shit",
+      "ass",
+      "asshole",
+      "b!tch",
+      "b17ch",
+      "b1tch",
+      "bastard",
+      "bi+ch",
+      "boiolas",
+      "buceta",
+      "c0ck",
+      "cawk",
+      "chink",
+      "cipa",
+      "clits",
+      "cock",
+      "cum",
+      "cunt",
+      "dildo",
+      "dirsa",
+      "ejakulate",
+      "fatass",
+      "fcuk",
+      "fuk",
+      "fux0r",
+      "hoer",
+      "hore",
+      "jism",
+      "kawk",
+      "l3itch",
+      "l3i+ch",
+      "lesbian",
+      "masturbate",
+      "masterbat*",
+      "masterbat3",
+      "motherfucker",
+      "s.o.b.",
+      "mofo",
+      "nazi",
+      "nigga",
+      "nigger",
+      "nutsack",
+      "phuck",
+      "pimpis",
+      "pusse",
+      "pussy",
+      "scrotum",
+      "sh!t",
+      "shemale",
+      "shi+",
+      "sh!+",
+      "slut",
+      "smut",
+      "teets",
+      "tits",
+      "boobs",
+      "b00bs",
+      "teez",
+      "testical",
+      "testicle",
+      "titt",
+      "w00se",
+      "jackoff",
+      "wank",
+      "whoar",
+      "whore",
+      "*damn",
+      "*dyke",
+      "*fuck*",
+      "*shit*",
+      "@$$",
+      "amcik",
+      "andskota",
+      "arse*",
+      "assrammer",
+      "ayir",
+      "bi7ch",
+      "bitch*",
+      "bollock*",
+      "breasts",
+      "butt-pirate",
+      "cabron",
+      "cazzo",
+      "chraa",
+      "chuj",
+      "Cock*",
+      "cunt*",
+      "d4mn",
+      "daygo",
+      "dego",
+      "dick*",
+      "dike*",
+      "dupa",
+      "dziwka",
+      "ejackulate",
+      "Ekrem*",
+      "Ekto",
+      "enculer",
+      "faen",
+      "fag*",
+      "fanculo",
+      "fanny",
+      "feces",
+      "feg",
+      "Felcher",
+      "ficken",
+      "fitt*",
+      "Flikker",
+      "foreskin",
+      "Fotze",
+      "Fu(*",
+      "fuk*",
+      "futkretzn",
+      "gay",
+      "gook",
+      "guiena",
+      "h0r",
+      "h4x0r",
+      "hell",
+      "helvete",
+      "hoer*",
+      "honkey",
+      "Huevon",
+      "hui",
+      "injun",
+      "jizz",
+      "kanker*",
+      "kike",
+      "klootzak",
+      "kraut",
+      "knulle",
+      "kuk",
+      "kuksuger",
+      "Kurac",
+      "kurwa",
+      "kusi*",
+      "kyrpa*",
+      "lesbo",
+      "mamhoon",
+      "masturbat*",
+      "merd*",
+      "mibun",
+      "monkleigh",
+      "mouliewop",
+      "muie",
+      "mulkku",
+      "muschi",
+      "nazis",
+      "nepesaurio",
+      "nigger*",
+      "orospu",
+      "paska*",
+      "perse",
+      "picka",
+      "pierdol*",
+      "pillu*",
+      "pimmel",
+      "piss*",
+      "pizda",
+      "poontsee",
+      "poop",
+      "porn",
+      "p0rn",
+      "pr0n",
+      "preteen",
+      "pula",
+      "pule",
+      "puta",
+      "puto",
+      "qahbeh",
+      "queef*",
+      "rautenberg",
+      "schaffer",
+      "scheiss*",
+      "schlampe",
+      "schmuck",
+      "screw",
+      "sh!t*",
+      "sharmuta",
+      "sharmute",
+      "shipal",
+      "shiz",
+      "skribz",
+      "skurwysyn",
+      "sphencter",
+      "spic",
+      "spierdalaj",
+      "splooge",
+      "suka",
+      "b00b*",
+      "testicle*",
+      "titt*",
+      "twat",
+      "vittu",
+      "wank*",
+      "wetback*",
+      "wichser",
+      "wop*",
+      "yed",
+      "zabourah"
     ];
     var mute = localStorage.getItem('muteState') || "no";
     var musicMute = localStorage.getItem('musicMuteState') || "no";
     var music = new Audio("sounds/Further_Away.mp3"); // buffers automatically when created
-    if (mute === "yes") {
-        music.pause();
-    } else if (mute === "no" && musicMute === "no") {
-        music.loop = true;
-        music.play();
-    }
-    // var request = new XMLHttpRequest();
-    // request.open("GET", "../lang.json", false);
-    // request.send(null)
-    // var json_obj = JSON.parse(request.responseText);
-    // var json_obj = JSON.parse("lang.json");
+
     var words = restrictedwords; // json_obj.words;
     var inputType = 1;
     var input = new CanvasInput({
-        canvas: document.getElementById('c'),
-        x: 700.5 / 1920 * window.innerWidth,
-        y: 300.5 / 1080 * window.innerHeight,
-        fontSize: 94 / 1080 * window.innerHeight,
-        fontFamily: 'Escapists',
-        fontColor: '#212121',
-        width: 645.5 / 1920 * window.innerWidth,
-        height: 77 / 1080 * window.innerHeight,
-        padding: 0,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 2,
-        boxShadow: '1px 1px 0px #fff',
-        innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-        placeHolder: localStorage.getItem('name')
+      canvas: document.getElementById('c'),
+      x: 700.5 / 1920 * window.innerWidth,
+      y: 300.5 / 1080 * window.innerHeight,
+      fontSize: 94 / 1080 * window.innerHeight,
+      fontFamily: 'Escapists',
+      fontColor: '#212121',
+      width: 645.5 / 1920 * window.innerWidth,
+      height: 77 / 1080 * window.innerHeight,
+      padding: 0,
+      borderWidth: 1,
+      borderColor: 'black',
+      borderRadius: 2,
+      boxShadow: '1px 1px 0px #fff',
+      innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+      placeHolder: localStorage.getItem('name')
     });
     var maxNameLength = 15;
 
@@ -519,272 +509,209 @@
     var musicMutedPic = new Image();
     var musicUnmutedPic = new Image();
 
-    var ctx;
+    var canvas = document.getElementById("c");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var ctx = canvas.getContext("2d");
+
     var buttons = [];
     var pic = "images/Pages/settings.png";
 
-    function draw(type) {
-        var canvas = document.getElementById("c");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        // var mutePic = new Image();
-        // mutePic.src = "images/Buttons/muted.png"
-        // var musicMutePic = new Image();
-        // playerBoosterPic.src = "images/Buttons/music_muted.png"
-        ctx = canvas.getContext("2d");
+    function setMutes() {
+      if (mute === "yes") {
+        music.pause();
+      } else if (mute === "no" && musicMute === "no") {
+        music.loop = true;
+        music.play();
+      }
 
-        // console.log("here");
-        // backgroundImage.src = pic;
-        //     backgroundImage.onload = function() {
-        //         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-        //     }
-
-        if (type === "profanity") {
-            input.blur();
-            input.render();
-            input.destroy();
-            profanity.src = "images/Other/profanity.png";
-            profanity.onload = function() {
-                ctx.drawImage(profanity, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
-            }
-            xImage.src = "images/Buttons/x.png";
-            xImage.onload = function() {
-                ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 30 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
-            }
-            // mute [588, 639, 842, 946]
-            // music mute [1071, 639, 1327, 946]
-        } else if (type === "muted") {
-            ctx.drawImage(mutedPic, 588 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
-            console.log("here");
-        } else if (type === "unmuted") {
-            ctx.drawImage(unmutedPic, 588 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
-            console.log("here");
-        } else if (type === "musicMuted") {
-            ctx.drawImage(musicMutedPic, 1071 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
-            console.log("here");
-        } else if (type === "musicUnmuted") {
-            ctx.drawImage(musicUnmutedPic, 1071 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
-            console.log("here");
-        } else {
-            backgroundImage.src = pic;
-            backgroundImage.onload = function() {
-                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-            }
-            setTimeout(function() {
-                input.render();
-            }, 400);
+      if (mute === "yes") {
+        mutedPic.src = "images/Buttons/muted.png";
+        mutedPic.onload = function() {
+          draw("muted");
         }
+      }
+      if (musicMute === "yes") {
+        musicMutedPic.src = "images/Buttons/music_muted.png";
+        musicMutedPic.onload = function() {
+          draw("musicMuted");
+        }
+      }
     }
 
-    // if (inputType == 0) {
-    //     input.blur();
-    //     name = input.value();
-    //     input._x = -200000000;
-    //     input.destroy();
-    // }
+    function draw(type) {
+      if (type === "profanity") {
+        input.blur();
+        input.render();
+        input.destroy();
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        profanity.src = "images/Other/profanity.png";
+        profanity.onload = function() {
+          ctx.drawImage(profanity, 510 / 1920 * canvas.width, 90 / 1080 * canvas.height, 900 / 1920 * canvas.width, 900 / 1080 * canvas.height);
+        }
+        xImage.src = "images/Buttons/x.png";
+        xImage.onload = function() {
+          ctx.drawImage(xImage, 1410 / 1920 * canvas.width, 100 / 1080 * canvas.height, 60 / 1920 * canvas.width, 60 / 1080 * canvas.height);
+        }
+        // mute [588, 639, 842, 946]
+        // music mute [1071, 639, 1327, 946]
+      } else if (type === "muted") {
+        ctx.drawImage(mutedPic, 588 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+        console.log("here");
+      } else if (type === "unmuted") {
+        ctx.drawImage(unmutedPic, 588 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+        console.log("here");
+      } else if (type === "musicMuted") {
+        ctx.drawImage(musicMutedPic, 1071 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+        console.log("here");
+      } else if (type === "musicUnmuted") {
+        ctx.drawImage(musicUnmutedPic, 1071 / 1920 * canvas.width, 639 / 1080 * canvas.height, 254 / 1920 * canvas.width, 307 / 1080 * canvas.height);
+        console.log("here");
+      } else {
+        backgroundImage.src = pic;
+        backgroundImage.onload = function() {
+          ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+          setMutes();
+        }
+        setTimeout(function() {
+          input.render();
+        }, 400);
+      }
+    }
 
-    // function Get(yourUrl) {
-    //     var Httpreq = new XMLHttpRequest(); // a new request
-    //     Httpreq.open("GET", yourUrl, false);
-    //     Httpreq.send(null);
-    //     return Httpreq.responseText;
-    // }
-
-    // function getWordlist() {
-    //     var json_obj = JSON.parse(Get("https://raw.githubusercontent.com/web-mech/badwords/master/lib/lang.json"));
-    //     return json_obj.words;
-    // }
 
     function setName() {
-        // console.log("set name clicked")
-        // var json_obj = JSON.parse(Get("https://raw.githubusercontent.com/web-mech/badwords/master/lib/lang.json"));
-        // var words = json_obj.words;
-        if (input.value().length <= maxNameLength && input.value().length != 0 && !(words.some(words => (input.value()).includes(words)))) { //LIMIT Name length
-            // console.log("acceptable name");
-            localStorage.setItem('name', input.value());
-            writeScore(localStorage.getItem('highScore') || 0, localStorage.getItem('name'));
-            if (localStorage.getItem('highScore') === null) {
-                localStorage.setItem('highScore', 0);
-            }
-
-            location.reload();
-            // input._x = -200000000;
-        } else {
-            // console.log("bad name");
-            draw("profanity");
-            // input.blur();
-            // location.reload(100);
-            // input.destroy();
+      var nameInInputField = input.value();
+      var forbidden = words.some(words => (input.value().toLowerCase()).includes(words));
+      if (nameInInputField.length <= maxNameLength && nameInInputField.length != 0 && !forbidden) { //LIMIT Name length
+        localStorage.setItem('name', input.value());
+        writeScore(localStorage.getItem('highScore') || 0, localStorage.getItem('name'));
+        if (localStorage.getItem('highScore') === null) {
+          localStorage.setItem('highScore', 0);
         }
-    };
 
-    // var mutedPic = new Image();
-    // var unmutedPic = new Image();
-    // var <music></music>MutedPic = new Image();
-    // var musicUnmutedPic = new Image();
-
-    function muteMute() {
-        if (mute === "no") {
-            mute = "yes";
-            // music.play();
-            music.pause();
-            // changeMuteState();
-
-            localStorage.setItem('muteState', mute);
-
-            mutedPic.src = "images/Buttons/muted.png";
-            mutedPic.onload = function() {
-                draw("muted");
-            }
-        } else {
-            mute = "no";
-            if (musicMute === "no") {
-                music.loop = true;
-                music.play();
-            }
-            // changeMuteState();
-            localStorage.setItem('muteState', mute);
-
-            unmutedPic.src = "images/Buttons/unmuted.png";
-            unmutedPic.onload = function() {
-                draw("unmuted");
-            }
+        location.reload();
+      } else {
+        draw("profanity");
+      }
+    }
+    function muteMuteFunc() {
+      if (mute === "no") {
+        mute = "yes";
+        music.pause();
+        localStorage.setItem('muteState', mute);
+        mutedPic.src = "images/Buttons/muted.png";
+        mutedPic.onload = function() {
+          draw("muted");
         }
+      } else {
+        mute = "no";
+        if (musicMute === "no") {
+          music.loop = true;
+          music.play();
+        }
+        localStorage.setItem('muteState', mute);
+        unmutedPic.src = "images/Buttons/unmuted.png";
+        unmutedPic.onload = function() {
+          draw("unmuted");
+        }
+      }
     }
 
     function musicMuteFunc() {
-        if (musicMute === "no") {
-            musicMute = "yes";
-            music.pause();
-            // changeMusicMuteState();
-            localStorage.setItem('musicMuteState', musicMute);
+      if (musicMute === "no") {
+        musicMute = "yes";
+        music.pause();
+        localStorage.setItem('musicMuteState', musicMute);
 
-            musicMutedPic.src = "images/Buttons/music_muted.png";
-            musicMutedPic.onload = function() {
-                draw("musicMuted");
-            }
-        } else {
-            musicMute = "no";
-            if (mute === "no") {
-                music.loop = true;
-                music.play();
-            }
-            // changeMusicMuteState();
-            localStorage.setItem('musicMuteState', musicMute);
-
-            musicUnmutedPic.src = "images/Buttons/music_unmuted.png";
-            musicUnmutedPic.onload = function() {
-                draw("musicUnmuted");
-            }
+        musicMutedPic.src = "images/Buttons/music_muted.png";
+        musicMutedPic.onload = function() {
+          draw("musicMuted");
         }
-        // updatePauseButtons();
+      } else {
+        musicMute = "no";
+        if (mute === "no") {
+          music.loop = true;
+          music.play();
+        }
+        // changeMusicMuteState();
+        localStorage.setItem('musicMuteState', musicMute);
+
+        musicUnmutedPic.src = "images/Buttons/music_unmuted.png";
+        musicUnmutedPic.onload = function() {
+          draw("musicUnmuted");
+        }
+      }
     }
 
-    // function changeMuteState() {
-    //     if (mute === "yes") {
-    //         pic = "images/Pages/settings_muteMute.png"
-    //         localStorage.setItem('muteState', "yes");
-    //     } else if (mute === "no") {
-    //         pic = "images/Pages/settings.png"
-    //         localStorage.setItem('muteState', "no");
-    //     }
-    //     draw();
-    // }
-
-    // function changeMusicMuteState() {
-    //     if (musicMute === "yes") {
-    //         pic = "images/Pages/settings_musicMute.png"
-    //     } else if (musicMute === "no") {
-    //         pic = "images/Pages/settings.png"
-    //     }
-    //     draw();
-    // }
-
     function close() {
-        location.reload();
+      location.reload();
     }
 
     function backToAbout() {
-        if (mute === "no") {
-            var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
-            navBack_snd.play();
-            navBack_snd.onended = function() {
-                window.location = "menu.html";
-            }
-        } else {
-            window.location = "menu.html";
-        };
+      if (mute === "no") {
+        var navBack_snd = new Audio("sounds/navigateBack.wav"); // buffers automatically when created
+        navBack_snd.play();
+        navBack_snd.onended = function() {
+          window.location = "menu.html";
+        }
+      } else {
+        window.location = "menu.html";
+      };
     }
 
     function addButton(x1, y1, x2, y2, callback, param) {
-        buttons.push({
-            x1: x1,
-            y1: y1,
-            x2: x2,
-            y2: y2,
-            callback: callback,
-            param: param
-        });
+      buttons.push({
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
+        callback: callback,
+        param: param
+      });
     }
 
     function setButtons() {
-        var canvasWidth = window.innerWidth;
-        var canvasHeight = window.innerHeight;
-        addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToAbout);
-        addButton(694 / 1920 * canvasWidth, 591 / 1080 * canvasHeight, 874 / 1920 * canvasWidth, 808 / 1080 * canvasHeight, muteMute);
-        addButton(1042 / 1920 * canvasWidth, 588 / 1080 * canvasHeight, 1326 / 1920 * canvasWidth, 945 / 1080 * canvasHeight, musicMuteFunc);
-        addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
+      var canvasWidth = window.innerWidth;
+      var canvasHeight = window.innerHeight;
 
-        // addButton(103 / 1920 * canvasWidth, 674 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, name);
-        addButton(1410 / 1920 * canvasWidth, 30 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 90 / 1080 * canvasHeight, close);
+      addButton(588 / 1920 * canvasWidth, 639 / 1080 * canvasHeight, 842 / 1920 * canvasWidth, 946 / 1080 * canvasHeight, muteMuteFunc);
+      addButton(1042 / 1920 * canvasWidth, 639 / 1080 * canvasHeight, 1349 / 1920 * canvasWidth, 946 / 1080 * canvasHeight, musicMuteFunc);
+
+      addButton(132 / 1920 * canvasWidth, 110 / 1080 * canvasHeight, 413 / 1920 * canvasWidth, 193 / 1080 * canvasHeight, backToAbout);
+      addButton(1369 / 1920 * canvasWidth, 295 / 1080 * canvasHeight, 1640 / 1920 * canvasWidth, 392 / 1080 * canvasHeight, setName);
+
+      addButton(1410 / 1920 * canvasWidth, 100 / 1080 * canvasHeight, 1470 / 1920 * canvasWidth, 160 / 1080 * canvasHeight, close);
     }
 
     function touches(evt) {
-        var x = evt.changedTouches[0].pageX;
-        var y = evt.changedTouches[0].pageY;
-        checkButtons(x, y);
+      var x = evt.changedTouches[0].pageX;
+      var y = evt.changedTouches[0].pageY;
+      checkButtons(x, y);
     }
 
     function clicks(evt) {
-        var x = evt.clientX;
-        var y = evt.clientY;
-        checkButtons(x, y);
+      var x = evt.clientX;
+      var y = evt.clientY;
+      checkButtons(x, y);
     }
 
     function checkButtons(x, y) {
-        for (var i = 0; i < buttons.length; i++) {
-            var b = buttons[i];
-            if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-                // console.log("match "+i);
-                b.callback();
-            }
+      for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+        if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
+          // console.log("match "+i);
+          b.callback();
         }
+      }
     }
 
     function init() {
-        draw();
-        setButtons();
-        window.addEventListener('touchstart', touches);
-        // window.addEventListener('click', clicks);
+      draw();
+      setButtons();
+      window.addEventListener('touchstart', touches);
     }
-
-    // function checkButtons(evt) {
-    //   var x = evt.changedTouches[0].pageX;
-    //   var y = evt.changedTouches[0].pageY;
-    //   for (var i = 0; i < buttons.length; i++) {
-    //     var b = buttons[i];
-    //     if (x > b.x1 && x < b.x2 && y > b.y1 && y < b.y2) {
-    //       b.callback(b.param);
-    //     }
-    //   }
-    // }
-
-    // function init() {
-    //   draw();
-    //   setButtons();
-    //   window.addEventListener('touchstart', checkButtons);
-    // }
-    </script>
+  </script>
 </body>
 
 </html>

@@ -434,13 +434,13 @@
 				loadFonts();
 				window.addEventListener('touchstart', gameTouchStart);
 				window.addEventListener('touchend', gameTouchEnd);
-//				window.addEventListener('mousedown', getClickDown);
-//				window.addEventListener('mouseup', getClickUp);
-//				window.addEventListener('keydown', spaceDownEventListener);
-//				window.addEventListener('keyup', spaceUpEventListener);
+				//				window.addEventListener('mousedown', getClickDown);
+				//				window.addEventListener('mouseup', getClickUp);
+				//				window.addEventListener('keydown', spaceDownEventListener);
+				//				window.addEventListener('keyup', spaceUpEventListener);
 
 				myGamePiece = new component(myGameArea.canvas.height * 0.08, myGameArea.canvas.height * 0.08, "red", myGameArea.canvas.width * 0.15, myGameArea.canvas.height * 0.5, "player");
-				myGamePiece.gravity = 0.3;
+				// myGamePiece.gravity = 0.3;
 
 				myScore = new component(myGameArea.canvas.width * 0.02 + "px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, myGameArea.canvas.width * 0.03, "text");
 				myBest = new component(myGameArea.canvas.width * 0.02 + "px", "PressStart2P", "yellow", myGameArea.canvas.width * 0.01, myGameArea.canvas.width * 0.06, "text");
@@ -638,7 +638,7 @@
 					this.gravity = (0.7 - this.gravitySpeed);
 					this.type = "playerBooster";
 				} else if (this.gravitySpeed >= 0 && click == false) {
-					this.gravity = 0.2;
+					this.gravity = 0.2 * (myGameArea.canvas.width / 500);
 					this.type = "player";
 				} else if (click === true) {
 					this.type = "playerBooster";
@@ -648,7 +648,7 @@
 			}
 			this.endingAccel = function() {
 				if (myGamePiece.y < myGameArea.canvas.height * 0.47 && this.gravitySpeed <= 0) {
-					this.gravity = 0.6;
+					this.gravity = 0.6 * (myGameArea.canvas.width / 500);
 				}
 			}
 
@@ -823,7 +823,7 @@
 			speed = updateSpeed();
 			if (myGameArea.frameNo == 1 || newObstacle(0.6)) {
 				myGameArea.section++;
-
+				//TODO
 				x = myGameArea.canvas.width;
 				var zones = Math.floor((Math.random() * 3));
 				var randomness = (Math.random() * 0.3) + 0.7;
@@ -890,6 +890,7 @@
 				backgrounds[i].x += -(speed / 2);
 				backgrounds[i].update();
 			}
+
 			if (myGameArea.frameNo == 1 || everyinterval(Math.round(200 / 6))) {
 				score += 1;
 				if (forceAction === true) {
@@ -1142,7 +1143,7 @@
 
 		function accelerate(n) {
 			if (!myGameArea.interval) {
-				myGameArea.interval = setInterval(updateGameArea, 100 / 3);
+				myGameArea.interval = setInterval(updateGameArea, 100/3);
 			}
 
 			if (myGamePiece !== undefined && pauseAction === false && gameoverAction === false) {

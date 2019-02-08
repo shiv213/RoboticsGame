@@ -5,7 +5,7 @@ Game to spread the message of STEM in the community made by FRC team 1683, the T
 https://shiv213.github.io/RoboticsGame/
 
 ## Download
-Available on Google Play and on the IOS App Store (Temporarily down on App Store)
+Available on Google Play and on the IOS App Store
 
 ## Features
 - Simple Game Play

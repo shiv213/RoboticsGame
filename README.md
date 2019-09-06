@@ -2,7 +2,7 @@
 Game to spread the message of STEM in the community made by FRC team 1683, the Techno Titans
 
 ## Test Site
-https://shiv213.github.io/RoboticsGame/
+https://shivvtrivedi.com/RoboticsGame/
 
 ## Download
 Available on Google Play and on the IOS App Store
